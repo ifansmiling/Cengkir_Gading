@@ -4,20 +4,21 @@ import WebLayout from "../../layouts/BerandaLayout";
 const Beranda = () => {
   return (
     <WebLayout>
-      <div className="flex justify-center items-center min-h-screen bg-[#C9D7B8]">
-        <div className="flex-1 flex justify-center">
+      <div className="flex justify-center items-start min-h-screen bg-white">
+        <div className="flex-1 flex justify-center items-start mt-5">
           <img
-            src="/path/to/logo.png"
+            src="/logo2.png"
             alt="Cengkir Gading Logo"
-            className="w-64 h-auto"
+            className="w-72 h-auto"
           />
         </div>
 
-        <div className="flex-1 max-w-lg bg-white p-8 rounded-lg shadow-lg">
-          <h2 className="text-green-700 text-xl font-bold mb-4">
+        <div className="flex-1 max-w-2xl p-8 mt-12">
+          <h2 className="text-green-700 text-xl font-bold mb-4 border-b border-gray-400 inline-block pb-0.5">
             Menjelajah Karakter, Menghidupkan Kisah
           </h2>
-          <p className="text-gray-600 mb-4">
+
+          <p className="text-gray-600 mb-4 text-wrap">
             Mengasah Kemampuan Akting, Menggali Potensi, dan Menghidupkan Setiap
             Karakter dengan Dedikasi Penuh di Atas Panggung.
           </p>
@@ -29,7 +30,7 @@ const Beranda = () => {
               Sign Up
             </button>
           </div>
-          <p className="text-gray-700 text-sm">
+          <p className="text-gray-700 text-sm text-justify">
             “Di Pusat Latihan Drama Cengkir Gading, setiap aktor tidak hanya
             belajar menghafal naskah, tetapi juga menguasai seni mendalam dalam
             menghidupkan karakter di atas panggung. Melalui bimbingan yang penuh
