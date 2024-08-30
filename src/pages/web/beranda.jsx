@@ -23,13 +23,18 @@ const Beranda = () => {
             Karakter dengan Dedikasi Penuh di Atas Panggung.
           </p>
           <div className="flex space-x-4 mb-6">
-            <button className="w-full py-3 bg-green-500 text-white font-bold rounded hover:bg-green-600 transition">
-              Login
-            </button>
-            <button className="w-full py-3 bg-green-500 text-white font-bold rounded hover:bg-green-600 transition">
-              Sign Up
-            </button>
+            <a href="/login" className="w-full">
+              <button className="w-full py-3 bg-green-500 text-white font-bold rounded hover:bg-green-600 transition">
+                Login
+              </button>
+            </a>
+            <a href="/signup" className="w-full">
+              <button className="w-full py-3 bg-green-500 text-white font-bold rounded hover:bg-green-600 transition">
+                Sign Up
+              </button>
+            </a>
           </div>
+    
           <p className="text-gray-700 text-sm text-justify">
             “Di Pusat Latihan Drama Cengkir Gading, setiap aktor tidak hanya
             belajar menghafal naskah, tetapi juga menguasai seni mendalam dalam
