@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 //Rute Admin
 import Dashboard from "./pages/admin/dashboard/index";
+import AdminDrama from "./pages/admin/drama/index";
 
 //Rute Web
 import Beranda from "./pages/web/beranda";
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         {/* Rute Admin*/}
         <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/drama" element={<AdminDrama />} />
 
         {/* Rute Web*/}
         <Route path="/" element={<Beranda />} />
