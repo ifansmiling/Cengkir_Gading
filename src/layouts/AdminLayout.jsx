@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import api from "../services/api";
+import { NavLink } from "react-router-dom";
 import {
   FaTachometerAlt,
   FaCalendarAlt,
@@ -33,55 +34,50 @@ const AdminLayout = ({ children }) => {
           <img src="/logo1.png" alt="Cengkir Gading Logo" className="h-16" />
         </div>
         <nav className="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
-          <a
-            href="/admin/dashboard"
-            className="flex items-center px-4 py-2 text-white hover:bg-gray-700 hover:text-white rounded border-b border-white"
-          >
-            <FaTachometerAlt className="text-xl mt-2" />
-            <span className="ml-3 mt-2">Dashboard</span>
-          </a>
-          <a
-            href="/admin/drama"
-            className="flex items-center px-4 py-2 text-white hover:bg-gray-700 hover:text-white rounded border-b border-white"
-          >
-            <FaCalendarAlt className="text-xl mt-2" />
-            <span className="ml-3 mt-2">Perpustakaan Drama</span>
-          </a>
-          <a
-            href="/admin/exercise"
-            className="flex items-center px-4 py-2 text-white hover:bg-gray-700 hover:text-white rounded border-b border-white"
-          >
-            <FaUser className="text-xl mt-2" />
-            <span className="ml-3 mt-2">Daily Exercise</span>
-          </a>
-          <a
-            href="/admin/skenario"
-            className="flex items-center px-4 py-2 text-white hover:bg-gray-700 hover:text-white rounded border-b border-white"
-          >
-            <FaTasks className="text-xl mt-2" />
-            <span className="ml-3 mt-2">Perpustakaan Skenario</span>
-          </a>
-          <a
-            href="/admin/karakter"
-            className="flex items-center px-4 py-2 text-white hover:bg-gray-700 hover:text-white rounded border-b border-white"
-          >
-            <FaWpforms className="text-xl mt-2" />
-            <span className="ml-3 mt-2">Evaluasi Karakter</span>
-          </a>
-          <a
-            href="/admin/acara"
-            className="flex items-center px-4 py-2 text-white hover:bg-gray-700 hover:text-white rounded border-b border-white"
-          >
-            <FaTable className="text-xl mt-2" />
-            <span className="ml-3 mt-2">Kalender Acara</span>
-          </a>
-          <a
-            href="/admin/user"
-            className="flex items-center px-4 py-2 text-white hover:bg-gray-700 hover:text-white rounded border-b border-white"
-          >
-            <FaUsers className="text-xl mt-2" />
-            <span className="ml-3 mt-2">Users List</span>
-          </a>
+          {[
+            {
+              href: "/admin/dashboard",
+              icon: FaTachometerAlt,
+              label: "Dashboard",
+            },
+            {
+              href: "/admin/drama",
+              icon: FaTable,
+              label: "Perpustakaan Drama",
+            },
+            { href: "/admin/exercise", icon: FaUser, label: "Daily Exercise" },
+            {
+              href: "/admin/skenario",
+              icon: FaTasks,
+              label: "Perpustakaan Skenario",
+            },
+            {
+              href: "/admin/karakter",
+              icon: FaWpforms,
+              label: "Evaluasi Karakter",
+            },
+            {
+              href: "/admin/acara",
+              icon: FaCalendarAlt,
+              label: "Kalender Acara",
+            },
+            { href: "/admin/user", icon: FaUsers, label: "Users List" },
+          ].map((menuItem) => (
+            <NavLink
+              key={menuItem.href}
+              to={menuItem.href}
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 rounded border-b border-white ${
+                  isActive
+                    ? "bg-gray-700 text-white"
+                    : "text-white hover:bg-gray-700"
+                }`
+              }
+            >
+              <menuItem.icon className="text-xl mt-2" />
+              <span className="ml-3 mt-2">{menuItem.label}</span>
+            </NavLink>
+          ))}
         </nav>
       </aside>
 
@@ -89,9 +85,9 @@ const AdminLayout = ({ children }) => {
       <div className="flex flex-col flex-1">
         <header className="flex items-center justify-between h-20 px-6 bg-green-700 border-b border-gray-200 fixed w-full z-10 ml-60">
           <div className="flex items-center space-x-6">
-            <a href="/" className="text-white hover:text-black">
+            <NavLink to="/" className="text-white hover:text-black">
               <FaHome className="text-3xl" />
-            </a>
+            </NavLink>
             <button
               onClick={handleLogout}
               className="text-white hover:text-black"

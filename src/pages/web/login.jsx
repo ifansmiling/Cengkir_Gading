@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import WebLayout from "../../layouts/BerandaLayout";
 import api from "../../services/api";
+import { FiEye, FiEyeOff } from "react-icons/fi"; // Importing icons
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
@@ -33,6 +35,11 @@ const Login = () => {
     }
   };
 
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <WebLayout>
       <div className="flex justify-center items-start min-h-screen bg-white">
@@ -42,18 +49,18 @@ const Login = () => {
             alt="Cengkir Gading Logo"
             className="w-60 h-auto mb-4"
           />
-          <p className="text-center px-4 text-gray-900 text-sm mb-8">
+          <p className="text-center px-24 text-gray-900 text-sm mb-8 font-dramatic-body">
             Bergabunglah dengan Cengkir Gading, dan Jadilah Bagian dari
             Komunitas Kreatif yang Menghidupkan Seni Peran di Panggung!
           </p>
         </div>
 
         <div className="flex-1 max-w-md p-8 mt-16 mr-36">
-          <h2 className="text-green-700 text-xl font-bold mb-4 border-b border-gray-300 inline-block pb-0.5">
+          <h2 className="text-green-700 text-xl font-dramatic-body font-bold mb-4 border-b border-gray-300 inline-block pb-0.5">
             Masuk ke Akun Kamu
           </h2>
 
-          <form className="space-y-6" onSubmit={handleLogin}>
+          <form className="space-y-6 font-dramatic-body" onSubmit={handleLogin}>
             <div>
               <label htmlFor="email" className="block text-gray-700 mb-1">
                 Email<span className="text-red-500">*</span>
@@ -69,12 +76,12 @@ const Login = () => {
               />
             </div>
 
-            <div>
+            <div className="relative">
               <label htmlFor="password" className="block text-gray-700 mb-1">
                 Kata Sandi<span className="text-red-500">*</span>
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -82,6 +89,12 @@ const Login = () => {
                 placeholder="Masukkan kata sandi kamu"
                 required
               />
+              <div
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-600 mt-6"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <FiEyeOff size={19} /> : <FiEye size={19} />}
+              </div>
             </div>
 
             {errorMessage && (

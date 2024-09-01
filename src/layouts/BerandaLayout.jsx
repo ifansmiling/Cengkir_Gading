@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { FaHome, FaSignInAlt, FaUserPlus } from "react-icons/fa"; // Importing icons
 
 const BerandaLayout = ({ children }) => {
   const location = useLocation();
@@ -16,13 +17,14 @@ const BerandaLayout = ({ children }) => {
         <div className="flex items-center">
           <a
             href="/"
-            className={`mx-4 font-bold transition-colors duration-300 ${
+            className={`mx-4 font-bold transition-colors duration-300 flex items-center ${
               activeLink === "/"
                 ? "text-[#0B771D] text-xl"
                 : "text-gray-800 text-xl"
-            } hover:text-[#0B771D]`}
+            } hover:text-[#0B771D] font-dramatic-body`} // Applying custom font
             onClick={() => handleClick("/")}
           >
+            <FaHome className="mr-1" /> {/* Adding Home Icon */}
             Beranda
           </a>
         </div>
@@ -34,24 +36,26 @@ const BerandaLayout = ({ children }) => {
         <div className="flex items-center">
           <a
             href="/login"
-            className={`mx-4 font-bold transition-colors duration-300 ${
+            className={`mx-4 font-bold transition-colors duration-300 flex items-center ${
               activeLink === "/login"
                 ? "text-[#0B771D] text-xl"
                 : "text-gray-800 text-xl"
-            } hover:text-[#0B771D]`}
+            } hover:text-[#0B771D] font-dramatic-body`} // Applying custom font
             onClick={() => handleClick("/login")}
           >
+            <FaSignInAlt className="mr-1" /> {/* Adding Login Icon */}
             Login
           </a>
           <a
             href="/signup"
-            className={`mx-4 font-bold transition-colors duration-300 ${
+            className={`mx-4 font-bold transition-colors duration-300 flex items-center ${
               activeLink === "/signup"
                 ? "text-[#0B771D] text-xl"
                 : "text-gray-800 text-xl"
-            } hover:text-[#0B771D]`}
+            } hover:text-[#0B771D] font-dramatic-body`} // Applying custom font
             onClick={() => handleClick("/signup")}
           >
+            <FaUserPlus className="mr-1" /> {/* Adding SignUp Icon */}
             Sign up
           </a>
         </div>
@@ -62,7 +66,7 @@ const BerandaLayout = ({ children }) => {
 
       {/* Footer */}
       <footer className="bg-[#DAF0BE] py-4 text-center mt-auto shadow-md">
-        <p className="text-gray-800">
+        <p className="text-gray-800 font-merriweather">
           © 2024 Cengkir Gading. All rights reserved.
         </p>
       </footer>

@@ -14,28 +14,28 @@ const Beranda = () => {
         </div>
 
         <div className="flex-1 max-w-2xl p-8 mt-12">
-          <h2 className="text-green-700 text-xl font-bold mb-4 border-b border-gray-400 inline-block pb-0.5">
+          <h2 className="font-dramatic-header text-green-700 text-2xl font-bold mb-4 border-b border-gray-400 inline-block pb-0.5">
             Menjelajah Karakter, Menghidupkan Kisah
           </h2>
 
-          <p className="text-gray-600 mb-4 text-wrap">
+          <p className="font-dramatic-body text-gray-600 mb-4">
             Mengasah Kemampuan Akting, Menggali Potensi, dan Menghidupkan Setiap
             Karakter dengan Dedikasi Penuh di Atas Panggung.
           </p>
           <div className="flex space-x-4 mb-6">
             <a href="/login" className="w-full">
-              <button className="w-full py-3 bg-green-500 text-white font-bold rounded hover:bg-green-600 transition">
+              <button className="w-full py-2 font-dramatic-body text-xl bg-green-500 text-white font-bold rounded hover:bg-green-600 transition">
                 Login
               </button>
             </a>
             <a href="/signup" className="w-full">
-              <button className="w-full py-3 bg-green-500 text-white font-bold rounded hover:bg-green-600 transition">
+              <button className="w-full py-2 font-dramatic-body text-xl bg-green-500 text-white font-bold rounded hover:bg-green-600 transition">
                 Sign Up
               </button>
             </a>
           </div>
-    
-          <p className="text-gray-700 text-sm text-justify">
+
+          <p className="font-dramatic-body text-gray-700 text-sm text-justify">
             “Di Pusat Latihan Drama Cengkir Gading, setiap aktor tidak hanya
             belajar menghafal naskah, tetapi juga menguasai seni mendalam dalam
             menghidupkan karakter di atas panggung. Melalui bimbingan yang penuh
