@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 // Rute Admin
 import Dashboard from "./pages/admin/dashboard/index";
 import AdminDrama from "./pages/admin/drama/index";
+import AdminUser from "./pages/admin/userList/index";
 
 // Rute Web
 import Beranda from "./pages/web/beranda";
@@ -24,6 +25,10 @@ function App() {
         <Route
           path="/admin/drama"
           element={<ProtectedRoute element={AdminDrama} />}
+        />
+        <Route
+          path="/admin/user"
+          element={<ProtectedRoute element={AdminUser} />}
         />
 
         {/* Rute Web tanpa proteksi */}
