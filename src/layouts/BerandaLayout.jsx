@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { FaHome, FaSignInAlt, FaUserPlus } from "react-icons/fa"; // Importing icons
+import { FaHome, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 
 const BerandaLayout = ({ children }) => {
   const location = useLocation();
@@ -21,14 +21,14 @@ const BerandaLayout = ({ children }) => {
               activeLink === "/"
                 ? "text-[#0B771D] text-xl"
                 : "text-gray-800 text-xl"
-            } hover:text-[#0B771D] font-dramatic-body`} // Applying custom font
+            } hover:text-[#0B771D] font-dramatic-body`}
             onClick={() => handleClick("/")}
           >
-            <FaHome className="mr-1" /> {/* Adding Home Icon */}
+            <FaHome className="mr-1" />
             Beranda
           </a>
         </div>
-        <div className="flex-1 flex justify-center ml-32">
+        <div className="flex-1 flex justify-center ml-28">
           <a href="/">
             <img src="/logo1.png" alt="Company Logo" className="w-44 h-auto" />
           </a>
@@ -40,10 +40,10 @@ const BerandaLayout = ({ children }) => {
               activeLink === "/login"
                 ? "text-[#0B771D] text-xl"
                 : "text-gray-800 text-xl"
-            } hover:text-[#0B771D] font-dramatic-body`} // Applying custom font
+            } hover:text-[#0B771D] font-dramatic-body`}
             onClick={() => handleClick("/login")}
           >
-            <FaSignInAlt className="mr-1" /> {/* Adding Login Icon */}
+            <FaSignInAlt className="mr-1" />
             Login
           </a>
           <a
@@ -52,10 +52,10 @@ const BerandaLayout = ({ children }) => {
               activeLink === "/signup"
                 ? "text-[#0B771D] text-xl"
                 : "text-gray-800 text-xl"
-            } hover:text-[#0B771D] font-dramatic-body`} // Applying custom font
+            } hover:text-[#0B771D] font-dramatic-body`} 
             onClick={() => handleClick("/signup")}
           >
-            <FaUserPlus className="mr-1" /> {/* Adding SignUp Icon */}
+            <FaUserPlus className="mr-1" />
             Sign up
           </a>
         </div>

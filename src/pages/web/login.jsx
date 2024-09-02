@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import WebLayout from "../../layouts/BerandaLayout";
 import api from "../../services/api";
-import { FiEye, FiEyeOff } from "react-icons/fi"; // Importing icons
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    scrollToTop();
     try {
       const response = await api.post("/login", {
         email,
@@ -35,9 +36,12 @@ const Login = () => {
     }
   };
 
-  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -70,13 +74,13 @@ const Login = () => {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded"
+                className="w-full px-4 py-2 border border-gray-300 rounded transition duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                 placeholder="Masukkan email kamu"
                 required
               />
             </div>
 
-            <div className="relative">
+            <div className="relative mt-4">
               <label htmlFor="password" className="block text-gray-700 mb-1">
                 Kata Sandi<span className="text-red-500">*</span>
               </label>
@@ -85,12 +89,12 @@ const Login = () => {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded"
+                className="w-full px-4 py-2 border border-gray-300 rounded transition duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                 placeholder="Masukkan kata sandi kamu"
                 required
               />
               <div
-                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-600 mt-6"
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-600 mt-6 hover:text-green-500"
                 onClick={togglePasswordVisibility}
               >
                 {showPassword ? <FiEyeOff size={19} /> : <FiEye size={19} />}
@@ -111,7 +115,15 @@ const Login = () => {
 
           <p className="text-gray-700 text-sm mt-6">
             Belum Mempunyai Akun?{" "}
-            <a href="/signup" className="text-blue-500 hover:underline">
+            <a
+              href="/signup"
+              className="text-blue-500 hover:underline"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToTop();
+                navigate("/signup");
+              }}
+            >
               Buat Akun
             </a>
           </p>

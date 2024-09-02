@@ -9,9 +9,10 @@ import {
   FaPhone,
   FaUserCheck,
   FaSignOutAlt,
-  FaArrowUp, 
+  FaArrowUp,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const UserLayout = ({ children }) => {
   const [isDramaLibraryOpen, setIsDramaLibraryOpen] = useState(false);
@@ -37,8 +38,8 @@ const UserLayout = ({ children }) => {
   };
 
   const handleLogout = () => {
-    // Implement logout logic here, such as clearing tokens or user data
-    // Then redirect to the home page
+    localStorage.removeItem("token");
+
     navigate("/");
   };
 
@@ -65,24 +66,29 @@ const UserLayout = ({ children }) => {
   return (
     <div className="flex flex-col h-screen bg-gray-100">
       {/* Navbar */}
-      <header className="bg-white shadow-sm px-3 py-2 fixed top-0 left-0 right-0 z-10 border-b border-gray-300">
+      <nav className="bg-white shadow-sm px-3 py-2 fixed top-0 left-0 right-0 z-10 border-b border-gray-300">
         <div className="flex items-center justify-between">
-          <div className="text-lg font-bold flex items-center space-x-2">
-            <FaDoorOpen className="text-green-600 text-2xl" />
-            <span>Welcome To Cengkir Gading</span>
+          <div className="text-lg font-bold flex items-center space-x-2 font-dramatic-header-user">
+            <Link to="/user/drama" className="flex items-center space-x-2">
+              <FaDoorOpen className="text-green-600 text-2xl" />
+              <span>Welcome To Cengkir Gading</span>
+            </Link>
           </div>
+
           <div className="flex items-center mr-14">
-            <img
-              src="/logo1.png"
-              alt="Logo"
-              className="w-48 h-auto"
-              style={{ maxWidth: "none", maxHeight: "none" }}
-            />
+            <Link to="/user/drama">
+              <img
+                src="/logo1.png"
+                alt="Logo"
+                className="w-48 h-auto"
+                style={{ maxWidth: "none", maxHeight: "none" }}
+              />
+            </Link>
           </div>
-          <div className="flex items-center space-x-4">
-            <a href="#" className="text-green-600">
+          <div className="flex items-center space-x-2 font-sidebar-menu">
+            <Link to="/user/drama" className="text-green-600">
               20102036
-            </a>
+            </Link>
             <button
               onClick={handleLogout}
               className="text-gray-700 hover:text-green-700"
@@ -91,15 +97,20 @@ const UserLayout = ({ children }) => {
             </button>
           </div>
         </div>
-      </header>
+      </nav>
 
       {/* Main Content */}
       <div className="flex flex-1 pt-16">
         {/* Sidebar */}
-        <aside className="bg-white shadow-xl border-r border-gray-500 h-full overflow-y-auto">
-          <div className="p-4 flex flex-col items-center mt-3">
-            <div className="mt-2 text-gray-700 font-bold">Ardhana Galih</div>
-            <a href="/user/drama" className="text-sm text-green-600 mt-1">
+        <sidebar className="bg-white shadow-xl border-r border-gray-500 h-full overflow-y-auto">
+          <div className="p-4 flex flex-col items-center mt-6">
+            <div className="mt-2 text-gray-700 font-bold text-lg font-sidebar-heading">
+              Ardhana Galih
+            </div>
+            <a
+              href="/user/drama"
+              className="text-sm text-green-600 mt-1 font-sidebar-menu"
+            >
               20102036
             </a>
           </div>
@@ -108,7 +119,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <a
                   href="/user/drama"
-                  className={`text-gray-700 font-medium flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeItem === "drama" || isDramaLibraryOpen
                       ? "text-green-700"
                       : "hover:text-green-700"
@@ -125,7 +136,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <a
                   href="/user/daily-exercise"
-                  className={`text-gray-700 font-medium flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeItem === "exercise" || isExerciseOpen
                       ? "text-green-700"
                       : "hover:text-green-700"
@@ -148,7 +159,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <a
                         href="/user/daily-exercise/artikel"
-                        className="text-gray-600 hover:text-green-700"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu "
                       >
                         Artikel
                       </a>
@@ -156,7 +167,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <a
                         href="/user/daily-exercise/buku"
-                        className="text-gray-600 hover:text-green-700"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
                       >
                         Buku
                       </a>
@@ -164,7 +175,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <a
                         href="/user/daily-exercise/akting"
-                        className="text-gray-600 hover:text-green-700"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
                       >
                         Teori-teori Akting
                       </a>
@@ -175,7 +186,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <a
                   href="/user/skenario"
-                  className={`text-gray-700 font-medium flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeItem === "scenario" || isScenarioLibraryOpen
                       ? "text-green-700"
                       : "hover:text-green-700"
@@ -188,7 +199,7 @@ const UserLayout = ({ children }) => {
                   <FaBook className="mr-3 text-xl" />
                   <span>Perpustakaan Skenario</span>
                   <FaChevronDown
-                    className={`ml-auto transition-transform ${
+                    className={`ml-2 transition-transform ${
                       isScenarioLibraryOpen ? "transform rotate-180" : ""
                     }`}
                   />
@@ -198,7 +209,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <a
                         href="/user/skenario/cerita-drama"
-                        className="text-gray-600 hover:text-green-700"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
                       >
                         Cerita Drama
                       </a>
@@ -206,7 +217,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <a
                         href="/user/skenario/cerita-pendek"
-                        className="text-gray-600 hover:text-green-700"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
                       >
                         Cerita Pendek
                       </a>
@@ -217,7 +228,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <a
                   href="/user/evaluasi-karakter"
-                  className="text-gray-700 font-medium flex items-center px-2 py-2 rounded transition duration-300 hover:text-green-700"
+                  className="text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 hover:text-green-700"
                 >
                   <FaUserCheck className="mr-3 text-xl" />
                   <span>Evaluasi Karakter</span>
@@ -226,7 +237,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <a
                   href="/user/kalender-acara"
-                  className="text-gray-700 font-medium flex items-center px-2 py-2 rounded transition duration-300 hover:text-green-700"
+                  className="text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 hover:text-green-700"
                 >
                   <FaCalendarAlt className="mr-3 text-xl" />
                   <span>Kalender Acara</span>
@@ -235,7 +246,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <a
                   href="/user/kontak"
-                  className="text-gray-700 font-medium flex items-center px-2 py-2 rounded transition duration-300 hover:text-green-700"
+                  className="text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 hover:text-green-700"
                 >
                   <FaPhone className="mr-3 text-xl" />
                   <span>Kontak & Dukungan</span>
@@ -243,42 +254,109 @@ const UserLayout = ({ children }) => {
               </li>
             </ul>
           </nav>
-        </aside>
+        </sidebar>
 
         {/* Content */}
         <main className="flex-1 mt-6">{children}</main>
       </div>
 
       {/* Footer */}
-      <footer className="bg-white shadow-md py-6 border-t border-gray-300">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-          <div className="text-center md:text-left mb-4 md:mb-0">
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">Menu</h3>
-            <ul className="space-y-2">
+      <footer className="bg-green-600 shadow-md py-10 border-t border-gray-300">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-start">
+          {/* Logo Section */}
+          <div className="flex flex-col items-center md:items-start mb-4 md:mb-0">
+            <a href="/user/drama" onClick={scrollToTop}>
+              <img
+                src="/logo2.png"
+                alt="Logo"
+                className="w-36 mb-2 cursor-pointer"
+              />
+            </a>
+            <p className="text-white text-sm text-center md:text-left font-dramatic-body-user">
+              © 2024 Pasar Lelang Drama Cengkir Gading. All rights reserved.
+            </p>
+          </div>
+
+          {/* Menu Section */}
+          <div className="flex flex-col items-center md:items-start mb-6 md:mb-0">
+            <h3 className="text-lg font-semibold text-black mb-2 font-dramatic-header">
+              Our Menu
+            </h3>
+            <ul className="space-y-2 font-dramatic-body">
               <li>
-                <a href="/about" className="text-gray-600 hover:text-green-700">
-                  About
+                <a
+                  href="/perpustakaan-drama"
+                  className="text-white hover:text-gray-700"
+                  onClick={scrollToTop}
+                >
+                  Perpustakaan Drama
                 </a>
               </li>
               <li>
                 <a
-                  href="/privacy"
-                  className="text-gray-600 hover:text-green-700"
+                  href="/daily-exercise"
+                  className="text-white hover:text-gray-700"
+                  onClick={scrollToTop}
                 >
-                  Privacy Policy
+                  Daily Exercise
                 </a>
               </li>
               <li>
-                <a href="/terms" className="text-gray-600 hover:text-green-700">
-                  Terms of Service
+                <a
+                  href="/perpustakaan-skenario"
+                  className="text-white hover:text-gray-700"
+                  onClick={scrollToTop}
+                >
+                  Perpustakaan Skenario
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/evaluasi-karakter"
+                  className="text-white hover:text-gray-700"
+                  onClick={scrollToTop}
+                >
+                  Evaluasi Karakter
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/kalender-acara"
+                  className="text-white hover:text-gray-700"
+                  onClick={scrollToTop}
+                >
+                  Kalender Acara
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/kontak-dukungan"
+                  className="text-white hover:text-gray-700"
+                  onClick={scrollToTop}
+                >
+                  Kontak dan Dukungan
                 </a>
               </li>
             </ul>
           </div>
-          <div className="text-center md:text-right">
-            <p className="text-gray-600">
-              © 2024 Cengkir Gading. All rights reserved.
-            </p>
+
+          {/* Operational Hours Section */}
+          <div className="flex flex-col items-center md:items-start mb-6 md:mb-0">
+            <h3 className="text-lg font-semibold text-black mb-2 font-dramatic-header">
+              Jam Operasional
+            </h3>
+            <p className="text-white font-dramatic-body-user">Senin-Jumat</p>
+            <p className="text-white font-dramatic-body-user">16:00 - 18:00</p>
+          </div>
+
+          {/* Contact Section */}
+          <div className="flex flex-col items-center md:items-start">
+            <h3 className="text-lg font-semibold text-black mb-2 font-dramatic-header">
+              Kontak Kami
+            </h3>
+            <p className="text-white font-dramatic-body">Ardhana@gmail.com</p>
+            <p className="text-white font-dramatic-body">PusatDramaITTP</p>
+            <p className="text-white font-dramatic-body">083207010875</p>
           </div>
         </div>
       </footer>

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import WebLayout from "../../layouts/BerandaLayout";
-import api from "../../services/api"; // Ensure the path is correct
-import { FiEye, FiEyeOff } from "react-icons/fi"; // Importing icons
+import api from "../../services/api";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const initialFormData = {
@@ -16,6 +17,7 @@ const Signup = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -35,7 +37,6 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Ensure passwords match
     if (formData.kataSandi !== formData.konfirmasiKataSandi) {
       setError("Kata sandi dan konfirmasi kata sandi tidak cocok.");
       return;
@@ -47,18 +48,20 @@ const Signup = () => {
         email: formData.email,
         kataSandi: formData.kataSandi,
         nim: formData.nim,
-        role: "user", // Adjust role as needed
+        role: "user",
       });
       alert("Pendaftaran berhasil!");
-      setFormData(initialFormData); // Reset form
-      setError(""); // Clear any existing errors
-      // Redirect to login page or another page if needed
-      // e.g., window.location.href = "/login";
+      setFormData(initialFormData);
+      setError("");
     } catch (err) {
       setError(
         err.response?.data?.error || "Terjadi kesalahan. Silakan coba lagi."
       );
     }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -92,7 +95,7 @@ const Signup = () => {
               <input
                 type="text"
                 id="nama"
-                className="w-full px-4 py-2 border border-gray-300 rounded"
+                className="w-full px-4 py-2 border border-gray-300 rounded transition duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                 placeholder="Masukkan nama kamu"
                 value={formData.nama}
                 onChange={handleChange}
@@ -107,7 +110,7 @@ const Signup = () => {
               <input
                 type="email"
                 id="email"
-                className="w-full px-4 py-2 border border-gray-300 rounded"
+                className="w-full px-4 py-2 border border-gray-300 rounded transition duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                 placeholder="Masukkan email kamu"
                 value={formData.email}
                 onChange={handleChange}
@@ -122,7 +125,7 @@ const Signup = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 id="kataSandi"
-                className="w-full px-4 py-2 border border-gray-300 rounded"
+                className="w-full px-4 py-2 border border-gray-300 rounded transition duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                 placeholder="Masukkan kata sandi kamu"
                 value={formData.kataSandi}
                 onChange={handleChange}
@@ -146,7 +149,7 @@ const Signup = () => {
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 id="konfirmasiKataSandi"
-                className="w-full px-4 py-2 border border-gray-300 rounded"
+                className="w-full px-4 py-2 border border-gray-300 rounded transition duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                 placeholder="Masukkan ulang kata sandi kamu"
                 value={formData.konfirmasiKataSandi}
                 onChange={handleChange}
@@ -171,7 +174,7 @@ const Signup = () => {
               <input
                 type="text"
                 id="nim"
-                className="w-full px-4 py-2 border border-gray-300 rounded"
+                className="w-full px-4 py-2 border border-gray-300 rounded transition duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                 placeholder="Masukkan NIM kamu"
                 value={formData.nim}
                 onChange={handleChange}
@@ -191,7 +194,15 @@ const Signup = () => {
 
           <p className="text-gray-700 text-sm mt-6">
             Sudah Punya Akun?{" "}
-            <a href="/login" className="text-blue-500 hover:underline">
+            <a
+              href="/login"
+              className="text-blue-500 hover:underline"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToTop();
+                navigate("/login");
+              }}
+            >
               Masuk
             </a>
           </p>
