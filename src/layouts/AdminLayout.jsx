@@ -57,7 +57,7 @@ const AdminLayout = ({ children }) => {
               label: "Evaluasi Karakter",
             },
             {
-              href: "/admin/acara",
+              href: "/admin/kalender",
               icon: FaCalendarAlt,
               label: "Kalender Acara",
             },
