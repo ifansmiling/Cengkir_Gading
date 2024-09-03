@@ -45,14 +45,16 @@ const UserList = () => {
   return (
     <AdminLayout>
       <div className="mt-6">
-        <h1 className="text-2xl font-dramatic-header-user font-bold text-center mb-6 relative w-max mx-auto">
-          Semua Pengguna
-          <span className="block h-1 bg-green-800"></span>
-        </h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto">
+            Semua Pengguna
+            <span className="block h-1 bg-green-800"></span>
+          </h1>
+        </div>
 
         <form
           onSubmit={handleSubmit}
-          className="flex items-center max-w-sm mx-auto mb-6"
+          className="flex items-center max-w-sm mx-auto mb-4"
         >
           <label htmlFor="user-search" className="sr-only">
             Search
@@ -61,7 +63,7 @@ const UserList = () => {
             <input
               type="text"
               id="user-search"
-              className="bg-white border border-green-300 hover:border-green-700 text-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-full pl-10 p-2.5 focus:outline-none"
+              className="bg-white border border-green-300 hover:border-green-700 text-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-full pl-4 p-2.5 focus:outline-none"
               placeholder="Search user name..."
               value={searchTerm}
               onChange={handleSearch}
@@ -90,6 +92,10 @@ const UserList = () => {
             <span className="sr-only">Search</span>
           </button>
         </form>
+        <button className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3">
+          <FaPlus className="mr-2" />
+          <span>Tambah User</span>
+        </button>
 
         {/* User Table */}
         <div className="overflow-x-auto">
@@ -104,7 +110,7 @@ const UserList = () => {
             </thead>
             <tbody>
               {filteredUsers.map((user, index) => (
-                <tr key={user.id} className="border-b">
+                <tr key={user.id} className="border-b hover:bg-gray-100">
                   <td className="py-2 px-4">{index + 1}</td>
                   <td className="py-2 px-4">{user.nama}</td>
                   <td className="py-2 px-4">{user.nim}</td>
@@ -114,9 +120,6 @@ const UserList = () => {
                     </button>
                     <button className="text-red-500 hover:text-red-700">
                       <FaTrash />
-                    </button>
-                    <button className="text-green-500 hover:text-green-700">
-                      <FaPlus />
                     </button>
                   </td>
                 </tr>

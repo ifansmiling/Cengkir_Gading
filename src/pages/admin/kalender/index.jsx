@@ -22,10 +22,14 @@ const Kalender = () => {
   return (
     <AdminLayout>
       <div className="p-6">
-        <h1 className="text-2xl font-dramatic-header-user font-bold text-center mb-6 relative w-max mx-auto">
+        <h1 className="text-2xl font-dramatic-header-user font-bold text-center mb-8 relative w-max mx-auto">
           Kalender Acara
           <span className="block h-1 bg-green-800"></span>
         </h1>
+        <button className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3">
+          <FaPlus className="mr-2" />
+          <span>Tambah User</span>
+        </button>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200">
             <thead>
@@ -67,9 +71,6 @@ const Kalender = () => {
                       </button>
                       <button className="text-red-500 hover:text-red-700">
                         <FaTrash />
-                      </button>
-                      <button className="text-green-500 hover:text-green-700">
-                        <FaPlus />
                       </button>
                     </div>
                   </td>
