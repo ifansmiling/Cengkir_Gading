@@ -44,16 +44,16 @@ const Kalender = () => {
             <tbody>
               {kalenderAcaras.map((event, index) => (
                 <tr key={event.id} className="hover:bg-gray-100">
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b border text-center">
                     {index + 1}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b border text-center">
                     {event.judul}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b border text-center">
                     {new Date(event.tanggal_event).toLocaleDateString()}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b border text-center">
                     {event.file_path ? (
                       <img
                         src={event.file_path}

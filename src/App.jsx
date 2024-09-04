@@ -8,6 +8,7 @@ import AdminDrama from "./pages/admin/drama/index";
 import AdminUser from "./pages/admin/userList/index";
 import AdminKalender from "./pages/admin/kalender/index";
 import AdminKarakter from "./pages/admin/karakter/index";
+import AdminSkenario from "./pages/admin/skenario/index";
 
 // Rute Web
 import Beranda from "./pages/web/beranda";
@@ -39,6 +40,10 @@ function App() {
         <Route
           path="/admin/karakter"
           element={<ProtectedRoute element={AdminKarakter} />}
+        />
+        <Route
+          path="/admin/skenario"
+          element={<ProtectedRoute element={AdminSkenario} />}
         />
 
         {/* Rute Web tanpa proteksi */}

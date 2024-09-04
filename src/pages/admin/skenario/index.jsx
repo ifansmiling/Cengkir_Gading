@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import api from "../../../services/api";
+import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 
-const UserList = () => {
-  const [users, setUsers] = useState([]);
+const Skenario = () => {
+  const [skenarios, setSkenarios] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [filteredSkenarios, setFilteredSkenarios] = useState([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchSkenarios = async () => {
       try {
-        const response = await api.get("/user");
-        const userList = response.data.filter((user) => user.role === "user");
-        setUsers(userList);
-        setFilteredUsers(userList);
+        const response = await api.get("/skenario");
+        setSkenarios(response.data);
+        setFilteredSkenarios(response.data);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Failed to fetch skenarios", error);
       }
     };
 
-    fetchUsers();
+    fetchSkenarios();
   }, []);
 
   const handleSearch = (e) => {
@@ -28,32 +27,36 @@ const UserList = () => {
     setSearchTerm(value);
 
     if (value) {
-      const filtered = users.filter((user) =>
-        user.nama.toLowerCase().includes(value.toLowerCase())
+      const filtered = skenarios.filter((skenario) =>
+        skenario.judul.toLowerCase().includes(value.toLowerCase())
       );
-      setFilteredUsers(filtered);
+      setFilteredSkenarios(filtered);
     } else {
-      setFilteredUsers(users);
+      setFilteredSkenarios(skenarios);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    handleSearch({ target: { value: searchTerm } });
+  const extractFileName = (filePath) => {
+    if (!filePath) return "Tidak ada file";
+
+    const fileNameWithExt = filePath.split("/").pop();
+    const fileName = fileNameWithExt.replace(/^\d+-/, "");
+
+    return fileName.charAt(0).toUpperCase() + fileName.split(".")[0].slice(1);
   };
 
   return (
     <AdminLayout>
-      <div className="mt-6">
+      <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto">
-            Semua Pengguna
+            Perpustakaan Skenario
             <span className="block h-1 bg-green-800"></span>
           </h1>
         </div>
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(e) => e.preventDefault()}
           className="flex items-center max-w-sm mx-auto mb-4"
         >
           <label htmlFor="user-search" className="sr-only">
@@ -64,7 +67,7 @@ const UserList = () => {
               type="text"
               id="user-search"
               className="bg-white border border-green-300 hover:border-green-700 text-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-full pl-4 p-2.5 focus:outline-none"
-              placeholder="Cari nama..."
+              placeholder="Cari judul..."
               value={searchTerm}
               onChange={handleSearch}
               required
@@ -92,30 +95,49 @@ const UserList = () => {
             <span className="sr-only">Search</span>
           </button>
         </form>
+
         <button className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3">
           <FaPlus className="mr-2" />
-          <span>Tambah User</span>
+          <span>Tambah Skenario</span>
         </button>
 
-        {/* User Table */}
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 text-center">
+          <table className="min-w-full bg-white border">
             <thead>
               <tr className="bg-gray-200">
-                <th className="py-2 px-4">No</th>
-                <th className="py-2 px-4">Nama</th>
-                <th className="py-2 px-4">NIM</th>
-                <th className="py-2 px-4">Action</th>
+                <th className="px-4 py-2 border text-center">No</th>
+                <th className="px-4 py-2 border text-center">Judul</th>
+                <th className="px-4 py-2 border text-center">Deskripsi</th>
+                <th className="px-4 py-2 border text-center">Naskah Drama</th>
+                <th className="px-4 py-2 border text-center">Aksi</th>
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user, index) => (
-                <tr key={user.id} className="border-b hover:bg-gray-100">
-                  <td className="py-2 px-4 border">{index + 1}</td>
-                  <td className="py-2 px-4 border">{user.nama}</td>
-                  <td className="py-2 px-4 border">{user.nim}</td>
-                  <td className="py-2 px-4 flex justify-center space-x-2">
-                    <button className="text-blue-500 hover:text-blue-700">
+              {filteredSkenarios.map((skenario, index) => (
+                <tr key={skenario.id} className="border-b hover:bg-gray-100">
+                  <td className="px-4 py-2 border text-center">{index + 1}</td>
+                  <td className="px-4 py-2 border text-center">
+                    {skenario.judul}
+                  </td>
+                  <td className="px-4 py-2 border text-center">
+                    {skenario.deskripsi}
+                  </td>
+                  <td className="px-4 py-2 border text-center">
+                    {skenario.file_path ? (
+                      <a
+                        href={skenario.file_path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:text-blue-700"
+                      >
+                        {extractFileName(skenario.file_path)}
+                      </a>
+                    ) : (
+                      "Tidak ada file"
+                    )}
+                  </td>
+                  <td className="px-4 py-2 border text-center">
+                    <button className="text-blue-500 hover:text-blue-700 mr-2">
                       <FaEdit />
                     </button>
                     <button className="text-red-500 hover:text-red-700">
@@ -132,4 +154,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default Skenario;
