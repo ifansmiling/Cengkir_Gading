@@ -28,12 +28,12 @@ const Kalender = () => {
         </h1>
         <button className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3">
           <FaPlus className="mr-2" />
-          <span>Tambah User</span>
+          <span>Kalender Acara</span>
         </button>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200">
             <thead>
-              <tr>
+              <tr className="bg-gray-200">
                 <th className="py-2 px-4 border-b text-center">No</th>
                 <th className="py-2 px-4 border-b text-center">Judul</th>
                 <th className="py-2 px-4 border-b text-center">Tanggal</th>

@@ -64,7 +64,7 @@ const UserList = () => {
               type="text"
               id="user-search"
               className="bg-white border border-green-300 hover:border-green-700 text-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-full pl-4 p-2.5 focus:outline-none"
-              placeholder="Search user name..."
+              placeholder="Cari nama..."
               value={searchTerm}
               onChange={handleSearch}
               required
@@ -101,7 +101,7 @@ const UserList = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-300 text-center">
             <thead>
-              <tr className="bg-gray-100 border-b">
+              <tr className="bg-gray-200">
                 <th className="py-2 px-4">No</th>
                 <th className="py-2 px-4">Nama</th>
                 <th className="py-2 px-4">NIM</th>
