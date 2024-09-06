@@ -128,7 +128,7 @@ const Skenario = () => {
                         href={skenario.file_path}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-500 hover:text-blue-700"
+                        className="text-blue-500 hover:underline"
                       >
                         {extractFileName(skenario.file_path)}
                       </a>
