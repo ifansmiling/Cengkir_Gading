@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleCheck,
+  faTimes,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FaEdit, FaTrash } from "react-icons/fa";
+
 import api from "../../../services/api";
 
 import "./ModalTransisition.css";
@@ -11,8 +16,11 @@ const Drama = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [userRatings, setUserRatings] = useState([]);
+  const [filteredRatings, setFilteredRatings] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -42,6 +50,7 @@ const Drama = () => {
           },
         });
         setUserRatings(response.data);
+        setFilteredRatings(response.data);
       } catch (error) {
         console.error("Gagal mengambil rating pengguna:", error);
       }
@@ -56,15 +65,75 @@ const Drama = () => {
     setShowModal(true);
   };
 
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (value) {
+      const filtered = userRatings.filter((rating) =>
+        rating.user.nama.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredRatings(filtered);
+    } else {
+      setFilteredRatings(userRatings);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleSearch({ target: { value: searchTerm } });
+  };
+
   return (
     <AdminLayout>
       <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto">
             Perpustakaan Drama
             <span className="block h-1 bg-green-800"></span>
           </h1>
         </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className="flex items-center max-w-sm mx-auto mb-4"
+        >
+          <label htmlFor="user-search" className="sr-only">
+            Search
+          </label>
+          <div className="relative w-full">
+            <input
+              type="text"
+              id="user-search"
+              className="bg-white border border-green-300 hover:border-green-700 text-green-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 w-full pl-4 p-2.5 focus:outline-none"
+              placeholder="Cari nama..."
+              value={searchTerm}
+              onChange={handleSearch}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="p-2.5 ml-2 text-sm font-medium text-white bg-green-700 rounded-lg border border-green-700 hover:bg-green-900 focus:outline-none"
+          >
+            <svg
+              className="w-4 h-4"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+            <span className="sr-only">Search</span>
+          </button>
+        </form>
 
         <div className="overflow-x-auto mb-6">
           <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
@@ -80,7 +149,7 @@ const Drama = () => {
               </tr>
             </thead>
             <tbody>
-              {userRatings.map((rating, index) => (
+              {filteredRatings.map((rating, index) => (
                 <tr
                   key={rating.id}
                   className="text-center hover:bg-gray-100 cursor-pointer"
@@ -115,7 +184,7 @@ const Drama = () => {
           </table>
         </div>
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto">
             Daftar Anggota
             <span className="block h-1 bg-green-800"></span>
@@ -141,8 +210,8 @@ const Drama = () => {
                   <td className="py-2 px-4 border-b text-center">
                     <div className="flex justify-center items-center h-full">
                       <FontAwesomeIcon
-                        icon={faCircleCheck}
-                        className="text-green-500 text-xl hover:text-green-700 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
+                        icon={faPlus}
+                        className="text-blue-500 text-xl hover:text-blue-700 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
                       />
                       <span className="ml-2">{user.nilai}</span>
                     </div>
@@ -173,6 +242,7 @@ const Drama = () => {
                 <FontAwesomeIcon icon={faTimes} />
               </button>
             </div>
+
             {/* Tabel untuk Drama dan Rating */}
             <table className="min-w-full text-center table-auto">
               <thead>
