@@ -48,7 +48,7 @@ const Signup = () => {
         email: formData.email,
         kataSandi: formData.kataSandi,
         nim: formData.nim,
-        role: "user",
+        role: "User",
       });
       alert("Pendaftaran berhasil!");
       setFormData(initialFormData);

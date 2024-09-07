@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { FaEdit, FaTrash, FaPlus, FaCaretDown } from "react-icons/fa";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
 
@@ -9,12 +9,14 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [selectedRole, setSelectedRole] = useState(""); // State untuk menyimpan filter role
+  const [dropdownOpen, setDropdownOpen] = useState(false); // State untuk toggle dropdown
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await api.get("/user");
-        const userList = response.data.filter((user) => user.role === "user");
+        const userList = response.data;
         setUsers(userList);
         setFilteredUsers(userList);
       } catch (error) {
@@ -26,27 +28,44 @@ const UserList = () => {
   }, []);
 
   const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-
-    if (value) {
-      const filtered = users.filter((user) =>
-        user.nama.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredUsers(filtered);
-    } else {
-      setFilteredUsers(users);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    handleSearch({ target: { value: searchTerm } });
+    setSearchTerm(e.target.value);
   };
 
   const handleClick = () => {
-    navigate("/admin/user/create"); 
+    navigate("/admin/user/create");
   };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
+      try {
+        await api.delete(`/user/${id}`);
+        setUsers(users.filter((user) => user.id !== id));
+        setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
+        alert("Pengguna berhasil dihapus");
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        alert("Gagal menghapus pengguna");
+      }
+    }
+  };
+
+  // Handle filter role
+  const handleRoleFilter = (role) => {
+    setSelectedRole(role);
+    setDropdownOpen(false);
+  };
+
+  // Filter users based on search term and selected role
+  useEffect(() => {
+    const filtered = users.filter((user) => {
+      const matchesSearch =
+        user.nama.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesRole =
+        selectedRole === "" || user.role.toLowerCase() === selectedRole.toLowerCase();
+      return matchesSearch && matchesRole;
+    });
+    setFilteredUsers(filtered);
+  }, [searchTerm, selectedRole, users]);
 
   return (
     <AdminLayout>
@@ -59,7 +78,7 @@ const UserList = () => {
         </div>
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(e) => e.preventDefault()}
           className="flex items-center max-w-sm mx-auto mb-4"
         >
           <label htmlFor="user-search" className="sr-only">
@@ -114,7 +133,38 @@ const UserList = () => {
                 <th className="py-2 px-4">No</th>
                 <th className="py-2 px-4">Nama</th>
                 <th className="py-2 px-4">NIM</th>
-                <th className="py-2 px-4">Action</th>
+                <th className="py-2 px-4 relative">
+                  Role
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="ml-2 text-gray-500 focus:outline-none"
+                  >
+                    <FaCaretDown />
+                  </button>
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 shadow-lg z-10">
+                      <button
+                        onClick={() => handleRoleFilter("")}
+                        className="block w-full text-left text-gray-600 px-4 py-2 text-sm hover:bg-gray-100"
+                      >
+                        Semua
+                      </button>
+                      <button
+                        onClick={() => handleRoleFilter("User")}
+                        className="block w-full text-left px-4  text-gray-600 py-2 text-sm hover:bg-gray-100"
+                      >
+                        User
+                      </button>
+                      <button
+                        onClick={() => handleRoleFilter("Admin")}
+                        className="block w-full text-left text-gray-600 px-4 py-2 text-sm hover:bg-gray-100"
+                      >
+                        Admin
+                      </button>
+                    </div>
+                  )}
+                </th>
+                <th className="py-2 px-4">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -123,11 +173,18 @@ const UserList = () => {
                   <td className="py-2 px-4 border">{index + 1}</td>
                   <td className="py-2 px-4 border">{user.nama}</td>
                   <td className="py-2 px-4 border">{user.nim}</td>
+                  <td className="py-2 px-4 border">{user.role}</td>
                   <td className="py-2 px-4 flex justify-center space-x-2">
-                    <button className="text-blue-500 hover:text-blue-700">
+                    <button
+                      className="text-blue-500 hover:text-blue-700"
+                      onClick={() => navigate(`/admin/user/edit/${user.id}`)}
+                    >
                       <FaEdit />
                     </button>
-                    <button className="text-red-500 hover:text-red-700">
+                    <button
+                      className="text-red-500 hover:text-red-700"
+                      onClick={() => handleDelete(user.id)}
+                    >
                       <FaTrash />
                     </button>
                   </td>

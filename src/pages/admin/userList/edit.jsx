@@ -1,25 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
-import { useNavigate } from "react-router-dom";
-import "../../../index.css";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
-const CreateUser = () => {
+const EditUser = () => {
+  const { id } = useParams(); // Mendapatkan ID dari URL
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nama: "",
     email: "",
     kataSandi: "",
-    konfirmasiKataSandi: "",
     nim: "",
     role: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const navigate = useNavigate();
+  // Mengambil data user berdasarkan ID saat page load
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await api.get(`/user/${id}`);
+        setFormData({
+          nama: response.data.nama,
+          email: response.data.email,
+          kataSandi: "", // Kata sandi kosong (biar user bisa ubah kalo perlu)
+          nim: response.data.nim,
+          role: response.data.role,
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUser();
+  }, [id]);
 
+  // Menghandle perubahan input
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -27,36 +45,33 @@ const CreateUser = () => {
     });
   };
 
+  // Menghandle submit form untuk update user
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.kataSandi !== formData.konfirmasiKataSandi) {
-      alert("Kata sandi dan konfirmasi kata sandi tidak cocok.");
-      return;
-    }
     try {
-      const response = await api.post("/user", formData);
-      console.log("User created:", response.data);
-      navigate("/admin/user/"); // Navigasi ke path /admin/user setelah sukses
+      await api.put(`/user/${id}`, formData);
+      navigate("/admin/user"); // Redirect setelah update berhasil
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("Error updating user:", error);
     }
   };
 
+  // Menghandle tombol cancel
   const handleCancel = () => {
-    navigate("/admin/user"); 
+    navigate("/admin/user");
   };
 
   return (
     <AdminLayout>
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">
-            Create User
+          <h2 className="text-3xl text-green-600 font-bold text-center mb-8 font-dramatic-header">
+            Edit User
           </h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
-                className="block text-gray-700 font-dramatic-subtitle mb-2 font-semibold"
+                className="block text-gray-700 font-semibold font-dramatic-subtitle mb-2"
                 htmlFor="nama"
               >
                 Nama
@@ -73,7 +88,7 @@ const CreateUser = () => {
             </div>
             <div className="mb-4">
               <label
-                className="block text-gray-700 font-dramatic-subtitle mb-2 font-semibold"
+                className="block text-gray-700 font-semibold font-dramatic-subtitle mb-2"
                 htmlFor="email"
               >
                 Email
@@ -90,10 +105,10 @@ const CreateUser = () => {
             </div>
             <div className="mb-4 relative">
               <label
-                className="block text-gray-700 font-dramatic-subtitle mb-2 font-semibold"
+                className="block text-gray-700 font-semibold font-dramatic-subtitle mb-2"
                 htmlFor="kataSandi"
               >
-                Kata Sandi
+                Kata Sandi (Opsional)
               </label>
               <input
                 type={showPassword ? "text" : "password"}
@@ -116,37 +131,9 @@ const CreateUser = () => {
                 )}
               </button>
             </div>
-            <div className="mb-4 relative">
-              <label
-                className="block text-gray-700 font-dramatic-subtitle mb-2 font-semibold"
-                htmlFor="konfirmasiKataSandi"
-              >
-                Konfirmasi Kata Sandi
-              </label>
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                id="konfirmasiKataSandi"
-                name="konfirmasiKataSandi"
-                value={formData.konfirmasiKataSandi}
-                onChange={handleChange}
-                className="text-gray-600 w-full px-4 py-2 border focus:border-green-400 hover:border-green-500 focus:outline-none rounded-md pr-10"
-                placeholder="*********"
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute inset-y-0 right-0 flex items-center pr-3"
-              >
-                {showConfirmPassword ? (
-                  <EyeIcon className="h-5 w-5 text-gray-500 mt-8" />
-                ) : (
-                  <EyeSlashIcon className="h-5 w-5 text-gray-500 mt-8" />
-                )}
-              </button>
-            </div>
             <div className="mb-4">
               <label
-                className="block text-gray-700 font-dramatic-subtitle mb-2 font-semibold"
+                className="block text-gray-700 font-semibold font-dramatic-subtitle mb-2"
                 htmlFor="nim"
               >
                 NIM
@@ -163,7 +150,7 @@ const CreateUser = () => {
             </div>
             <div className="mb-4">
               <label
-                className="block text-gray-700 font-dramatic-subtitle mb-2 font-semibold"
+                className="block text-gray-700 font-semibold font-dramatic-subtitle mb-2"
                 htmlFor="role"
               >
                 Role
@@ -193,7 +180,7 @@ const CreateUser = () => {
               type="submit"
               className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 mb-3"
             >
-              Create User
+              Update User
             </button>
             <button
               type="button"
@@ -209,4 +196,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default EditUser;
