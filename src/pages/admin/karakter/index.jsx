@@ -109,7 +109,7 @@ const Karakter = () => {
         </form>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 text-center mb-8">
+          <table className="min-w-full bg-white border border-gray-200 text-center rounded-lg shadow-md mb-8">
             <thead>
               <tr className="bg-gray-200">
                 <th className="py-2 px-4 border">No</th>
@@ -145,12 +145,12 @@ const Karakter = () => {
         </div>
 
         {/* Tabel Pengguna dengan Role User */}
-        <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto mb-6">
+        <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto mb-4">
           Daftar Anggota
           <span className="block h-1 bg-green-800"></span>
         </h1>
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 text-center">
+          <table className="min-w-full bg-white border border-gray-200 text-center rounded-lg shadow-md mb-2">
             <thead>
               <tr className="bg-gray-200">
                 <th className="py-2 px-4 border">No</th>

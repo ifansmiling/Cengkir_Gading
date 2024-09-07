@@ -6,6 +6,7 @@ import {
   faTimes,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { FaPlus } from "react-icons/fa";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
 import api from "../../../services/api";
@@ -17,48 +18,63 @@ const Drama = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [userRatings, setUserRatings] = useState([]);
   const [filteredRatings, setFilteredRatings] = useState([]);
+  const [parameters, setParameters] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchParameters = async () => {
       try {
-        const response = await api.get("/user", {
+        const response = await api.get("/drama", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setUsers(response.data);
-        const usersWithRoleUser = response.data.filter(
-          (user) => user.role === "user"
-        );
-        setFilteredUsers(usersWithRoleUser);
+        setParameters(response.data);
       } catch (error) {
-        console.error("Gagal mengambil data pengguna:", error);
-      }
-    };
-
-    const fetchUserRatings = async () => {
-      try {
-        const response = await api.get("/user-rating", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        setUserRatings(response.data);
-        setFilteredRatings(response.data);
-      } catch (error) {
-        console.error("Gagal mengambil rating pengguna:", error);
+        console.error("Gagal mengambil data parameter:", error);
       }
     };
 
     fetchUsers();
     fetchUserRatings();
+    fetchParameters();
   }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await api.get("/user", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setUsers(response.data);
+      const usersWithRoleUser = response.data.filter(
+        (user) => user.role === "user"
+      );
+      setFilteredUsers(usersWithRoleUser);
+    } catch (error) {
+      console.error("Gagal mengambil data pengguna:", error);
+    }
+  };
+
+  const fetchUserRatings = async () => {
+    try {
+      const response = await api.get("/user-rating", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setUserRatings(response.data);
+      setFilteredRatings(response.data);
+    } catch (error) {
+      console.error("Gagal mengambil rating pengguna:", error);
+    }
+  };
 
   const handleRowClick = (rating) => {
     setSelectedRating(rating);
@@ -136,7 +152,7 @@ const Drama = () => {
         </form>
 
         <div className="overflow-x-auto mb-6">
-          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-2">
             <thead>
               <tr className="bg-gray-200">
                 <th className="py-2 px-4 border-b text-center">No</th>
@@ -192,7 +208,7 @@ const Drama = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-6">
             <thead>
               <tr className="bg-gray-200">
                 <th className="py-2 px-4 border-b text-center">No</th>
@@ -221,50 +237,104 @@ const Drama = () => {
             </tbody>
           </table>
         </div>
-      </div>
 
-      {/* Modal untuk menampilkan detail rating */}
-      {showModal && selectedRating && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ml-60">
-          <div
-            className={`bg-white p-6 rounded-lg shadow-lg max-w-md w-full modal-enter ${
-              !showModal && "modal-exit"
-            }`}
-          >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl ml-32 font-bold text-center text-green-700">
-                Detail Rating
-              </h2>
-              <button
-                className="text-gray-500 hover:text-gray-700 text-xl"
-                onClick={() => setShowModal(false)}
-              >
-                <FontAwesomeIcon icon={faTimes} />
-              </button>
-            </div>
-
-            {/* Tabel untuk Drama dan Rating */}
-            <table className="min-w-full text-center table-auto">
-              <thead>
-                <tr className="bg-gray-200 rounded-lg">
-                  <th className="px-4 py-2 text-gray-700">Drama</th>
-                  <th className="px-4 py-2 text-gray-700">Rating</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-t">
-                  <td className="px-2 py-2 text-gray-800 border-b border">
-                    {selectedRating.drama.nama}
-                  </td>
-                  <td className="px-4 py-2 text-green-600 border-b border">
-                    {selectedRating.rating}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto">
+            Daftar Parameter
+            <span className="block h-1 bg-green-800"></span>
+          </h1>
         </div>
-      )}
+
+        <button className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3">
+          <FaPlus className="mr-2" />
+          <span>Tambah Parameter</span>
+        </button>
+
+        {/* Tabel Daftar Parameter */}
+        <div className="overflow-x-auto mb-6">
+          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-2">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="py-2 px-4 border-b text-center">No</th>
+                <th className="py-2 px-4 border-b text-center">
+                  Nama Parameter
+                </th>
+                <th className="py-2 px-4 border-b text-center">Deskripsi</th>
+                <th className="py-2 px-4 border-b text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {parameters.map((parameter, index) => (
+                <tr
+                  key={parameter.id}
+                  className="text-center hover:bg-gray-100"
+                >
+                  <td className="py-2 px-4 border-b border">{index + 1}</td>
+                  <td className="py-2 px-4 border-b border">
+                    {parameter.nama}
+                  </td>
+                  <td className="py-2 px-4 border-b border">
+                    {parameter.deskripsi}
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    <div className="flex justify-center gap-2">
+                      <button className="text-blue-500 hover:text-blue-700">
+                        <FaEdit />
+                      </button>
+                      <button className="text-red-500 hover:text-red-700">
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Modal untuk menampilkan detail rating */}
+        {showModal && selectedRating && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ml-60">
+            <div
+              className={`bg-white p-6 rounded-lg shadow-lg max-w-md w-full modal-enter ${
+                !showModal && "modal-exit"
+              }`}
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl ml-32 font-bold text-center text-green-700">
+                  Detail Rating
+                </h2>
+                <button
+                  className="text-gray-500 hover:text-gray-700 text-xl"
+                  onClick={() => setShowModal(false)}
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+
+              {/* Tabel untuk Drama dan Rating */}
+              <table className="min-w-full text-center table-auto">
+                <thead>
+                  <tr className="bg-gray-200 rounded-lg">
+                    <th className="px-4 py-2 text-gray-700">Drama</th>
+                    <th className="px-4 py-2 text-gray-700">Rating</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-t">
+                    <td className="px-2 py-2 text-gray-800 border-b border">
+                      {selectedRating.drama.nama}
+                    </td>
+                    <td className="px-4 py-2 text-green-600 border-b border">
+                      {selectedRating.rating}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
     </AdminLayout>
   );
 };

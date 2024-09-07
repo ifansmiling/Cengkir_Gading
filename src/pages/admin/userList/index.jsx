@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import api from "../../../services/api";
+import { useNavigate } from "react-router-dom";
 
 const UserList = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -40,6 +42,10 @@ const UserList = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleSearch({ target: { value: searchTerm } });
+  };
+
+  const handleClick = () => {
+    navigate("/admin/user/create"); 
   };
 
   return (
@@ -92,14 +98,17 @@ const UserList = () => {
             <span className="sr-only">Search</span>
           </button>
         </form>
-        <button className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3">
+        <button
+          onClick={handleClick}
+          className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
+        >
           <FaPlus className="mr-2" />
           <span>Tambah User</span>
         </button>
 
         {/* User Table */}
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 text-center">
+          <table className="min-w-full bg-white border border-gray-300 text-center rounded-lg shadow-md mb-2">
             <thead>
               <tr className="bg-gray-200">
                 <th className="py-2 px-4">No</th>

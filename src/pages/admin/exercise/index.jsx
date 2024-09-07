@@ -110,7 +110,7 @@ const Exercise = () => {
           <span>Tambah Exercise</span>
         </button>
 
-        <table className="min-w-full bg-white border border-gray-300 text-center">
+        <table className="min-w-full bg-white border border-gray-300 text-center rounded-lg shadow-md mb-2">
           <thead>
             <tr className="bg-gray-200">
               <th className="py-2 px-4 border-b">No</th>

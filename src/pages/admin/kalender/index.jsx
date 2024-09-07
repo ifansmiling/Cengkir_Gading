@@ -31,7 +31,7 @@ const Kalender = () => {
           <span>Kalender Acara</span>
         </button>
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200">
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md mb-2">
             <thead>
               <tr className="bg-gray-200">
                 <th className="py-2 px-4 border-b text-center">No</th>
