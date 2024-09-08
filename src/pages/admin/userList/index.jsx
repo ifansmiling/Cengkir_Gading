@@ -9,8 +9,8 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [selectedRole, setSelectedRole] = useState(""); // State untuk menyimpan filter role
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State untuk toggle dropdown
+  const [selectedRole, setSelectedRole] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -49,19 +49,19 @@ const UserList = () => {
     }
   };
 
-  // Handle filter role
   const handleRoleFilter = (role) => {
     setSelectedRole(role);
     setDropdownOpen(false);
   };
 
-  // Filter users based on search term and selected role
   useEffect(() => {
     const filtered = users.filter((user) => {
-      const matchesSearch =
-        user.nama.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = user.nama
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
       const matchesRole =
-        selectedRole === "" || user.role.toLowerCase() === selectedRole.toLowerCase();
+        selectedRole === "" ||
+        user.role.toLowerCase() === selectedRole.toLowerCase();
       return matchesSearch && matchesRole;
     });
     setFilteredUsers(filtered);
@@ -145,19 +145,25 @@ const UserList = () => {
                     <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 shadow-lg z-10">
                       <button
                         onClick={() => handleRoleFilter("")}
-                        className="block w-full text-left text-gray-600 px-4 py-2 text-sm hover:bg-gray-100"
+                        className={`block w-full text-left text-gray-600 px-4 py-2 text-sm hover:bg-gray-100 ${
+                          selectedRole === "" ? "bg-gray-100" : ""
+                        }`}
                       >
                         Semua
                       </button>
                       <button
                         onClick={() => handleRoleFilter("User")}
-                        className="block w-full text-left px-4  text-gray-600 py-2 text-sm hover:bg-gray-100"
+                        className={`block w-full text-left text-gray-600 px-4 py-2 text-sm hover:bg-gray-100 ${
+                          selectedRole === "User" ? "bg-gray-100" : ""
+                        }`}
                       >
                         User
                       </button>
                       <button
                         onClick={() => handleRoleFilter("Admin")}
-                        className="block w-full text-left text-gray-600 px-4 py-2 text-sm hover:bg-gray-100"
+                        className={`block w-full text-left text-gray-600 px-4 py-2 text-sm hover:bg-gray-100 ${
+                          selectedRole === "Admin" ? "bg-gray-100" : ""
+                        }`}
                       >
                         Admin
                       </button>

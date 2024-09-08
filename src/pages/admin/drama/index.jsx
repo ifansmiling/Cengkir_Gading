@@ -53,7 +53,7 @@ const Drama = () => {
       });
       setUsers(response.data);
       const usersWithRoleUser = response.data.filter(
-        (user) => user.role === "user"
+        (user) => user.role === "User"
       );
       setFilteredUsers(usersWithRoleUser);
     } catch (error) {
@@ -86,8 +86,11 @@ const Drama = () => {
     setSearchTerm(value);
 
     if (value) {
-      const filtered = userRatings.filter((rating) =>
-        rating.user.nama.toLowerCase().includes(value.toLowerCase())
+      const filtered = userRatings.filter(
+        (rating) =>
+          rating.user &&
+          rating.user.nama &&
+          rating.user.nama.toLowerCase().includes(value.toLowerCase())
       );
       setFilteredRatings(filtered);
     } else {
@@ -98,6 +101,26 @@ const Drama = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleSearch({ target: { value: searchTerm } });
+  };
+
+  const handleDelete = async (ratingId) => {
+    try {
+      const response = await api.delete(`/user-rating/${ratingId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.status === 200) {
+        setFilteredRatings(
+          filteredRatings.filter((rating) => rating.id !== ratingId)
+        );
+        alert("Rating berhasil dihapus.");
+      }
+    } catch (error) {
+      console.error("Gagal menghapus rating:", error);
+      alert("Terjadi kesalahan saat menghapus rating.");
+    }
   };
 
   return (
@@ -173,10 +196,10 @@ const Drama = () => {
                 >
                   <td className="py-2 px-4 border-b border">{index + 1}</td>
                   <td className="py-2 px-4 border-b border">
-                    {rating.user.nama}
+                    {rating.user && rating.user.nama ? rating.user.nama : "-"}
                   </td>
                   <td className="py-2 px-2 border-b border">
-                    {rating.user.nim}
+                    {rating.user && rating.user.nim ? rating.user.nim : "-"}
                   </td>
                   <td className="py-2 px-4 border-b border">
                     <FontAwesomeIcon
@@ -189,7 +212,10 @@ const Drama = () => {
                       <button className="text-blue-500 hover:text-blue-700">
                         <FaEdit />
                       </button>
-                      <button className="text-red-500 hover:text-red-700">
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDelete(rating.id)}
+                      >
                         <FaTrash />
                       </button>
                     </div>

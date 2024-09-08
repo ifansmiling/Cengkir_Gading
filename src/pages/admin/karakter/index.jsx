@@ -27,12 +27,12 @@ const Karakter = () => {
       try {
         const response = await api.get("/user");
         const usersWithRoleUser = response.data.filter(
-          (user) => user.role === "user"
+          (user) => user.role === "User"
         );
         setUsers(usersWithRoleUser);
         setFilteredUsers(usersWithRoleUser);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching users:", error);  
       }
     };
 
