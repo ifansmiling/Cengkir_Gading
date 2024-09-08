@@ -12,6 +12,7 @@ module.exports = {
         "sidebar-heading": ["Poppins", "sans-serif"],
         "sidebar-menu": ["Roboto", "sans-serif"],
         "sidebar-submenu": ["Open Sans", "sans-serif"],
+        "sidebar-menu-admin": ["Work Sans", "sans-serif"],
       },
     },
   },

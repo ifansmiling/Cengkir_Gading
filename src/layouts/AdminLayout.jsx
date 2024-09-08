@@ -29,7 +29,7 @@ const AdminLayout = ({ children }) => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className="w-60 bg-green-700 text-white flex flex-col fixed h-full z-20">
+      <sidebar className="w-60 bg-green-700 text-white flex flex-col fixed h-full z-20">
         <div className="flex items-center justify-center h-20 bg-gray-300">
           <img src="/logo1.png" alt="Cengkir Gading Logo" className="h-16" />
         </div>
@@ -67,7 +67,7 @@ const AdminLayout = ({ children }) => {
               key={menuItem.href}
               to={menuItem.href}
               className={({ isActive }) =>
-                `flex items-center px-4 py-2 rounded border-b border-white ${
+                `flex items-center px-4 py-2 rounded border-b font-sidebar-menu-admin text-base border-white ${
                   isActive
                     ? "bg-gray-700 text-white"
                     : "text-white hover:bg-gray-700"
@@ -79,11 +79,11 @@ const AdminLayout = ({ children }) => {
             </NavLink>
           ))}
         </nav>
-      </aside>
+      </sidebar>
 
       {/* Navbar */}
       <div className="flex flex-col flex-1">
-        <header className="flex items-center justify-between h-20 px-6 bg-green-700 border-b border-gray-200 fixed w-full z-10 ml-60">
+        <nav className="flex items-center justify-between h-20 px-6 bg-green-700 border-b border-gray-200 fixed w-full z-10 ml-60">
           <div className="flex items-center space-x-6">
             <NavLink to="/" className="text-white hover:text-black">
               <FaHome className="text-3xl" />
@@ -103,14 +103,14 @@ const AdminLayout = ({ children }) => {
                 className="w-12 h-12 rounded-full"
               />
               <div className="text-sm">
-                <div className="font-medium text-white text-sm">
+                <div className="font-medium text-white text-sm font-sidebar-submenu">
                   Ardhana Galih
                 </div>
-                <div className="text-white text-xs">Admin</div>
+                <div className="text-gray-900 text-xs font-sidebar-menu">Admin</div>
               </div>
             </div>
           </div>
-        </header>
+        </nav>
 
         {/* Content */}
         <main className="flex-1 p-2 bg-gray-100 mt-20 ml-60 overflow-y-auto">

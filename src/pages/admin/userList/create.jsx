@@ -191,14 +191,14 @@ const CreateUser = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 mb-3"
+              className="w-full bg-green-700 text-white py-2 px-4 rounded-md hover:bg-green-800 mb-3 font-dramatic-body-user text-lg"
             >
               Create User
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 font-dramatic-body-user text-lg"
             >
               Cancel
             </button>

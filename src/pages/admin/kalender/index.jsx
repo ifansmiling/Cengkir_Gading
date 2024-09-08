@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Kalender = () => {
   const [kalenderAcaras, setKalenderAcaras] = useState([]);
@@ -12,21 +13,50 @@ const Kalender = () => {
         const response = await api.get("/kalenderAcara");
         setKalenderAcaras(response.data);
       } catch (error) {
-        console.error("Failed to fetch kalender acara:", error);
+        console.error("Gagal mengambil data kalender acara:", error);
       }
     };
 
     fetchKalenderAcaras();
   }, []);
 
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/admin/kalender/create");
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Apakah Anda yakin ingin menghapus acara ini?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await api.delete(`/kalenderAcara/${id}`);
+      setKalenderAcaras(kalenderAcaras.filter((event) => event.id !== id));
+    } catch (error) {
+      console.error(
+        "Gagal menghapus acara:",
+        error.response?.data?.message || error.message
+      );
+    }
+  };
+  const handleEdit = (id) => {
+    navigate(`/admin/kalender/edit/${id}`);
+  };
+
   return (
     <AdminLayout>
       <div className="p-6">
-        <h1 className="text-2xl font-dramatic-header-user font-bold text-center mb-8 relative w-max mx-auto">
+        <h1 className="text-2xl font-bold text-center mb-8 relative w-max mx-auto font-dramatic-header">
           Kalender Acara
           <span className="block h-1 bg-green-800"></span>
         </h1>
-        <button className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3">
+        <button
+          className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
+          onClick={handleClick}
+        >
           <FaPlus className="mr-2" />
           <span>Kalender Acara</span>
         </button>
@@ -44,16 +74,16 @@ const Kalender = () => {
             <tbody>
               {kalenderAcaras.map((event, index) => (
                 <tr key={event.id} className="hover:bg-gray-100">
-                  <td className="py-2 px-4 border-b border text-center">
+                  <td className="py-2 px-4 border-b text-center">
                     {index + 1}
                   </td>
-                  <td className="py-2 px-4 border-b border text-center">
+                  <td className="py-2 px-4 border-b text-center">
                     {event.judul}
                   </td>
-                  <td className="py-2 px-4 border-b border text-center">
+                  <td className="py-2 px-4 border-b text-center">
                     {new Date(event.tanggal_event).toLocaleDateString()}
                   </td>
-                  <td className="py-2 px-4 border-b border text-center">
+                  <td className="py-2 px-4 border-b text-center">
                     {event.file_path ? (
                       <img
                         src={event.file_path}
@@ -66,10 +96,17 @@ const Kalender = () => {
                   </td>
                   <td className="py-2 px-4 border-b text-center">
                     <div className="flex justify-center space-x-2">
-                      <button className="text-blue-500 hover:text-blue-700">
+                      <button
+                        onClick={() => handleEdit(event.id)}
+                        className="text-blue-500 hover:text-blue-700"
+                      >
                         <FaEdit />
                       </button>
-                      <button className="text-red-500 hover:text-red-700">
+
+                      <button
+                        onClick={() => handleDelete(event.id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
                         <FaTrash />
                       </button>
                     </div>
@@ -79,7 +116,7 @@ const Kalender = () => {
               {kalenderAcaras.length === 0 && (
                 <tr>
                   <td colSpan="5" className="py-2 px-4 text-center">
-                    No events found.
+                    Tidak ada acara.
                   </td>
                 </tr>
               )}
