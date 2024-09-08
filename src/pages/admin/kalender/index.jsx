@@ -42,6 +42,7 @@ const Kalender = () => {
       );
     }
   };
+
   const handleEdit = (id) => {
     navigate(`/admin/kalender/edit/${id}`);
   };
@@ -84,16 +85,22 @@ const Kalender = () => {
                     {new Date(event.tanggal_event).toLocaleDateString()}
                   </td>
                   <td className="py-2 px-4 border-b text-center">
-                    {event.file_path ? (
-                      <img
-                        src={event.file_path}
-                        alt={event.judul}
-                        className="w-20 h-20 object-cover mx-auto rounded"
-                      />
+                    {event.file_paths.length > 0 ? (
+                      <div className="flex justify-center space-x-0">
+                        {event.file_paths.map((filePath, i) => (
+                          <img
+                            key={i}
+                            src={filePath}
+                            alt={`${event.judul}-${i}`}
+                            className="w-20 h-20 object-cover rounded m-0"
+                          />
+                        ))}
+                      </div>
                     ) : (
                       <span>Gambar tidak tersedia</span>
                     )}
                   </td>
+
                   <td className="py-2 px-4 border-b text-center">
                     <div className="flex justify-center space-x-2">
                       <button
@@ -102,7 +109,6 @@ const Kalender = () => {
                       >
                         <FaEdit />
                       </button>
-
                       <button
                         onClick={() => handleDelete(event.id)}
                         className="text-red-500 hover:text-red-700"

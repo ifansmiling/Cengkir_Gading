@@ -10,7 +10,7 @@ const EditCalender = () => {
     judul: "",
     deskripsi: "",
     tanggal_event: "",
-    file: null,
+    files: [],
   });
   const [error, setError] = useState(null);
 
@@ -22,7 +22,7 @@ const EditCalender = () => {
           judul: response.data.judul,
           deskripsi: response.data.deskripsi,
           tanggal_event: response.data.tanggal_event.split("T")[0],
-          file: null, 
+          files: response.data.file_paths || [],
         });
       } catch (error) {
         console.error("Failed to fetch event data:", error);
@@ -39,7 +39,7 @@ const EditCalender = () => {
   };
 
   const handleFileChange = (e) => {
-    setFormData({ ...formData, file: e.target.files[0] });
+    setFormData({ ...formData, files: [...e.target.files] });
   };
 
   const handleSubmit = async (e) => {
@@ -49,8 +49,9 @@ const EditCalender = () => {
     form.append("judul", formData.judul);
     form.append("deskripsi", formData.deskripsi);
     form.append("tanggal_event", formData.tanggal_event);
-    if (formData.file) {
-      form.append("file", formData.file);
+
+    for (const file of formData.files) {
+      form.append("images", file);
     }
 
     try {
@@ -140,15 +141,37 @@ const EditCalender = () => {
 
             <div className="mb-4">
               <label
-                className="block text-gray-700 font-semibold  font-dramatic-subtitle mb-2"
-                htmlFor="file"
+                className="block text-gray-700 font-semibold font-dramatic-subtitle mb-2"
+                htmlFor="files"
               >
-                Upload File (Opsional)
+                Upload Files (Opsional)
               </label>
+              {formData.files.length > 0 && (
+                <div className="mb-4">
+                  <label className="block text-green-700 font-semibold font-dramatic-subtitle mb-2">
+                    Gambar Sebelumnya
+                  </label>
+                  <div className="flex overflow-x-auto">
+                    {formData.files.map(
+                      (filePath, index) =>
+                        typeof filePath === "string" &&
+                        filePath.startsWith("http") && (
+                          <img
+                            key={index}
+                            src={filePath}
+                            alt={`Gambar Acara Sebelumnya ${index + 1}`}
+                            className="w-32 h-32 object-cover mr-2"
+                          />
+                        )
+                    )}
+                  </div>
+                </div>
+              )}
               <input
                 type="file"
-                id="file"
-                name="file"
+                id="files"
+                name="files"
+                multiple
                 onChange={handleFileChange}
                 className="w-full px-4 py-2 border rounded-md hover:border-green-500 focus:border-green-400"
               />

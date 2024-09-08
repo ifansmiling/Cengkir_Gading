@@ -10,7 +10,7 @@ const CreateKalender = () => {
     judul: "",
     deskripsi: "",
     tanggal_event: "",
-    file: null,
+    files: [],
   });
   const [error, setError] = useState(null);
 
@@ -25,7 +25,7 @@ const CreateKalender = () => {
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      file: e.target.files[0],
+      files: Array.from(e.target.files),
     });
   };
 
@@ -35,9 +35,10 @@ const CreateKalender = () => {
     form.append("judul", formData.judul);
     form.append("deskripsi", formData.deskripsi);
     form.append("tanggal_event", formData.tanggal_event);
-    if (formData.file) {
-      form.append("file", formData.file);
-    }
+
+    formData.files.forEach((file) => {
+      form.append("images", file);
+    });
 
     try {
       await api.post("/kalenderAcara", form, {
@@ -45,6 +46,7 @@ const CreateKalender = () => {
       });
       navigate("/admin/kalender");
     } catch (error) {
+      console.error("Submission error:", error);
       setError(error.response?.data?.message || "Error creating event");
     }
   };
@@ -117,8 +119,9 @@ const CreateKalender = () => {
               </label>
               <input
                 type="file"
-                name="file"
+                name="files"
                 onChange={handleFileChange}
+                multiple
                 className="text-gray-600 w-full px-4 py-2 border focus:border-green-400 hover:border-green-500 focus:outline-none rounded-md"
               />
             </div>

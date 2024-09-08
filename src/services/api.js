@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Membuat instance Axios
 const api = axios.create({
   baseURL: "http://localhost:5000/",
   headers: {
@@ -22,6 +21,11 @@ api.interceptors.request.use(
   }
 );
 
+// Fungsi untuk mendapatkan URL gambar dengan baseURL
+const getImageURL = (path) => {
+  return `http://localhost:5000${path}`; 
+};
+
 api.interceptors.response.use(
   (response) => {
     return response;
@@ -38,3 +42,4 @@ api.interceptors.response.use(
 );
 
 export default api;
+export { getImageURL };
