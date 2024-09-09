@@ -37,7 +37,7 @@ const CreateKalender = () => {
     form.append("tanggal_event", formData.tanggal_event);
 
     formData.files.forEach((file) => {
-      form.append("images", file);
+      form.append("file", file);
     });
 
     try {

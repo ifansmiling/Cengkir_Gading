@@ -50,8 +50,10 @@ const EditCalender = () => {
     form.append("deskripsi", formData.deskripsi);
     form.append("tanggal_event", formData.tanggal_event);
 
-    for (const file of formData.files) {
-      form.append("images", file);
+    if (formData.files.length > 0) {
+      for (const file of formData.files) {
+        form.append("file", file);
+      }
     }
 
     try {

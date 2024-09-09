@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Skenario = () => {
   const [skenarios, setSkenarios] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredSkenarios, setFilteredSkenarios] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSkenarios = async () => {
@@ -36,6 +39,10 @@ const Skenario = () => {
     }
   };
 
+  const handleEditClick = (id) => {
+    navigate(`/admin/skenario/edit/${id}`);
+  };
+
   const extractFileName = (filePath) => {
     if (!filePath) return "Tidak ada file";
 
@@ -45,11 +52,27 @@ const Skenario = () => {
     return fileName.charAt(0).toUpperCase() + fileName.split(".")[0].slice(1);
   };
 
+  const handleDeleteClick = async (id) => {
+    try {
+      if (window.confirm("Apakah Anda yakin ingin menghapus skenario ini?")) {
+        await api.delete(`/skenario/${id}`);
+        setSkenarios(skenarios.filter((skenario) => skenario.id !== id));
+        setFilteredSkenarios(
+          filteredSkenarios.filter((skenario) => skenario.id !== id)
+        );
+        alert("Skenario berhasil dihapus");
+      }
+    } catch (error) {
+      console.error("Failed to delete skenario", error);
+      alert("Gagal menghapus skenario");
+    }
+  };
+
   return (
     <AdminLayout>
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto">
+          <h1 className="text-2xl font-bold text-center relative w-max mx-auto font-dramatic-header">
             Perpustakaan Skenario
             <span className="block h-1 bg-green-800"></span>
           </h1>
@@ -96,7 +119,10 @@ const Skenario = () => {
           </button>
         </form>
 
-        <button className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3">
+        <button
+          className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
+          onClick={() => navigate("/admin/skenario/create")}
+        >
           <FaPlus className="mr-2" />
           <span>Tambah Skenario</span>
         </button>
@@ -116,31 +142,42 @@ const Skenario = () => {
               {filteredSkenarios.map((skenario, index) => (
                 <tr key={skenario.id} className="border-b hover:bg-gray-100">
                   <td className="px-4 py-2 border text-center">{index + 1}</td>
-                  <td className="px-4 py-2 border text-center">
+                  <td className="px-2 py-2 border text-center">
                     {skenario.judul}
                   </td>
                   <td className="px-4 py-2 border text-center">
                     {skenario.deskripsi}
                   </td>
-                  <td className="px-4 py-2 border text-center">
-                    {skenario.file_path ? (
-                      <a
-                        href={skenario.file_path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline"
-                      >
-                        {extractFileName(skenario.file_path)}
-                      </a>
+                  <td className="px-2 py-2 border text-center">
+                    {skenario.file_paths.length > 0 ? (
+                      <div className="flex flex-col">
+                        {skenario.file_paths.map((filePath, i) => (
+                          <a
+                            key={i}
+                            href={filePath}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline"
+                          >
+                            {extractFileName(filePath)}
+                          </a>
+                        ))}
+                      </div>
                     ) : (
                       "Tidak ada file"
                     )}
                   </td>
-                  <td className="px-4 py-2 border text-center">
-                    <button className="text-blue-500 hover:text-blue-700 mr-2">
+                  <td className="px-6 py-2 border text-center">
+                    <button
+                      className="text-blue-500 hover:text-blue-700 mr-2"
+                      onClick={() => handleEditClick(skenario.id)}
+                    >
                       <FaEdit />
                     </button>
-                    <button className="text-red-500 hover:text-red-700">
+                    <button
+                      className="text-red-500 hover:text-red-700"
+                      onClick={() => handleDeleteClick(skenario.id)}
+                    >
                       <FaTrash />
                     </button>
                   </td>

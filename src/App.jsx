@@ -15,6 +15,8 @@ import AdminKarakter from "./pages/admin/karakter/index";
 import AdminCreateKarakter from "./pages/admin/karakter/create";
 import AdminEditKarakter from "./pages/admin/karakter/edit";
 import AdminSkenario from "./pages/admin/skenario/index";
+import AdminCreateSkenario from "./pages/admin/skenario/create";
+import AdminEditSkenario from "./pages/admin/skenario/edit";
 import AdminExercise from "./pages/admin/exercise/index";
 
 // Rute Web
@@ -75,6 +77,14 @@ function App() {
         <Route
           path="/admin/skenario"
           element={<ProtectedRoute element={AdminSkenario} />}
+        />
+        <Route
+          path="/admin/skenario/create"
+          element={<ProtectedRoute element={AdminCreateSkenario} />}
+        />
+        <Route
+          path="/admin/skenario/edit/:id"
+          element={<ProtectedRoute element={AdminEditSkenario} />}
         />
         <Route
           path="/admin/exercise"
