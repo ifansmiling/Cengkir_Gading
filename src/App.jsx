@@ -12,6 +12,8 @@ import AdminKalender from "./pages/admin/kalender/index";
 import AdminCreateKalender from "./pages/admin/kalender/create";
 import AdminEditKalender from "./pages/admin/kalender/edit";
 import AdminKarakter from "./pages/admin/karakter/index";
+import AdminCreateKarakter from "./pages/admin/karakter/create";
+import AdminEditKarakter from "./pages/admin/karakter/edit";
 import AdminSkenario from "./pages/admin/skenario/index";
 import AdminExercise from "./pages/admin/exercise/index";
 
@@ -54,13 +56,21 @@ function App() {
           path="/admin/kalender/create"
           element={<ProtectedRoute element={AdminCreateKalender} />}
         />
-         <Route
+        <Route
           path="/admin/kalender/edit/:id"
           element={<ProtectedRoute element={AdminEditKalender} />}
         />
         <Route
           path="/admin/karakter"
           element={<ProtectedRoute element={AdminKarakter} />}
+        />
+        <Route
+          path="/admin/karakter/create"
+          element={<ProtectedRoute element={AdminCreateKarakter} />}
+        />
+        <Route
+          path="/admin/karakter/edit/:id"
+          element={<ProtectedRoute element={AdminEditKarakter} />}
         />
         <Route
           path="/admin/skenario"

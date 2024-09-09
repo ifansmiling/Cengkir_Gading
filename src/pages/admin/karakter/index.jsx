@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
-import { FaEdit, FaTrash, FaPlus, FaClipboardCheck } from "react-icons/fa";
+import { FaEdit, FaTrash, FaClipboardCheck } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Karakter = () => {
   const [evaluasiKarakters, setEvaluasiKarakters] = useState([]);
@@ -11,6 +12,8 @@ const Karakter = () => {
     []
   );
   const [filteredUsers, setFilteredUsers] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvaluasiKarakters = async () => {
@@ -32,7 +35,7 @@ const Karakter = () => {
         setUsers(usersWithRoleUser);
         setFilteredUsers(usersWithRoleUser);
       } catch (error) {
-        console.error("Error fetching users:", error);  
+        console.error("Error fetching users:", error);
       }
     };
 
@@ -57,6 +60,32 @@ const Karakter = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleSearch({ target: { value: searchTerm } });
+  };
+
+  const handleCreateEvaluasi = (userId) => {
+    navigate(`/admin/karakter/create`, { state: { userId } });
+  };
+
+  const handleEditEvaluasi = (id) => {
+    navigate(`/admin/karakter/edit/${id}`);
+  };
+
+  const handleDeleteEvaluasi = async (id) => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus evaluasi ini?")) {
+      try {
+        await api.delete(`/evaluasiKarakter/${id}`);
+        setEvaluasiKarakters((prev) =>
+          prev.filter((evaluasi) => evaluasi.id !== id)
+        );
+        setFilteredEvaluasiKarakters((prev) =>
+          prev.filter((evaluasi) => evaluasi.id !== id)
+        );
+        alert("Evaluasi Karakter berhasil dihapus.");
+      } catch (error) {
+        console.error("Error deleting evaluasi karakter:", error);
+        alert("Gagal menghapus evaluasi karakter.");
+      }
+    }
   };
 
   return (
@@ -130,10 +159,16 @@ const Karakter = () => {
                   <td className="py-2 px-3 border">{item.evaluasi}</td>
                   <td className="py-2 px-6 border">
                     <div className="flex justify-center">
-                      <button className="text-blue-500 hover:text-blue-700 mr-2">
+                      <button
+                        className="text-blue-500 hover:text-blue-700 mr-2"
+                        onClick={() => handleEditEvaluasi(item.id)} 
+                      >
                         <FaEdit />
                       </button>
-                      <button className="text-red-500 hover:text-red-700">
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDeleteEvaluasi(item.id)} 
+                      >
                         <FaTrash />
                       </button>
                     </div>
@@ -172,19 +207,22 @@ const Karakter = () => {
                         evaluasiKarakters.some(
                           (evaluasi) => evaluasi.user?.id === user.id
                         )
-                          ? "text-green-500"
-                          : "text-red-500"
+                          ? "text-green-600"
+                          : "text-red-600"
                       }
                     >
                       {evaluasiKarakters.some(
                         (evaluasi) => evaluasi.user?.id === user.id
                       )
-                        ? "Sudah dievaluasi"
-                        : "Belum dievaluasi"}
+                        ? "Sudah Ada Evaluasi"
+                        : "Belum Ada Evaluasi"}
                     </span>
                   </td>
                   <td className="py-2 px-6 border">
-                    <button className="text-blue-500 hover:text-blue-800">
+                    <button
+                      className="text-green-500 hover:text-green-700"
+                      onClick={() => handleCreateEvaluasi(user.id)}
+                    >
                       <FaClipboardCheck />
                     </button>
                   </td>
