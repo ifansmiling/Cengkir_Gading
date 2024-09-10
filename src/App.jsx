@@ -18,6 +18,8 @@ import AdminSkenario from "./pages/admin/skenario/index";
 import AdminCreateSkenario from "./pages/admin/skenario/create";
 import AdminEditSkenario from "./pages/admin/skenario/edit";
 import AdminExercise from "./pages/admin/exercise/index";
+import AdminCreateExercise from "./pages/admin/exercise/create";
+import AdminEditExercise from "./pages/admin/exercise/edit";
 
 // Rute Web
 import Beranda from "./pages/web/beranda";
@@ -89,6 +91,14 @@ function App() {
         <Route
           path="/admin/exercise"
           element={<ProtectedRoute element={AdminExercise} />}
+        />
+        <Route
+          path="/admin/exercise/create"
+          element={<ProtectedRoute element={AdminCreateExercise} />}
+        />
+         <Route
+          path="/admin/exercise/edit/:id"
+          element={<ProtectedRoute element={AdminEditExercise} />}
         />
 
         {/* Rute Web tanpa proteksi */}

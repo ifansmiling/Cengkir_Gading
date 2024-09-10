@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { FaEdit, FaTrash, FaPlus, FaChevronDown } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Exercise = () => {
   const [exercises, setExercises] = useState([]);
@@ -40,6 +41,16 @@ const Exercise = () => {
     setFilteredExercises(filtered);
   };
 
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/admin/exercise/create");
+  };
+
+  const handleEditClick = (id) => {
+    navigate(`/admin/exercise/edit/${id}`);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,6 +64,30 @@ const Exercise = () => {
 
     fetchData();
   }, []);
+
+  const deleteExercise = async (id) => {
+    try {
+      await api.delete(`/daily-exercise/${id}`);
+
+      const updatedExercises = exercises.filter(
+        (exercise) => exercise.id !== id
+      );
+      setExercises(updatedExercises);
+      setFilteredExercises(updatedExercises);
+    } catch (error) {
+      console.error("Error deleting exercise", error);
+      alert("Gagal menghapus exercise.");
+    }
+  };
+
+  const handleDeleteClick = (id) => {
+    const confirmDelete = window.confirm(
+      "Apakah Anda yakin ingin menghapus exercise ini?"
+    );
+    if (confirmDelete) {
+      deleteExercise(id);
+    }
+  };
 
   return (
     <AdminLayout>
@@ -105,7 +140,10 @@ const Exercise = () => {
           </button>
         </form>
 
-        <button className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3">
+        <button
+          className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
+          onClick={handleClick}
+        >
           <FaPlus className="mr-2" />
           <span>Tambah Exercise</span>
         </button>
@@ -130,7 +168,7 @@ const Exercise = () => {
                       "Artikel",
                       "Buku",
                       "Teori-teori Akting",
-                      "Video",
+                      "Video Tutorial",
                     ].map((type) => (
                       <button
                         key={type}
@@ -165,24 +203,31 @@ const Exercise = () => {
                     {exercise.tipe}
                   </td>
                   <td className="py-2 px-2 border-b border text-center align-middle">
-                    {exercise.file_path ? (
-                      <a
-                        href={exercise.file_path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline"
-                      >
-                        {getOriginalFileName(exercise.file_path)}
-                      </a>
-                    ) : (
-                      "Tidak Ada File"
-                    )}
+                    {exercise.file_path && exercise.file_path.length > 0
+                      ? exercise.file_path.map((path, idx) => (
+                          <a
+                            key={idx}
+                            href={path}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline block"
+                          >
+                            {getOriginalFileName(path)}
+                          </a>
+                        ))
+                      : "Tidak Ada File"}
                   </td>
                   <td className="py-2 px-4 border-b text-center align-middle">
-                    <button className="text-blue-500 hover:text-blue-700 mr-2">
+                    <button
+                      className="text-blue-500 hover:text-blue-700 mr-2"
+                      onClick={() => handleEditClick(exercise.id)}
+                    >
                       <FaEdit />
                     </button>
-                    <button className="text-red-500 hover:text-red-700">
+                    <button
+                      className="text-red-500 hover:text-red-700"
+                      onClick={() => handleDeleteClick(exercise.id)}
+                    >
                       <FaTrash />
                     </button>
                   </td>
