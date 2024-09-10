@@ -51,8 +51,8 @@ const CreateExercise = () => {
         setFormData({ judul: "", deskripsi: "", tipe: "", files: [] });
         setError(null);
         setTimeout(() => {
-          navigate("/admin/exercise"); 
-        }, 1500); 
+          navigate("/admin/exercise");
+        }, 1500);
       }
     } catch (error) {
       setError(error.response?.data?.message || "Error creating exercise");
@@ -69,7 +69,7 @@ const CreateExercise = () => {
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">
-            Tambah Exercise Harian
+            Tambah Exercise
           </h2>
 
           {error && (

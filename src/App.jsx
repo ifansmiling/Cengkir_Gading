@@ -5,6 +5,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 // Rute Admin
 import Dashboard from "./pages/admin/dashboard/index";
 import AdminDrama from "./pages/admin/drama/index";
+import AdminCreateParameter from "./pages/admin/drama/parameter/create";
+import AdminEditParameter from "./pages/admin/drama/parameter/edit";
 import AdminUser from "./pages/admin/userList/index";
 import AdminCreateUser from "./pages/admin/userList/create";
 import AdminEditUser from "./pages/admin/userList/edit";
@@ -39,6 +41,14 @@ function App() {
         <Route
           path="/admin/drama"
           element={<ProtectedRoute element={AdminDrama} />}
+        />
+        <Route
+          path="/admin/drama/parameter/create"
+          element={<ProtectedRoute element={AdminCreateParameter} />}
+        />
+        <Route
+          path="/admin/drama/parameter/edit/:id"
+          element={<ProtectedRoute element={AdminEditParameter} />}
         />
         <Route
           path="/admin/user"
@@ -96,7 +106,7 @@ function App() {
           path="/admin/exercise/create"
           element={<ProtectedRoute element={AdminCreateExercise} />}
         />
-         <Route
+        <Route
           path="/admin/exercise/edit/:id"
           element={<ProtectedRoute element={AdminEditExercise} />}
         />

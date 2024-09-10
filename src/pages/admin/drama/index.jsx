@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FaPlus } from "react-icons/fa";
 import { FaEdit, FaTrash } from "react-icons/fa";
-
+import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
 
 import "./ModalTransisition.css";
@@ -76,11 +76,6 @@ const Drama = () => {
     }
   };
 
-  const handleRowClick = (rating) => {
-    setSelectedRating(rating);
-    setShowModal(true);
-  };
-
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -121,6 +116,41 @@ const Drama = () => {
       console.error("Gagal menghapus rating:", error);
       alert("Terjadi kesalahan saat menghapus rating.");
     }
+  };
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/admin/drama/parameter/create");
+  };
+
+  const handleEditParameter = (id) => {
+    navigate(`/admin/drama/parameter/edit/${id}`);
+  };
+
+  const handleDeleteParameter = async (id) => {
+    if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+      try {
+        const response = await api.delete(`/drama/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setParameters(parameters.filter((parameter) => parameter.id !== id));
+          alert("Drama berhasil dihapus.");
+        }
+      } catch (error) {
+        console.error("Gagal menghapus drama:", error);
+        alert("Terjadi kesalahan saat menghapus drama.");
+      }
+    }
+  };
+
+  const handleShowModal = (rating) => {
+    setSelectedRating(rating);
+    setShowModal(true);
   };
 
   return (
@@ -189,11 +219,7 @@ const Drama = () => {
             </thead>
             <tbody>
               {filteredRatings.map((rating, index) => (
-                <tr
-                  key={rating.id}
-                  className="text-center hover:bg-gray-100 cursor-pointer"
-                  onClick={() => handleRowClick(rating)}
-                >
+                <tr key={rating.id} className="text-center hover:bg-gray-100">
                   <td className="py-2 px-4 border-b border">{index + 1}</td>
                   <td className="py-2 px-4 border-b border">
                     {rating.user && rating.user.nama ? rating.user.nama : "-"}
@@ -204,7 +230,8 @@ const Drama = () => {
                   <td className="py-2 px-4 border-b border">
                     <FontAwesomeIcon
                       icon={faCircleCheck}
-                      className="text-green-500 text-xl hover:text-green-700 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
+                      className="text-green-500 text-xl hover:text-green-700 cursor-pointer"
+                      onClick={() => handleShowModal(rating)} // Panggil handleShowModal saat ikon diklik
                     />
                   </td>
                   <td className="py-2 px-4 border-b">
@@ -271,7 +298,10 @@ const Drama = () => {
           </h1>
         </div>
 
-        <button className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3">
+        <button
+          className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
+          onClick={handleClick}
+        >
           <FaPlus className="mr-2" />
           <span>Tambah Parameter</span>
         </button>
@@ -304,10 +334,16 @@ const Drama = () => {
                   </td>
                   <td className="py-2 px-4 border-b">
                     <div className="flex justify-center gap-2">
-                      <button className="text-blue-500 hover:text-blue-700">
+                      <button
+                        className="text-blue-500 hover:text-blue-700"
+                        onClick={() => handleEditParameter(parameter.id)}
+                      >
                         <FaEdit />
                       </button>
-                      <button className="text-red-500 hover:text-red-700">
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDeleteParameter(parameter.id)}
+                      >
                         <FaTrash />
                       </button>
                     </div>
@@ -319,23 +355,19 @@ const Drama = () => {
         </div>
 
         {/* Modal untuk menampilkan detail rating */}
-        {showModal && selectedRating && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ml-60">
-            <div
-              className={`bg-white p-6 rounded-lg shadow-lg max-w-md w-full modal-enter ${
-                !showModal && "modal-exit"
-              }`}
-            >
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative ml-52">
+              <button
+                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+                onClick={() => setShowModal(false)}
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl ml-32 font-bold text-center text-green-700">
+                <h2 className="text-2xl ml-40 font-bold text-center text-green-700">
                   Detail Rating
                 </h2>
-                <button
-                  className="text-gray-500 hover:text-gray-700 text-xl"
-                  onClick={() => setShowModal(false)}
-                >
-                  <FontAwesomeIcon icon={faTimes} />
-                </button>
               </div>
 
               {/* Tabel untuk Drama dan Rating */}
