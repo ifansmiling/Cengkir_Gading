@@ -20,6 +20,9 @@ const Drama = () => {
   const [filteredRatings, setFilteredRatings] = useState([]);
   const [parameters, setParameters] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUserRatings, setSelectedUserRatings] = useState([]);
+  const [selectedUserName, setSelectedUserName] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -97,6 +100,35 @@ const Drama = () => {
     }
   };
 
+  const openModal = async (userId) => {
+    try {
+      const response = await api.get(`/user-rating/user/${userId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      console.log("Data dari API:", response.data);
+
+      // Memastikan data dari API disimpan di state dengan benar
+      setSelectedUserRatings(response.data.data || []);
+      setSelectedUserName(
+        response.data.data.find((rating) => rating.user_id === userId)?.user
+          ?.nama || ""
+      );
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Gagal mengambil rating pengguna:", error);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedUserRatings([]);
+    setSelectedUserName("");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     handleSearch({ target: { value: searchTerm } });
@@ -130,6 +162,14 @@ const Drama = () => {
         alert("Terjadi kesalahan saat menghapus drama.");
       }
     }
+  };
+
+  const handleIconClick = (userId) => {
+    openModal(userId);
+  };
+
+  const handleClickRating = (userId) => {
+    navigate(`/admin/drama/rating/create/${userId}`);
   };
 
   return (
@@ -209,7 +249,8 @@ const Drama = () => {
                   <td className="py-2 px-4 border-b text-center border">
                     <FontAwesomeIcon
                       icon={faCircleCheck}
-                      className="text-green-500 text-xl"
+                      className="text-green-500 text-xl cursor-pointer"
+                      onClick={() => handleIconClick(rating.user_id)}
                     />
                   </td>
                   <td className="py-2 px-4 border-b">
@@ -233,6 +274,62 @@ const Drama = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Modal */}
+        {isModalOpen && (
+          <div className="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="modal-content bg-white p-6 rounded-lg shadow-lg w-11/12 sm:w-1/3 relative ml-52">
+              <button
+                className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                onClick={closeModal}
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+              <h2 className="text-2xl font-dramatic-header font-bold text-center text-green-800 mb-4">
+                Detail Penilaian
+              </h2>
+              <div>
+                <h3 className="text-lg font-medium">Nama Pengguna:</h3>
+                <p className="text-gray-700 mb-4">{selectedUserName}</p>
+                <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="py-2 px-4 border-b text-center">
+                        Parameter
+                      </th>
+                      <th className="py-2 px-4 border-b text-center">Nilai</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedUserRatings.length > 0 ? (
+                      selectedUserRatings.map((rating) => (
+                        <tr key={rating.id}>
+                          <td className="py-2 px-4 border-b text-center">
+                            {rating.drama
+                              ? rating.drama.nama
+                              : "Unknown Parameter"}
+                          </td>
+                          <td className="py-2 px-4 border-b text-center text-green-600">
+                            {rating.rating}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="2"
+                          className="py-2 px-4 border-b text-center"
+                        >
+                          Data tidak tersedia
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto">
@@ -262,8 +359,8 @@ const Drama = () => {
                       <FontAwesomeIcon
                         icon={faPlus}
                         className="text-blue-500 text-xl hover:text-blue-700 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
+                        onClick={() => handleClickRating(user.id)}
                       />
-                      <span className="ml-2">{user.nilai}</span>
                     </div>
                   </td>
                 </tr>
