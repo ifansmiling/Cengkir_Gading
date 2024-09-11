@@ -19,11 +19,27 @@ const Drama = () => {
   const [userRatings, setUserRatings] = useState([]);
   const [filteredRatings, setFilteredRatings] = useState([]);
   const [parameters, setParameters] = useState([]);
-  const [selectedRating, setSelectedRating] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await api.get("/user", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setUsers(response.data);
+        const usersWithRoleUser = response.data.filter(
+          (user) => user.role === "User"
+        );
+        setFilteredUsers(usersWithRoleUser);
+      } catch (error) {
+        console.error("Gagal mengambil data pengguna:", error);
+      }
+    };
+
     const fetchParameters = async () => {
       try {
         const response = await api.get("/drama", {
@@ -38,43 +54,31 @@ const Drama = () => {
       }
     };
 
+    const fetchUserRatings = async () => {
+      try {
+        const response = await api.get("/user-rating", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        const uniqueRatings = response.data.data.filter(
+          (rating, index, self) =>
+            index === self.findIndex((r) => r.user.nama === rating.user.nama)
+        );
+
+        setUserRatings(uniqueRatings);
+        setFilteredRatings(uniqueRatings);
+      } catch (error) {
+        console.error("Gagal mengambil data user rating:", error);
+      }
+    };
+
     fetchUsers();
-    fetchUserRatings();
     fetchParameters();
+    fetchUserRatings();
   }, []);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await api.get("/user", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setUsers(response.data);
-      const usersWithRoleUser = response.data.filter(
-        (user) => user.role === "User"
-      );
-      setFilteredUsers(usersWithRoleUser);
-    } catch (error) {
-      console.error("Gagal mengambil data pengguna:", error);
-    }
-  };
-
-  const fetchUserRatings = async () => {
-    try {
-      const response = await api.get("/user-rating", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setUserRatings(response.data);
-      setFilteredRatings(response.data);
-    } catch (error) {
-      console.error("Gagal mengambil rating pengguna:", error);
-    }
-  };
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -96,26 +100,6 @@ const Drama = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleSearch({ target: { value: searchTerm } });
-  };
-
-  const handleDelete = async (ratingId) => {
-    try {
-      const response = await api.delete(`/user-rating/${ratingId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      if (response.status === 200) {
-        setFilteredRatings(
-          filteredRatings.filter((rating) => rating.id !== ratingId)
-        );
-        alert("Rating berhasil dihapus.");
-      }
-    } catch (error) {
-      console.error("Gagal menghapus rating:", error);
-      alert("Terjadi kesalahan saat menghapus rating.");
-    }
   };
 
   const navigate = useNavigate();
@@ -146,11 +130,6 @@ const Drama = () => {
         alert("Terjadi kesalahan saat menghapus drama.");
       }
     }
-  };
-
-  const handleShowModal = (rating) => {
-    setSelectedRating(rating);
-    setShowModal(true);
   };
 
   return (
@@ -205,7 +184,7 @@ const Drama = () => {
         </form>
 
         <div className="overflow-x-auto mb-6">
-          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-2">
+          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-6">
             <thead>
               <tr className="bg-gray-200">
                 <th className="py-2 px-4 border-b text-center">No</th>
@@ -222,26 +201,28 @@ const Drama = () => {
                 <tr key={rating.id} className="text-center hover:bg-gray-100">
                   <td className="py-2 px-4 border-b border">{index + 1}</td>
                   <td className="py-2 px-4 border-b border">
-                    {rating.user && rating.user.nama ? rating.user.nama : "-"}
-                  </td>
-                  <td className="py-2 px-2 border-b border">
-                    {rating.user && rating.user.nim ? rating.user.nim : "-"}
+                    {rating.user.nama}
                   </td>
                   <td className="py-2 px-4 border-b border">
+                    {rating.user.nim}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center border">
                     <FontAwesomeIcon
                       icon={faCircleCheck}
-                      className="text-green-500 text-xl hover:text-green-700 cursor-pointer"
-                      onClick={() => handleShowModal(rating)} // Panggil handleShowModal saat ikon diklik
+                      className="text-green-500 text-xl"
                     />
                   </td>
                   <td className="py-2 px-4 border-b">
                     <div className="flex justify-center gap-2">
-                      <button className="text-blue-500 hover:text-blue-700">
+                      <button
+                        className="text-blue-500 hover:text-blue-700"
+                        onClick={() => handleEditRating(rating.id)}
+                      >
                         <FaEdit />
                       </button>
                       <button
                         className="text-red-500 hover:text-red-700"
-                        onClick={() => handleDelete(rating.id)}
+                        onClick={() => handleDeleteRating(rating.id)}
                       >
                         <FaTrash />
                       </button>
@@ -353,45 +334,6 @@ const Drama = () => {
             </tbody>
           </table>
         </div>
-
-        {/* Modal untuk menampilkan detail rating */}
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg relative ml-52">
-              <button
-                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-                onClick={() => setShowModal(false)}
-              >
-                <FontAwesomeIcon icon={faTimes} />
-              </button>
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl ml-40 font-bold text-center text-green-700">
-                  Detail Rating
-                </h2>
-              </div>
-
-              {/* Tabel untuk Drama dan Rating */}
-              <table className="min-w-full text-center table-auto">
-                <thead>
-                  <tr className="bg-gray-200 rounded-lg">
-                    <th className="px-4 py-2 text-gray-700">Drama</th>
-                    <th className="px-4 py-2 text-gray-700">Rating</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-t">
-                    <td className="px-2 py-2 text-gray-800 border-b border">
-                      {selectedRating.drama.nama}
-                    </td>
-                    <td className="px-4 py-2 text-green-600 border-b border">
-                      {selectedRating.rating}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
       </div>
     </AdminLayout>
   );
