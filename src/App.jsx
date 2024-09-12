@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/admin/dashboard/index";
 import AdminDrama from "./pages/admin/drama/index";
 import AdminCreateRating from "./pages/admin/drama/rating/create";
+import AdminEditRating from "./pages/admin/drama/rating/edit";
 import AdminCreateParameter from "./pages/admin/drama/parameter/create";
 import AdminEditParameter from "./pages/admin/drama/parameter/edit";
 import AdminUser from "./pages/admin/userList/index";
@@ -46,6 +47,10 @@ function App() {
         <Route
           path="/admin/drama/rating/create/:id"
           element={<ProtectedRoute element={AdminCreateRating} />}
+        />
+        <Route
+          path="/admin/drama/rating/edit/:id"
+          element={<ProtectedRoute element={AdminEditRating} />}
         />
         <Route
           path="/admin/drama/parameter/create"

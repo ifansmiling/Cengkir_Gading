@@ -66,17 +66,15 @@ const Drama = () => {
           },
         });
 
-        // Ambil data ratings
         const ratings = response.data.data;
 
-        // Mengelompokkan data berdasarkan user_id
         const groupedRatings = ratings.reduce((acc, rating) => {
           if (!acc[rating.user_id]) {
             acc[rating.user_id] = {
               user_id: rating.user_id,
               nama: rating.user.nama,
               nim: rating.user.nim,
-              ratings: [], // Array untuk menyimpan rating
+              ratings: [],
             };
           }
           acc[rating.user_id].ratings.push({
@@ -87,10 +85,8 @@ const Drama = () => {
           return acc;
         }, {});
 
-        // Konversi objek ke array
         const uniqueUserRatings = Object.values(groupedRatings);
 
-        // Setel ratings unik ke state
         setUserRatings(uniqueUserRatings);
         setFilteredRatings(uniqueUserRatings);
       } catch (error) {
@@ -131,7 +127,6 @@ const Drama = () => {
 
       console.log("Data dari API:", response.data);
 
-      // Memastikan data dari API disimpan di state dengan benar
       setSelectedUserRatings(response.data.data || []);
       setSelectedUserName(
         response.data.data.find((rating) => rating.user_id === userId)?.user
@@ -229,6 +224,10 @@ const Drama = () => {
     }
   };
 
+  const handleEditRating = (userId) => {
+    navigate(`/admin/drama/rating/edit/${userId}`);
+  };
+
   return (
     <AdminLayout>
       <div className="p-6">
@@ -311,9 +310,13 @@ const Drama = () => {
                   </td>
                   <td className="py-2 px-4 border-b">
                     <div className="flex justify-center gap-2">
-                      <button className="text-blue-500 hover:text-blue-700">
+                      <button
+                        onClick={() => handleEditRating(user.user_id)}
+                        className="text-blue-500 hover:text-blue-700"
+                      >
                         <FaEdit />
                       </button>
+
                       <button
                         className="text-red-500 hover:text-red-700"
                         onClick={() =>
