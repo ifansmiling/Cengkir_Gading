@@ -66,13 +66,33 @@ const Drama = () => {
           },
         });
 
-        const uniqueRatings = response.data.data.filter(
-          (rating, index, self) =>
-            index === self.findIndex((r) => r.user.nama === rating.user.nama)
-        );
+        // Ambil data ratings
+        const ratings = response.data.data;
 
-        setUserRatings(uniqueRatings);
-        setFilteredRatings(uniqueRatings);
+        // Mengelompokkan data berdasarkan user_id
+        const groupedRatings = ratings.reduce((acc, rating) => {
+          if (!acc[rating.user_id]) {
+            acc[rating.user_id] = {
+              user_id: rating.user_id,
+              nama: rating.user.nama,
+              nim: rating.user.nim,
+              ratings: [], // Array untuk menyimpan rating
+            };
+          }
+          acc[rating.user_id].ratings.push({
+            parameter_id: rating.parameter_id,
+            rating: rating.rating,
+            drama: rating.drama.nama,
+          });
+          return acc;
+        }, {});
+
+        // Konversi objek ke array
+        const uniqueUserRatings = Object.values(groupedRatings);
+
+        // Setel ratings unik ke state
+        setUserRatings(uniqueUserRatings);
+        setFilteredRatings(uniqueUserRatings);
       } catch (error) {
         console.error("Gagal mengambil data user rating:", error);
       }
@@ -172,6 +192,43 @@ const Drama = () => {
     navigate(`/admin/drama/rating/create/${userId}`);
   };
 
+  const handleDeleteUserRating = async (userId, parameterIds) => {
+    if (
+      window.confirm(
+        "Apakah Anda yakin ingin menghapus semua rating pengguna ini dengan parameter yang diberikan?"
+      )
+    ) {
+      try {
+        const response = await api.delete(`/user-rating`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          data: {
+            user_id: userId,
+            parameter_ids: parameterIds,
+          },
+        });
+
+        console.log("Respons dari API:", response);
+
+        if (response.status === 200) {
+          alert("User Rating berhasil dihapus.");
+
+          setUserRatings((prevRatings) =>
+            prevRatings.filter((rating) => rating.user_id !== userId)
+          );
+          setFilteredRatings((prevRatings) =>
+            prevRatings.filter((rating) => rating.user_id !== userId)
+          );
+        }
+      } catch (error) {
+        console.error("Gagal menghapus User Rating:", error);
+        alert("Terjadi kesalahan saat menghapus User Rating.");
+      }
+    }
+  };
+
   return (
     <AdminLayout>
       <div className="p-6">
@@ -237,33 +294,34 @@ const Drama = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredRatings.map((rating, index) => (
-                <tr key={rating.id} className="text-center hover:bg-gray-100">
+              {filteredRatings.map((user, index) => (
+                <tr
+                  key={user.user_id}
+                  className="text-center hover:bg-gray-100"
+                >
                   <td className="py-2 px-4 border-b border">{index + 1}</td>
-                  <td className="py-2 px-4 border-b border">
-                    {rating.user.nama}
-                  </td>
-                  <td className="py-2 px-4 border-b border">
-                    {rating.user.nim}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center border">
+                  <td className="py-2 px-4 border-b border">{user.nama}</td>
+                  <td className="py-2 px-4 border-b border">{user.nim}</td>
+                  <td className="py-2 px-4 border-b text-center">
                     <FontAwesomeIcon
                       icon={faCircleCheck}
                       className="text-green-500 text-xl cursor-pointer"
-                      onClick={() => handleIconClick(rating.user_id)}
+                      onClick={() => handleIconClick(user.user_id)}
                     />
                   </td>
                   <td className="py-2 px-4 border-b">
                     <div className="flex justify-center gap-2">
-                      <button
-                        className="text-blue-500 hover:text-blue-700"
-                        onClick={() => handleEditRating(rating.id)}
-                      >
+                      <button className="text-blue-500 hover:text-blue-700">
                         <FaEdit />
                       </button>
                       <button
                         className="text-red-500 hover:text-red-700"
-                        onClick={() => handleDeleteRating(rating.id)}
+                        onClick={() =>
+                          handleDeleteUserRating(
+                            user.user_id,
+                            user.ratings.map((r) => r.parameter_id)
+                          )
+                        }
                       >
                         <FaTrash />
                       </button>
