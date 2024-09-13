@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../../../layouts/AdminLayout";
 import api from "../../../../services/api";
+import "./style.css";
 
 const EditRating = () => {
   const { id } = useParams();
@@ -61,50 +62,68 @@ const EditRating = () => {
 
   return (
     <AdminLayout>
-      <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-        <h1 className="text-2xl font-bold mb-6">Edit User Rating</h1>
-        <form onSubmit={handleUpdate} className="space-y-6">
-          {userRating.map((ratingData) => (
-            <div
-              key={ratingData.parameter_id}
-              className="flex flex-col items-start"
-            >
-              <label
-                htmlFor={`rating-${ratingData.parameter_id}`}
-                className="block text-sm font-medium text-gray-700"
-              >
-                {ratingData.drama.nama}:
+      <div className="py-6">
+        <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">
+            Edit User Rating
+          </h2>
+
+          <form onSubmit={handleUpdate} className="space-y-6">
+            <div>
+              <label className="block text-xl font-bold font-dramatic-subtitle text-gray-700">
+                Edit Rating Parameter
               </label>
-              <div className="flex items-center space-x-4">
-                <input
-                  id={`rating-${ratingData.parameter_id}`}
-                  type="range"
-                  min="1"
-                  max="100"
-                  value={ratingMap[ratingData.parameter_id] || ""}
-                  onChange={(e) =>
-                    setRatingMap((prevRatings) => ({
-                      ...prevRatings,
-                      [ratingData.parameter_id]: e.target.value,
-                    }))
-                  }
-                  className="mt-1 block w-full h-10 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <span className="text-sm font-medium text-gray-700">
-                  {ratingMap[ratingData.parameter_id] || "0"}
-                </span>
+              <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {userRating.map((ratingData) => (
+                  <div
+                    key={ratingData.parameter_id}
+                    className="flex flex-col items-start"
+                  >
+                    <label
+                      htmlFor={`rating-${ratingData.parameter_id}`}
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      {ratingData.drama.nama}:
+                    </label>
+                    <input
+                      id={`rating-${ratingData.parameter_id}`}
+                      type="range"
+                      min="1"
+                      max="100"
+                      value={ratingMap[ratingData.parameter_id] || 50}
+                      onChange={(e) =>
+                        setRatingMap((prevRatings) => ({
+                          ...prevRatings,
+                          [ratingData.parameter_id]: e.target.value,
+                        }))
+                      }
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-green"
+                    />
+                    <div className="mt-2 text-sm text-gray-500">
+                      {ratingMap[ratingData.parameter_id] || 50} / 100
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
-          <div>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Update
-            </button>
-          </div>
-        </form>
+
+            <div>
+              <button
+                type="submit"
+                className="w-full bg-green-700 font-dramatic-body-user py-2 px-4 rounded-md hover:bg-green-800 text-lg mb-3 text-white"
+              >
+                Update Rating
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/admin/drama")}
+                className="w-full bg-blue-600 text-white font-dramatic-body-user py-2 px-4 rounded-md hover:bg-blue-800 text-lg"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </AdminLayout>
   );

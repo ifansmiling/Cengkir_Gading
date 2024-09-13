@@ -193,7 +193,7 @@ const Exercise = () => {
             {filteredExercises.length > 0 ? (
               filteredExercises.map((exercise, index) => (
                 <tr key={exercise.id} className="hover:bg-gray-100">
-                  <td className="py-2 px-4 border-b border text-center align-middle">
+                  <td className="py-2 px-6 border-b border text-center align-middle">
                     {index + 1}
                   </td>
                   <td className="py-2 px-4 border-b border text-center align-middle">
@@ -217,19 +217,21 @@ const Exercise = () => {
                         ))
                       : "Tidak Ada File"}
                   </td>
-                  <td className="py-2 px-4 border-b text-center align-middle">
-                    <button
-                      className="text-blue-500 hover:text-blue-700 mr-2"
-                      onClick={() => handleEditClick(exercise.id)}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDeleteClick(exercise.id)}
-                    >
-                      <FaTrash />
-                    </button>
+                  <td className="py-2 px-6 border-b text-center align-middle">
+                    <div className="flex justify-center items-center space-x-2">
+                      <button
+                        className="text-blue-500 hover:text-blue-700"
+                        onClick={() => handleEditClick(exercise.id)}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDeleteClick(exercise.id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))

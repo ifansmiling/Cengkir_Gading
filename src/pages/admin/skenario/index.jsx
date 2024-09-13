@@ -167,19 +167,21 @@ const Skenario = () => {
                       "Tidak ada file"
                     )}
                   </td>
-                  <td className="px-6 py-2 border text-center">
-                    <button
-                      className="text-blue-500 hover:text-blue-700 mr-2"
-                      onClick={() => handleEditClick(skenario.id)}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDeleteClick(skenario.id)}
-                    >
-                      <FaTrash />
-                    </button>
+                  <td className="px-6 py-2 border text-center align-middle">
+                    <div className="flex justify-center items-center space-x-2">
+                      <button
+                        className="text-blue-500 hover:text-blue-700"
+                        onClick={() => handleEditClick(skenario.id)}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDeleteClick(skenario.id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

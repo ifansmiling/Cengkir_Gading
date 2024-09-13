@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../../../layouts/AdminLayout";
 import api from "../../../../services/api";
-import { useNavigate } from "react-router-dom";
 
 const CreateRating = () => {
   const { id: userId } = useParams();
@@ -35,57 +34,75 @@ const CreateRating = () => {
       const data = {
         user_id: userId,
         parameter_id: Object.keys(selectedRatings),
-        rating: Object.values(selectedRatings).map((r) => Number(r)), 
+        rating: Object.values(selectedRatings).map((r) => Number(r)),
       };
       await api.post("/user-rating", data);
-      navigate("/admin/drama");
       alert("Rating berhasil dikirim!");
+      navigate("/admin/drama");
     } catch (error) {
       console.error("Error submitting rating:", error);
     }
   };
 
+  const handleCancel = () => {
+    navigate("/admin/drama");
+  };
+
   return (
     <AdminLayout>
-      <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-        <h1 className="text-2xl font-bold mb-6">Buat User Rating</h1>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Pilih Rating per Parameter
-            </label>
-            <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-              {parameters.map((param) => (
-                <div key={param.id} className="flex flex-col items-start">
-                  <label className="block text-sm font-medium text-gray-700">
-                    {param.nama}
-                  </label>
-                  <input
-                    type="range"
-                    min="1"
-                    max="100"
-                    value={selectedRatings[param.id] || 50}
-                    onChange={(e) =>
-                      handleRatingChange(param.id, e.target.value)
-                    }
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                  />
-                  <div className="mt-2 text-sm text-gray-500">
-                    {selectedRatings[param.id] || 50} / 100
+      <div className="py-6">
+        <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">
+            Buat User Rating
+          </h2>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-xl font-bold font-dramatic-subtitle text-gray-700">
+                Pilih Rating Parameter
+              </label>
+              <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {parameters.map((param) => (
+                  <div key={param.id} className="flex flex-col items-start">
+                    <label className="block text-sm font-medium text-gray-700">
+                      {param.nama}
+                    </label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="100"
+                      value={selectedRatings[param.id] || 50}
+                      onChange={(e) =>
+                        handleRatingChange(param.id, e.target.value)
+                      }
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-green" // Tambahkan kelas range-green
+                    />
+
+                    <div className="mt-2 text-sm text-gray-500">
+                      {selectedRatings[param.id] || 50} / 100
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Submit Rating
-            </button>
-          </div>
-        </form>
+
+            <div>
+              <button
+                type="submit"
+                className="w-full bg-green-700 text-white py-2 px-4 rounded-md hover:bg-green-800 font-dramatic-body-user text-lg mb-3"
+              >
+                Submit Rating
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 font-dramatic-body-user text-lg"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </AdminLayout>
   );
