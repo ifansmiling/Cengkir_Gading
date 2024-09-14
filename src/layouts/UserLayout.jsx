@@ -19,6 +19,8 @@ const UserLayout = ({ children }) => {
   const [activeLink, setActiveLink] = useState(window.location.pathname);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const navigate = useNavigate();
+  const nama = localStorage.getItem("nama");
+  const nim = localStorage.getItem("nim");
 
   const toggleExerciseLibrary = () => {
     setIsExerciseOpen(!isExerciseOpen);
@@ -30,7 +32,10 @@ const UserLayout = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    localStorage.removeItem("nim");
+    localStorage.removeItem("nama");
+    localStorage.removeItem("role");
+    navigate("/login");
   };
 
   const handleScroll = () => {
@@ -90,7 +95,7 @@ const UserLayout = ({ children }) => {
               className="text-green-600"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             >
-              20102036
+              {nim || "Unknown User"}
             </Link>
             <button
               onClick={handleLogout}
@@ -108,13 +113,13 @@ const UserLayout = ({ children }) => {
         <aside className="bg-white shadow-xl border-r border-gray-500 h-full overflow-y-auto">
           <div className="p-4 flex flex-col items-center mt-6">
             <div className="mt-2 text-gray-700 font-bold text-lg font-sidebar-heading">
-              Ardhana Galih
+              {nama || "Unknown User"}
             </div>
             <Link
               to="/user/drama"
               className="text-sm text-green-600 mt-1 font-sidebar-menu"
             >
-              20102036
+              {nim || "Unknown User"}
             </Link>
           </div>
           <nav className="p-4">
@@ -311,7 +316,7 @@ const UserLayout = ({ children }) => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-green-600 shadow-md py-10 border-t border-gray-300">
+      <footer className="bg-green-600 shadow-md py-4 border-t border-gray-300">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-start">
           {/* Logo Section */}
           <div className="flex flex-col items-center md:items-start mb-4 md:mb-0">

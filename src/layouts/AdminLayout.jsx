@@ -14,11 +14,17 @@ import {
 } from "react-icons/fa";
 
 const AdminLayout = ({ children }) => {
+  const nama = localStorage.getItem("nama");
+  const role = localStorage.getItem("role");
+
   const handleLogout = async () => {
     try {
       await api.post("/logout");
 
       localStorage.removeItem("token");
+      localStorage.removeItem("nim");
+      localStorage.removeItem("nama");
+      localStorage.removeItem("role");
 
       window.location.href = "/login";
     } catch (error) {
@@ -104,9 +110,11 @@ const AdminLayout = ({ children }) => {
               />
               <div className="text-sm">
                 <div className="font-medium text-white text-sm font-sidebar-submenu">
-                  Ardhana Galih
+                  {nama || "Unknown User"}
                 </div>
-                <div className="text-gray-900 text-xs font-sidebar-menu">Admin</div>
+                <div className="text-gray-900 text-xs font-sidebar-menu">
+                  {role || "User"}
+                </div>
               </div>
             </div>
           </div>

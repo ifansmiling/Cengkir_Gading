@@ -20,9 +20,12 @@ const Login = () => {
         kataSandi: password,
       });
 
-      const { token, role } = response.data;
+      const { token, role, nama, nim } = response.data;
 
       localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
+      localStorage.setItem("nama", nama);
+      localStorage.setItem("nim", nim);
 
       if (role === "Admin") {
         navigate("/admin/dashboard");
