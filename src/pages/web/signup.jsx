@@ -132,7 +132,7 @@ const Signup = () => {
                 required
               />
               <div
-                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-600 mt-6"
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-600 mt-6 hover:text-green-500"
                 onClick={togglePasswordVisibility}
               >
                 {showPassword ? <FiEyeOff size={19} /> : <FiEye size={19} />}
@@ -156,7 +156,7 @@ const Signup = () => {
                 required
               />
               <div
-                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-600 mt-6"
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-600 mt-6 hover:text-green-500"
                 onClick={toggleConfirmPasswordVisibility}
               >
                 {showConfirmPassword ? (

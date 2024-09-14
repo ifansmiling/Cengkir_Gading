@@ -11,35 +11,25 @@ import {
   FaSignOutAlt,
   FaArrowUp,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const UserLayout = ({ children }) => {
-  const [isDramaLibraryOpen, setIsDramaLibraryOpen] = useState(false);
   const [isExerciseOpen, setIsExerciseOpen] = useState(false);
   const [isScenarioLibraryOpen, setIsScenarioLibraryOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState(null);
+  const [activeLink, setActiveLink] = useState(window.location.pathname);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const navigate = useNavigate();
 
-  const toggleDramaLibrary = () => {
-    setIsDramaLibraryOpen(!isDramaLibraryOpen);
-    setActiveItem("drama");
-  };
-
   const toggleExerciseLibrary = () => {
     setIsExerciseOpen(!isExerciseOpen);
-    setActiveItem("exercise");
   };
 
   const toggleScenarioLibrary = () => {
     setIsScenarioLibraryOpen(!isScenarioLibraryOpen);
-    setActiveItem("scenario");
   };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-
     navigate("/");
   };
 
@@ -58,6 +48,10 @@ const UserLayout = ({ children }) => {
     });
   };
 
+  const handleLinkClick = (path) => {
+    setActiveLink(path);
+  };
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -69,7 +63,11 @@ const UserLayout = ({ children }) => {
       <nav className="bg-white shadow-sm px-3 py-2 fixed top-0 left-0 right-0 z-10 border-b border-gray-300">
         <div className="flex items-center justify-between">
           <div className="text-lg font-bold flex items-center space-x-2 font-dramatic-header-user">
-            <Link to="/user/drama" className="flex items-center space-x-2">
+            <Link
+              to="/user/drama"
+              className="flex items-center space-x-2"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            >
               <FaDoorOpen className="text-green-600 text-2xl" />
               <span>Welcome To Cengkir Gading</span>
             </Link>
@@ -81,12 +79,17 @@ const UserLayout = ({ children }) => {
                 src="/logo1.png"
                 alt="Logo"
                 className="w-48 h-auto"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 style={{ maxWidth: "none", maxHeight: "none" }}
               />
             </Link>
           </div>
           <div className="flex items-center space-x-2 font-sidebar-menu">
-            <Link to="/user/drama" className="text-green-600">
+            <Link
+              to="/user/drama"
+              className="text-green-600"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            >
               20102036
             </Link>
             <button
@@ -102,48 +105,53 @@ const UserLayout = ({ children }) => {
       {/* Main Content */}
       <div className="flex flex-1 pt-16">
         {/* Sidebar */}
-        <sidebar className="bg-white shadow-xl border-r border-gray-500 h-full overflow-y-auto">
+        <aside className="bg-white shadow-xl border-r border-gray-500 h-full overflow-y-auto">
           <div className="p-4 flex flex-col items-center mt-6">
             <div className="mt-2 text-gray-700 font-bold text-lg font-sidebar-heading">
               Ardhana Galih
             </div>
-            <a
-              href="/user/drama"
+            <Link
+              to="/user/drama"
               className="text-sm text-green-600 mt-1 font-sidebar-menu"
             >
               20102036
-            </a>
+            </Link>
           </div>
           <nav className="p-4">
             <ul>
+              {/* Drama Library */}
               <li className="mb-2">
-                <a
-                  href="/user/drama"
+                <Link
+                  to="/user/drama"
                   className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
-                    activeItem === "drama" || isDramaLibraryOpen
-                      ? "text-green-700"
-                      : "hover:text-green-700"
+                    activeLink === "/user/drama"
+                      ? "bg-green-700 text-white"
+                      : "hover:bg-green-700 hover:text-white"
                   }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleDramaLibrary();
+                  onClick={() => {
+                    handleLinkClick("/user/drama");
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
                   <FaTheaterMasks className="mr-3 text-xl" />
                   <span>Perpustakaan Drama</span>
-                </a>
+                </Link>
               </li>
+
+              {/* Daily Exercise */}
               <li className="mb-2">
-                <a
-                  href="/user/daily-exercise"
+                <Link
+                  to="/user/daily-exercise"
                   className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
-                    activeItem === "exercise" || isExerciseOpen
-                      ? "text-green-700"
-                      : "hover:text-green-700"
+                    activeLink === "/user/daily-exercise" || isExerciseOpen
+                      ? "bg-green-700 text-white"
+                      : "hover:bg-green-700 hover:text-white"
                   }`}
                   onClick={(e) => {
                     e.preventDefault();
                     toggleExerciseLibrary();
+                    handleLinkClick("/user/daily-exercise");
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
                   <FaRunning className="mr-3 text-xl" />
@@ -153,47 +161,59 @@ const UserLayout = ({ children }) => {
                       isExerciseOpen ? "transform rotate-180" : ""
                     }`}
                   />
-                </a>
+                </Link>
                 {isExerciseOpen && (
                   <ul className="ml-8 mt-2 space-y-2">
                     <li>
-                      <a
-                        href="/user/daily-exercise/artikel"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu "
+                      <Link
+                        to="/user/daily-exercise/artikel"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
                       >
                         Artikel
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
-                        href="/user/daily-exercise/buku"
+                      <Link
+                        to="/user/daily-exercise/buku"
                         className="text-gray-600 hover:text-green-700 font-sidebar-menu"
                       >
                         Buku
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
-                        href="/user/daily-exercise/akting"
+                      <Link
+                        to="/user/daily-exercise/akting"
                         className="text-gray-600 hover:text-green-700 font-sidebar-menu"
                       >
                         Teori-teori Akting
-                      </a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/user/daily-exercise/video"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
+                      >
+                        Video
+                      </Link>
                     </li>
                   </ul>
                 )}
               </li>
+
+              {/* Perpustakaan Skenario */}
               <li className="mb-2">
-                <a
-                  href="/user/skenario"
+                <Link
+                  to="/user/skenario"
                   className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
-                    activeItem === "scenario" || isScenarioLibraryOpen
-                      ? "text-green-700"
-                      : "hover:text-green-700"
+                    activeLink === "/user/skenario" || isScenarioLibraryOpen
+                      ? "bg-green-700 text-white"
+                      : "hover:bg-green-700 hover:text-white"
                   }`}
                   onClick={(e) => {
                     e.preventDefault();
                     toggleScenarioLibrary();
+                    handleLinkClick("/user/skenario");
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
                   <FaBook className="mr-3 text-xl" />
@@ -203,58 +223,88 @@ const UserLayout = ({ children }) => {
                       isScenarioLibraryOpen ? "transform rotate-180" : ""
                     }`}
                   />
-                </a>
+                </Link>
                 {isScenarioLibraryOpen && (
                   <ul className="ml-8 mt-2 space-y-2">
                     <li>
-                      <a
-                        href="/user/skenario/cerita-drama"
+                      <Link
+                        to="/user/skenario/cerita-drama"
                         className="text-gray-600 hover:text-green-700 font-sidebar-menu"
                       >
                         Cerita Drama
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a
-                        href="/user/skenario/cerita-pendek"
+                      <Link
+                        to="/user/skenario/cerita-pendek"
                         className="text-gray-600 hover:text-green-700 font-sidebar-menu"
                       >
                         Cerita Pendek
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 )}
               </li>
+
+              {/* Evaluasi Karakter */}
               <li className="mb-2">
-                <a
-                  href="/user/evaluasi-karakter"
-                  className="text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 hover:text-green-700"
+                <Link
+                  to="/user/evaluasi-karakter"
+                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                    activeLink === "/user/evaluasi-karakter"
+                      ? "bg-green-700 text-white"
+                      : "hover:bg-green-700 hover:text-white"
+                  }`}
+                  onClick={() => {
+                    handleLinkClick("/user/evaluasi-karakter");
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 >
                   <FaUserCheck className="mr-3 text-xl" />
                   <span>Evaluasi Karakter</span>
-                </a>
+                </Link>
               </li>
+
+              {/* Kalender Acara */}
               <li className="mb-2">
-                <a
-                  href="/user/kalender-acara"
-                  className="text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 hover:text-green-700"
+                <Link
+                  to="/user/kalender-acara"
+                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                    activeLink === "/user/kalender-acara"
+                      ? "bg-green-700 text-white"
+                      : "hover:bg-green-700 hover:text-white"
+                  }`}
+                  onClick={() => {
+                    handleLinkClick("/user/kalender-acara");
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 >
                   <FaCalendarAlt className="mr-3 text-xl" />
                   <span>Kalender Acara</span>
-                </a>
+                </Link>
               </li>
+
+              {/* Kontak */}
               <li className="mb-2">
-                <a
-                  href="/user/kontak"
-                  className="text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 hover:text-green-700"
+                <Link
+                  to="/user/kontak"
+                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                    activeLink === "/user/kontak"
+                      ? "bg-green-700 text-white"
+                      : "hover:bg-green-700 hover:text-white"
+                  }`}
+                  onClick={() => {
+                    handleLinkClick("/user/kontak");
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 >
                   <FaPhone className="mr-3 text-xl" />
-                  <span>Kontak & Dukungan</span>
-                </a>
+                  <span>Kontak</span>
+                </Link>
               </li>
             </ul>
           </nav>
-        </sidebar>
+        </aside>
 
         {/* Content */}
         <main className="flex-1 mt-6">{children}</main>
@@ -265,13 +315,13 @@ const UserLayout = ({ children }) => {
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-start">
           {/* Logo Section */}
           <div className="flex flex-col items-center md:items-start mb-4 md:mb-0">
-            <a href="/user/drama" onClick={scrollToTop}>
+            <Link to="/user/drama" onClick={scrollToTop}>
               <img
                 src="/logo2.png"
                 alt="Logo"
                 className="w-36 mb-2 cursor-pointer"
               />
-            </a>
+            </Link>
             <p className="text-white text-sm text-center md:text-left font-dramatic-body-user">
               © 2024 Pasar Lelang Drama Cengkir Gading. All rights reserved.
             </p>
@@ -284,58 +334,58 @@ const UserLayout = ({ children }) => {
             </h3>
             <ul className="space-y-2 font-dramatic-body">
               <li>
-                <a
-                  href="/perpustakaan-drama"
+                <Link
+                  to="/user/drama"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >
                   Perpustakaan Drama
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/daily-exercise"
+                <Link
+                  to="/daily-exercise"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >
                   Daily Exercise
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/perpustakaan-skenario"
+                <Link
+                  to="/perpustakaan-skenario"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >
                   Perpustakaan Skenario
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/evaluasi-karakter"
+                <Link
+                  to="/evaluasi-karakter"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >
                   Evaluasi Karakter
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/kalender-acara"
+                <Link
+                  to="/user/kalender-acara"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >
                   Kalender Acara
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/kontak-dukungan"
+                <Link
+                  to="/kontak-dukungan"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >
                   Kontak dan Dukungan
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

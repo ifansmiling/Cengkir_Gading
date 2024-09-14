@@ -28,7 +28,7 @@ const BerandaLayout = ({ children }) => {
             Beranda
           </a>
         </div>
-        <div className="flex-1 flex justify-center ml-28">
+        <div className="flex-1 flex justify-center ml-40">
           <a href="/">
             <img src="/logo1.png" alt="Company Logo" className="w-44 h-auto" />
           </a>
