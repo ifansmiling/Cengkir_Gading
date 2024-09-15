@@ -20,12 +20,13 @@ const Login = () => {
         kataSandi: password,
       });
 
-      const { token, role, nama, nim } = response.data;
+      const { token, role, nama, nim, userId } = response.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
       localStorage.setItem("nama", nama);
       localStorage.setItem("nim", nim);
+      localStorage.setItem("id", userId);
 
       if (role === "Admin") {
         navigate("/admin/dashboard");

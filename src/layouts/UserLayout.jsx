@@ -15,19 +15,15 @@ import { useNavigate, Link } from "react-router-dom";
 
 const UserLayout = ({ children }) => {
   const [isExerciseOpen, setIsExerciseOpen] = useState(false);
-  const [isScenarioLibraryOpen, setIsScenarioLibraryOpen] = useState(false);
   const [activeLink, setActiveLink] = useState(window.location.pathname);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const navigate = useNavigate();
   const nama = localStorage.getItem("nama");
   const nim = localStorage.getItem("nim");
+  const id = localStorage.getItem("id");
 
   const toggleExerciseLibrary = () => {
     setIsExerciseOpen(!isExerciseOpen);
-  };
-
-  const toggleScenarioLibrary = () => {
-    setIsScenarioLibraryOpen(!isScenarioLibraryOpen);
   };
 
   const handleLogout = () => {
@@ -35,6 +31,7 @@ const UserLayout = ({ children }) => {
     localStorage.removeItem("nim");
     localStorage.removeItem("nama");
     localStorage.removeItem("role");
+    localStorage.removeItem("id");
     navigate("/login");
   };
 
@@ -210,65 +207,40 @@ const UserLayout = ({ children }) => {
                 <Link
                   to="/user/skenario"
                   className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
-                    activeLink === "/user/skenario" || isScenarioLibraryOpen
+                    activeLink === "/user/skenario"
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
                   }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleScenarioLibrary();
+                  onClick={() => {
                     handleLinkClick("/user/skenario");
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
                   <FaBook className="mr-3 text-xl" />
                   <span>Perpustakaan Skenario</span>
-                  <FaChevronDown
-                    className={`ml-2 transition-transform ${
-                      isScenarioLibraryOpen ? "transform rotate-180" : ""
-                    }`}
-                  />
                 </Link>
-                {isScenarioLibraryOpen && (
-                  <ul className="ml-8 mt-2 space-y-2">
-                    <li>
-                      <Link
-                        to="/user/skenario/cerita-drama"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
-                      >
-                        Cerita Drama
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/user/skenario/cerita-pendek"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
-                      >
-                        Cerita Pendek
-                      </Link>
-                    </li>
-                  </ul>
-                )}
               </li>
 
               {/* Evaluasi Karakter */}
-              <li className="mb-2">
-                <Link
-                  to="/user/evaluasi-karakter"
-                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
-                    activeLink === "/user/evaluasi-karakter"
-                      ? "bg-green-700 text-white"
-                      : "hover:bg-green-700 hover:text-white"
-                  }`}
-                  onClick={() => {
-                    handleLinkClick("/user/evaluasi-karakter");
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                >
-                  <FaUserCheck className="mr-3 text-xl" />
-                  <span>Evaluasi Karakter</span>
-                </Link>
-              </li>
+              {id && (
+                <li className="mb-2">
+                  <Link
+                    to={`/user/evaluasi-karakter/${id}`}
+                    className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                      activeLink === `/user/evaluasi-karakter/${id}`
+                        ? "bg-green-700 text-white"
+                        : "hover:bg-green-700 hover:text-white"
+                    }`}
+                    onClick={() => {
+                      handleLinkClick(`/user/evaluasi-karakter/${id}`);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                  >
+                    <FaUserCheck className="mr-3 text-xl" />
+                    <span>Evaluasi Karakter</span>
+                  </Link>
+                </li>
+              )}
 
               {/* Kalender Acara */}
               <li className="mb-2">

@@ -25,6 +25,7 @@ const AdminLayout = ({ children }) => {
       localStorage.removeItem("nim");
       localStorage.removeItem("nama");
       localStorage.removeItem("role");
+      localStorage.removeItem("id");
 
       window.location.href = "/login";
     } catch (error) {
