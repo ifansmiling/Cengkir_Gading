@@ -109,7 +109,7 @@ const UserLayout = ({ children }) => {
         {/* Sidebar */}
         <aside className="bg-white shadow-xl border-r border-gray-500 h-full overflow-y-auto">
           <div className="p-4 flex flex-col items-center mt-6">
-            <div className="mt-2 text-gray-700 font-bold text-lg font-sidebar-heading">
+            <div className="mt-2 text-gray-700 font-bold text-base font-sidebar-heading">
               {nama || "Unknown User"}
             </div>
             <Link
@@ -125,7 +125,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/drama"
-                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-gray-700 text-base font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/drama"
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -144,7 +144,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/daily-exercise"
-                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-gray-700 text-base font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/daily-exercise" || isExerciseOpen
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -276,7 +276,7 @@ const UserLayout = ({ children }) => {
                   }}
                 >
                   <FaPhone className="mr-3 text-xl" />
-                  <span>Kontak</span>
+                  <span>Kontak & Dukungan</span>
                 </Link>
               </li>
             </ul>
@@ -300,7 +300,7 @@ const UserLayout = ({ children }) => {
               />
             </Link>
             <p className="text-white text-sm text-center md:text-left font-dramatic-body-user">
-              © 2024 Pasar Lelang Drama Cengkir Gading. All rights reserved.
+              © 2024 Pusat Latihan Drama Cengkir Gading. All rights reserved.
             </p>
           </div>
 
@@ -339,7 +339,7 @@ const UserLayout = ({ children }) => {
               </li>
               <li>
                 <Link
-                  to="/evaluasi-karakter"
+                  to="/user/evaluasi-karakter/${id}"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >
@@ -357,7 +357,7 @@ const UserLayout = ({ children }) => {
               </li>
               <li>
                 <Link
-                  to="/kontak-dukungan"
+                  to="/user/kontak"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >

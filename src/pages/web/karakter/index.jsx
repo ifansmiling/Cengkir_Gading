@@ -47,54 +47,67 @@ const EvaluasiKarakter = () => {
 
   return (
     <UserLayout>
-      <div className="bg-white min-h-screen py-8 relative">
-        <div className="max-w-5xl mx-auto px-4 bg-white  mt-4">
-          <h1 className="text-4xl font-bold text-center text-green-700 mb-10">
-            Evaluasi Karakter Drama
+      <div className="bg-white min-h-screen py-8">
+        <div className="max-w-full mx-auto px-4">
+          {" "}
+          <h1 className="font-dramatic-header text-3xl font-bold text-center text-green-700 mb-8">
+            Evaluasi Karakter Anggota
           </h1>
-
           {message && (
-            <div className="bg-yellow-100 p-4 text-yellow-700 text-center mb-4">
+            <div className="bg-white p-4 text-red-500 text-center mb-4 rounded-md shadow-md">
               {message}
             </div>
           )}
-
           {evaluation && evaluation.length > 0 ? (
-            evaluation.map((evalItem) => (
-              <div key={evalItem.id} className="bg-gray-50 shadow-lg p-6 mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                  {evalItem.judul_evaluasi}
-                </h2>
+            <div className="grid grid-cols-1 gap-8">
+              {" "}
+              {evaluation.map((evalItem) => (
+                <div
+                  key={evalItem.id}
+                  className="bg-white shadow-md p-6 rounded-lg hover:bg-gray-50 transition-all duration-300 w-full"
+                >
+                  <h2 className="font-dramatic-body-user text-xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-300 pb-2 text-center">
+                    {evalItem.judul_evaluasi}
+                  </h2>
 
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold text-gray-700">
-                    Kekurangan:
-                  </h3>
-                  <ul className="list-disc list-inside mt-2 space-y-2">
-                    {evalItem.kekurangan?.split("\n").map((weakness, index) => (
-                      <li key={index} className="text-gray-600">
-                        {weakness}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                  <div className="mb-4">
+                    <h3 className="font-dramatic-body-user text-lg font-bold text-gray-700">
+                      Kekurangan:
+                    </h3>
+                    <ul className="list-disc list-inside mt-2 space-y-2 text-justify">
+                      {evalItem.kekurangan
+                        ?.split("\n")
+                        .map((weakness, index) => (
+                          <li
+                            key={index}
+                            className="text-gray-600 font-dramatic-subtitle"
+                          >
+                            {weakness}
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
 
-                <div>
-                  <h3 className="text-xl font-bold text-gray-700">
-                    Evaluasi yang Harus Dilakukan:
-                  </h3>
-                  <ul className="list-disc list-inside mt-2 space-y-2">
-                    {evalItem.evaluasi
-                      ?.split("\n")
-                      .map((improvement, index) => (
-                        <li key={index} className="text-gray-600">
-                          {improvement}
-                        </li>
-                      ))}
-                  </ul>
+                  <div>
+                    <h3 className="font-dramatic-body-user text-lg font-bold text-gray-700">
+                      Evaluasi yang Harus Dilakukan:
+                    </h3>
+                    <ul className="list-disc list-inside mt-2 space-y-2 text-justify">
+                      {evalItem.evaluasi
+                        ?.split("\n")
+                        .map((improvement, index) => (
+                          <li
+                            key={index}
+                            className="text-gray-600 font-dramatic-subtitle"
+                          >
+                            {improvement}
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))}
+            </div>
           ) : (
             <p className="text-center text-gray-700"></p>
           )}

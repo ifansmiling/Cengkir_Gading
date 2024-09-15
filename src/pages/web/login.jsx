@@ -78,7 +78,7 @@ const Login = () => {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded transition duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
+                className="w-full px-4 py-2 border border-gray-300 rounded duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                 placeholder="Masukkan email kamu"
                 required
               />
@@ -93,7 +93,7 @@ const Login = () => {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded transition duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
+                className="w-full px-4 py-2 border border-gray-300 rounded duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                 placeholder="Masukkan kata sandi kamu"
                 required
               />

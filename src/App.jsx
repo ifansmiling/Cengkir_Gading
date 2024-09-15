@@ -32,6 +32,7 @@ import SignUp from "./pages/web/signup";
 import Drama from "./pages/web/drama/index";
 import KalenderAcara from "./pages/web/kalender/index";
 import EvaluasiKarakter from "./pages/web/karakter/index";
+import KontakDukungan from "./pages/web/kontak/index";
 
 function App() {
   return (
@@ -140,6 +141,10 @@ function App() {
         <Route
           path="/user/evaluasi-karakter/:id"
           element={<ProtectedRoute element={EvaluasiKarakter} />}
+        />
+         <Route
+          path="/user/kontak"
+          element={<ProtectedRoute element={KontakDukungan} />}
         />
       </Routes>
     </Router>
