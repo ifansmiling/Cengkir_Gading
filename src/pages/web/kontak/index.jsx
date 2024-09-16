@@ -24,10 +24,12 @@ const Kontak = () => {
     <UserLayout>
       <div className="bg-white min-h-screen py-10">
         <div className="max-w-4xl mx-auto px-6">
-          <h1 className="text-3xl font-dramatic-header font-bold text-center text-green-700 mb-8">
-            Kontak dan Dukungan
-          </h1>
-          <p className="text-justify text-sm text-gray-600 mb-6 font-dramatic-body-user leading-relaxed">
+          <div className="flex justify-center mb-10">
+            <h1 className="font-event-header text-3xl font-bold text-green-800 border-b-2 border-green-800 inline-block">
+              Kontak dan Dukungan
+            </h1>
+          </div>
+          <p className="text-justify text-base text-gray-600 mb-6 font-dramatic-body-user leading-relaxed">
             Silahkan hubungi kami jika ada yang perlu ditanyakan mengenai
             latihan, evaluasi, atau dukungan teknis lainnya. Website Pusat
             Latihan Cengkir Gading adalah platform yang didedikasikan untuk

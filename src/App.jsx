@@ -33,6 +33,7 @@ import Drama from "./pages/web/drama/index";
 import KalenderAcara from "./pages/web/kalender/index";
 import EvaluasiKarakter from "./pages/web/karakter/index";
 import KontakDukungan from "./pages/web/kontak/index";
+import Skenario from "./pages/web/skenario/index";
 
 function App() {
   return (
@@ -142,9 +143,13 @@ function App() {
           path="/user/evaluasi-karakter/:id"
           element={<ProtectedRoute element={EvaluasiKarakter} />}
         />
-         <Route
+        <Route
           path="/user/kontak"
           element={<ProtectedRoute element={KontakDukungan} />}
+        />
+        <Route
+          path="/user/skenario"
+          element={<ProtectedRoute element={Skenario} />}
         />
       </Routes>
     </Router>

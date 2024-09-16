@@ -50,7 +50,7 @@ const EvaluasiKarakter = () => {
       <div className="bg-white min-h-screen py-8">
         <div className="max-w-full mx-auto px-4">
           {" "}
-          <h1 className="font-dramatic-header text-3xl font-bold text-center text-green-700 mb-8">
+          <h1 className="font-dramatic-header text-3xl font-extrabold text-left text-green-800 mb-10 border-b-2 border-green-800 inline-block">
             Evaluasi Karakter Anggota
           </h1>
           {message && (
@@ -66,7 +66,7 @@ const EvaluasiKarakter = () => {
                   key={evalItem.id}
                   className="bg-white shadow-md p-6 rounded-lg hover:bg-gray-50 transition-all duration-300 w-full"
                 >
-                  <h2 className="font-dramatic-body-user text-xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-300 pb-2 text-center">
+                  <h2 className="font-dramatic-body-user text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-300 pb-2 text-center">
                     {evalItem.judul_evaluasi}
                   </h2>
 
