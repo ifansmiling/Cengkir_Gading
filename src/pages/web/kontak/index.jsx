@@ -25,11 +25,11 @@ const Kontak = () => {
       <div className="bg-white min-h-screen py-10">
         <div className="max-w-4xl mx-auto px-6">
           <div className="flex justify-center mb-10">
-            <h1 className="font-event-header text-3xl font-bold text-green-800 border-b-2 border-green-800 inline-block">
+            <h1 className="font-dramatic-header text-2xl font-extrabold text-left text-green-800 underline underline-offset-2 decoration-green-800">
               Kontak dan Dukungan
             </h1>
           </div>
-          <p className="text-justify text-base text-gray-600 mb-6 font-dramatic-body-user leading-relaxed">
+          <p className="text-justify text-sm text-gray-600 mb-6 font-dramatic-body-user leading-relaxed">
             Silahkan hubungi kami jika ada yang perlu ditanyakan mengenai
             latihan, evaluasi, atau dukungan teknis lainnya. Website Pusat
             Latihan Cengkir Gading adalah platform yang didedikasikan untuk
@@ -46,12 +46,12 @@ const Kontak = () => {
           <div className="bg-gray-100 shadow-md rounded-lg p-8">
             <form className="space-y-4">
               <div>
-                <label className="block text-base font-dramatic-body-user text-gray-700">
+                <label className="block text-sm font-dramatic-body-user text-gray-700">
                   Nama
                 </label>
                 <input
                   type="text"
-                  className="font-dramatic-body-user mt-1 block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
+                  className="text-sm font-dramatic-body-user mt-1 block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                   placeholder="Nama Anda"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -59,12 +59,12 @@ const Kontak = () => {
               </div>
 
               <div>
-                <label className="font-dramatic-body-user block text-base font-medium text-gray-700">
+                <label className="font-dramatic-body-user block text-sm font-medium text-gray-700">
                   NIM
                 </label>
                 <input
                   type="text"
-                  className="font-dramatic-body-user mt-1 block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
+                  className="text-sm font-dramatic-body-user mt-1 block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                   placeholder="Nomor Induk Mahasiswa"
                   value={nim}
                   onChange={(e) => setNim(e.target.value)}
@@ -72,11 +72,11 @@ const Kontak = () => {
               </div>
 
               <div>
-                <label className="font-dramatic-body-user block text-lg font-medium text-gray-700">
+                <label className="font-dramatic-body-user block text-base font-medium text-gray-700">
                   Pesan
                 </label>
                 <textarea
-                  className="font-dramatic-body-user mt-1 block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
+                  className="text-sm font-dramatic-body-user mt-1 block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm duration-300 focus:border-green-400 hover:border-green-400 focus:outline-none"
                   placeholder="Tuliskan pesan Anda"
                   rows={4}
                   value={message}
@@ -86,7 +86,7 @@ const Kontak = () => {
 
               <button
                 type="button"
-                className="font-event-subtext w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg flex items-center justify-center space-x-2 transform hover:scale-105 transition-transform"
+                className="text-sm font-event-subtext w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-lg flex items-center justify-center space-x-2 transform hover:scale-105 transition-transform"
                 onClick={handleSendMessage}
               >
                 <FaPaperPlane />

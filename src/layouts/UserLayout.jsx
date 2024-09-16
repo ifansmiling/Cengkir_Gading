@@ -125,7 +125,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/drama"
-                  className={`text-gray-700 text-base font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-gray-700 text-sm font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/drama"
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -144,7 +144,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/daily-exercise"
-                  className={`text-gray-700 text-base font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-gray-700 text-sm font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/daily-exercise" || isExerciseOpen
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -156,7 +156,7 @@ const UserLayout = ({ children }) => {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
-                  <FaRunning className="mr-3 text-xl" />
+                  <FaRunning className="mr-3 text-base" />
                   <span>Daily Exercise</span>
                   <FaChevronDown
                     className={`ml-auto transition-transform ${
@@ -169,7 +169,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <Link
                         to="/user/daily-exercise/artikel"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm"
                       >
                         Artikel
                       </Link>
@@ -177,7 +177,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <Link
                         to="/user/daily-exercise/buku"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm"
                       >
                         Buku
                       </Link>
@@ -185,7 +185,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <Link
                         to="/user/daily-exercise/akting"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm"
                       >
                         Teori-teori Akting
                       </Link>
@@ -193,7 +193,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <Link
                         to="/user/daily-exercise/video"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm"
                       >
                         Video
                       </Link>
@@ -206,7 +206,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/skenario"
-                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-sm text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/skenario"
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -216,7 +216,7 @@ const UserLayout = ({ children }) => {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
-                  <FaBook className="mr-3 text-xl" />
+                  <FaBook className="mr-3 text-base" />
                   <span>Perpustakaan Skenario</span>
                 </Link>
               </li>
@@ -226,7 +226,7 @@ const UserLayout = ({ children }) => {
                 <li className="mb-2">
                   <Link
                     to={`/user/evaluasi-karakter/${id}`}
-                    className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                    className={`text-sm text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                       activeLink === `/user/evaluasi-karakter/${id}`
                         ? "bg-green-700 text-white"
                         : "hover:bg-green-700 hover:text-white"
@@ -236,7 +236,7 @@ const UserLayout = ({ children }) => {
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                   >
-                    <FaUserCheck className="mr-3 text-xl" />
+                    <FaUserCheck className="mr-3 text-base" />
                     <span>Evaluasi Karakter</span>
                   </Link>
                 </li>
@@ -246,7 +246,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/kalender-acara"
-                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-sm text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/kalender-acara"
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -256,7 +256,7 @@ const UserLayout = ({ children }) => {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
-                  <FaCalendarAlt className="mr-3 text-xl" />
+                  <FaCalendarAlt className="mr-3 text-base" />
                   <span>Kalender Acara</span>
                 </Link>
               </li>
@@ -265,7 +265,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/kontak"
-                  className={`text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-sm text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/kontak"
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -275,7 +275,7 @@ const UserLayout = ({ children }) => {
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
-                  <FaPhone className="mr-3 text-xl" />
+                  <FaPhone className="mr-3 text-base" />
                   <span>Kontak & Dukungan</span>
                 </Link>
               </li>
@@ -330,7 +330,7 @@ const UserLayout = ({ children }) => {
               </li>
               <li>
                 <Link
-                  to="/perpustakaan-skenario"
+                  to="/user/skenario"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >

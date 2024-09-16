@@ -30,7 +30,7 @@ const KalenderAcara = () => {
     <UserLayout>
       <div className="container mx-auto p-6 bg-white">
         <div className="flex justify-center mb-10">
-          <h1 className="font-event-header text-3xl font-bold text-green-800 border-b-2 border-green-800 inline-block">
+          <h1 className="font-dramatic-header text-3xl font-extrabold text-left text-green-800 underline underline-offset-2 decoration-green-800">
             Kalender Acara
           </h1>
         </div>
@@ -41,14 +41,14 @@ const KalenderAcara = () => {
             return (
               <div
                 key={event.id}
-                className="bg-white shadow-md rounded-md overflow-hidden flex flex-col justify-between"
+                className="bg-white shadow-md overflow-hidden flex flex-col justify-between hover:shadow-lg"
               >
                 <div>
                   <div className="relative">
                     <img
                       src={event.file_paths[0]}
                       alt={event.judul}
-                      className="font-dramatic-header-user w-full h-42 object-cover"
+                      className="font-dramatic-header-user w-full h-56 object-cover"
                     />
                     <div className="absolute top-4 left-4 bg-black text-white text-center p-2 rounded-lg">
                       <span className="block text-sm font-bold">{month}</span>
