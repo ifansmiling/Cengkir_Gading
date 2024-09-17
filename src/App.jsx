@@ -34,6 +34,8 @@ import KalenderAcara from "./pages/web/kalender/index";
 import EvaluasiKarakter from "./pages/web/karakter/index";
 import KontakDukungan from "./pages/web/kontak/index";
 import Skenario from "./pages/web/skenario/index";
+import ExerrciseArtikel from "./pages/web/exercise/artikel/index";
+import ExerrciseBuku from "./pages/web/exercise/buku/index";
 
 function App() {
   return (
@@ -150,6 +152,14 @@ function App() {
         <Route
           path="/user/skenario"
           element={<ProtectedRoute element={Skenario} />}
+        />
+        <Route
+          path="/user/daily-exercise/artikel"
+          element={<ProtectedRoute element={ExerrciseArtikel} />}
+        />
+        <Route
+          path="/user/daily-exercise/buku"
+          element={<ProtectedRoute element={ExerrciseBuku} />}
         />
       </Routes>
     </Router>

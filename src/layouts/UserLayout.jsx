@@ -86,7 +86,7 @@ const UserLayout = ({ children }) => {
               />
             </Link>
           </div>
-          <div className="flex items-center space-x-2 font-sidebar-menu">
+          <div className="flex items-center space-x-2 font-sidebar-menu ">
             <Link
               to="/user/drama"
               className="text-green-600"
@@ -96,7 +96,7 @@ const UserLayout = ({ children }) => {
             </Link>
             <button
               onClick={handleLogout}
-              className="text-gray-700 hover:text-green-700"
+              className="text-gray-700 hover:text-green-700 "
             >
               <FaSignOutAlt className="text-xl" />
             </button>
@@ -118,14 +118,16 @@ const UserLayout = ({ children }) => {
             >
               {nim || "Unknown User"}
             </Link>
+            <div className="w-full mt-2 border-b-2 border-gray-600"></div>
           </div>
+
           <nav className="p-4">
             <ul>
               {/* Drama Library */}
               <li className="mb-2">
                 <Link
                   to="/user/drama"
-                  className={`text-gray-700 text-sm font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-gray-700 text-sm border-b-2 border-green-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/drama"
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -144,7 +146,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/daily-exercise"
-                  className={`text-gray-700 text-sm font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-gray-700 border-b-2 border-green-700 text-sm font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/daily-exercise" || isExerciseOpen
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -169,7 +171,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <Link
                         to="/user/daily-exercise/artikel"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm border-b-2 border-green-600 shadow-lg transition duration-300 ease-in-out hover:border-green-900 hover:shadow-xl"
                       >
                         Artikel
                       </Link>
@@ -177,7 +179,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <Link
                         to="/user/daily-exercise/buku"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm border-b-2 border-green-600 shadow-lg transition duration-300 ease-in-out hover:border-green-900 hover:shadow-xl"
                       >
                         Buku
                       </Link>
@@ -185,7 +187,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <Link
                         to="/user/daily-exercise/akting"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm border-b-2 border-green-600 shadow-lg transition duration-300 ease-in-out hover:border-green-900 hover:shadow-xl"
                       >
                         Teori-teori Akting
                       </Link>
@@ -193,7 +195,7 @@ const UserLayout = ({ children }) => {
                     <li>
                       <Link
                         to="/user/daily-exercise/video"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm"
+                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm border-b-2 border-green-600 shadow-lg transition duration-300 ease-in-out hover:border-green-900 hover:shadow-xl"
                       >
                         Video
                       </Link>
@@ -206,7 +208,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/skenario"
-                  className={`text-sm text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-sm text-gray-700 border-b-2 border-green-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/skenario"
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -226,7 +228,7 @@ const UserLayout = ({ children }) => {
                 <li className="mb-2">
                   <Link
                     to={`/user/evaluasi-karakter/${id}`}
-                    className={`text-sm text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                    className={`text-sm text-gray-700 border-b-2 border-green-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                       activeLink === `/user/evaluasi-karakter/${id}`
                         ? "bg-green-700 text-white"
                         : "hover:bg-green-700 hover:text-white"
@@ -246,7 +248,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/kalender-acara"
-                  className={`text-sm text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-sm text-gray-700 border-b-2 border-green-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/kalender-acara"
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
@@ -265,7 +267,7 @@ const UserLayout = ({ children }) => {
               <li className="mb-2">
                 <Link
                   to="/user/kontak"
-                  className={`text-sm text-gray-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                  className={`text-sm text-gray-700 border-b-2 border-green-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
                     activeLink === "/user/kontak"
                       ? "bg-green-700 text-white"
                       : "hover:bg-green-700 hover:text-white"
