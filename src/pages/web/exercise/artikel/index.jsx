@@ -24,7 +24,7 @@ const ExerciseArtikel = () => {
   return (
     <UserLayout>
       <div className="container mx-auto px-4 py-6 bg-white">
-        <h1 className="font-dramatic-header text-2xl font-extrabold text-left text-green-800 mb-8 underline underline-offset-2 decoration-green-800">
+        <h1 className=" mt-2 font-dramatic-header text-2xl font-extrabold text-left text-green-800 mb-8 underline underline-offset-2 decoration-green-800">
           Daftar Semua Artikel
         </h1>
         <div className="grid gap-6">

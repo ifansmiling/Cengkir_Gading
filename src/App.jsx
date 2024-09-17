@@ -36,6 +36,8 @@ import KontakDukungan from "./pages/web/kontak/index";
 import Skenario from "./pages/web/skenario/index";
 import ExerrciseArtikel from "./pages/web/exercise/artikel/index";
 import ExerrciseBuku from "./pages/web/exercise/buku/index";
+import ExerciseAkting from "./pages/web/exercise/teori-teori/index";
+import ExerciseVideo from "./pages/web/exercise/video/index";
 
 function App() {
   return (
@@ -160,6 +162,14 @@ function App() {
         <Route
           path="/user/daily-exercise/buku"
           element={<ProtectedRoute element={ExerrciseBuku} />}
+        />
+        <Route
+          path="/user/daily-exercise/akting"
+          element={<ProtectedRoute element={ExerciseAkting} />}
+        />
+        <Route
+          path="/user/daily-exercise/video"
+          element={<ProtectedRoute element={ExerciseVideo} />}
         />
       </Routes>
     </Router>

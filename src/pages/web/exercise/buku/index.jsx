@@ -21,23 +21,30 @@ const ExerciseBuku = () => {
 
   return (
     <UserLayout>
-      <div className="container mx-auto px-4 py-6 bg-white">
-        <h1 className="font-dramatic-header text-2xl font-extrabold text-left text-green-800 mb-8 underline underline-offset-2 decoration-green-800">
+      <div className="container mx-auto px-4 py-8 bg-white">
+        <h1 className="mt-2 font-dramatic-header text-2xl font-extrabold text-left text-green-800 mb-8 underline underline-offset-2 decoration-green-800">
           Daftar Semua Buku
         </h1>
-        <div className="grid gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {books.map((book) => (
             <div
               key={book.id}
-              className="bg-white border border-gray-300 rounded-lg p-5 shadow-lg hover:border-green-500 hover:shadow-xl transition-shadow duration-300"
+              className="flex flex-col bg-gray-100 border border-white rounded-lg shadow-lg hover:border-green-600 hover:shadow-xl transition-shadow duration-300"
             >
-              <h2 className="text-base font-semibold text-green-700 mb-2 font-dramatic-body-user">
-                {book.judul}
-              </h2>
-              <p className="text-black mb-3 font-dramatic-body-user text-sm">
-                {book.deskripsi}
-              </p>
-              <div className="flex items-center space-x-4">
+              {/* Bagian judul */}
+              <div className="p-4 flex items-center justify-center bg-blue-400 rounded-t-lg">
+                <h2 className="text-base font-bold text-gray-800 font-dramatic-body-user">
+                  {book.judul}
+                </h2>
+              </div>
+              {/* Bagian deskripsi */}
+              <div className="p-6 flex-1">
+                <p className="text-gray-700 mb-4 font-dramatic-body-user text-sm text-justify">
+                  {book.deskripsi}
+                </p>
+              </div>
+              {/* Bagian link download */}
+              <div className="p-4 flex justify-end items-end">
                 {book.file_path.map((file, index) => {
                   const fileExtension = file.split(".").pop();
                   const isPdf = fileExtension === "pdf";
@@ -48,9 +55,9 @@ const ExerciseBuku = () => {
                     <a
                       key={index}
                       href={file}
-                      className={`font-dramatic-subtitle text-base text-${
-                        isPdf ? "red" : "blue"
-                      }-600 hover:underline`}
+                      className={`font-dramatic-subtitle text-base ${
+                        isPdf ? "text-red-700" : "text-blue-700"
+                      } hover:underline`}
                       download
                     >
                       Download {isPdf ? "PDF" : "Word"}
