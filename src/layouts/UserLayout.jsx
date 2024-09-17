@@ -56,11 +56,18 @@ const UserLayout = ({ children }) => {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
+
+    if (activeLink.includes("/user/daily-exercise")) {
+      setIsExerciseOpen(true);
+    } else {
+      setIsExerciseOpen(false);
+    }
+
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [activeLink]);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-white">
       {/* Navbar */}
       <nav className="bg-white shadow-sm px-3 py-2 fixed top-0 left-0 right-0 z-10 border-b border-gray-300">
         <div className="flex items-center justify-between">
@@ -124,7 +131,7 @@ const UserLayout = ({ children }) => {
           <nav className="p-4">
             <ul>
               {/* Drama Library */}
-              <li className="mb-2">
+              <li className="mb-3">
                 <Link
                   to="/user/drama"
                   className={`text-gray-700 text-sm border-b-2 border-green-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
@@ -166,42 +173,76 @@ const UserLayout = ({ children }) => {
                     }`}
                   />
                 </Link>
-                {isExerciseOpen && (
-                  <ul className="ml-8 mt-2 space-y-2">
-                    <li>
-                      <Link
-                        to="/user/daily-exercise/artikel"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm border-b-2 border-green-600 shadow-lg transition duration-300 ease-in-out hover:border-green-900 hover:shadow-xl"
-                      >
-                        Artikel
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/user/daily-exercise/buku"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm border-b-2 border-green-600 shadow-lg transition duration-300 ease-in-out hover:border-green-900 hover:shadow-xl"
-                      >
-                        Buku
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/user/daily-exercise/akting"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm border-b-2 border-green-600 shadow-lg transition duration-300 ease-in-out hover:border-green-900 hover:shadow-xl"
-                      >
-                        Teori-teori Akting
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/user/daily-exercise/video"
-                        className="text-gray-600 hover:text-green-700 font-sidebar-menu text-sm border-b-2 border-green-600 shadow-lg transition duration-300 ease-in-out hover:border-green-900 hover:shadow-xl"
-                      >
-                        Video
-                      </Link>
-                    </li>
-                  </ul>
-                )}
+
+                {/* Sub-menu */}
+                <ul
+                  className={`ml-8 mt-2 space-y-2 transition-all duration-300 ease-in-out ${
+                    isExerciseOpen
+                      ? "max-h-40 opacity-100"
+                      : "max-h-0 opacity-0 overflow-hidden"
+                  }`}
+                >
+                  <li>
+                    <Link
+                      to="/user/daily-exercise/artikel"
+                      className={`text-gray-700 text-sm font-sidebar-menu flex items-center px-2 py-2 rounded transition duration-300 border-b-2 border-green-700 ${
+                        activeLink === "/user/daily-exercise/artikel"
+                          ? "bg-green-700 text-white"
+                          : "hover:bg-green-700 hover:text-white"
+                      }`}
+                      onClick={() =>
+                        handleLinkClick("/user/daily-exercise/artikel")
+                      }
+                    >
+                      Artikel
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/user/daily-exercise/buku"
+                      className={`text-gray-700 text-sm font-sidebar-menu flex items-center px-2 py-2 rounded transition duration-300 border-b-2 border-green-700 ${
+                        activeLink === "/user/daily-exercise/buku"
+                          ? "bg-green-700 text-white"
+                          : "hover:bg-green-700 hover:text-white"
+                      }`}
+                      onClick={() =>
+                        handleLinkClick("/user/daily-exercise/buku")
+                      }
+                    >
+                      Buku
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/user/daily-exercise/akting"
+                      className={`text-gray-700 text-sm font-sidebar-menu flex items-center px-2 py-2 rounded transition duration-300 border-b-2 border-green-700 ${
+                        activeLink === "/user/daily-exercise/akting"
+                          ? "bg-green-700 text-white"
+                          : "hover:bg-green-700 hover:text-white"
+                      }`}
+                      onClick={() =>
+                        handleLinkClick("/user/daily-exercise/akting")
+                      }
+                    >
+                      Teori-teori Akting
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/user/daily-exercise/video"
+                      className={`text-gray-700 text-sm font-sidebar-menu flex items-center px-2 py-2 rounded transition duration-300 border-b-2 border-green-700 ${
+                        activeLink === "/user/daily-exercise/video"
+                          ? "bg-green-700 text-white"
+                          : "hover:bg-green-700 hover:text-white"
+                      }`}
+                      onClick={() =>
+                        handleLinkClick("/user/daily-exercise/video")
+                      }
+                    >
+                      Video
+                    </Link>
+                  </li>
+                </ul>
               </li>
 
               {/* Perpustakaan Skenario */}
@@ -323,7 +364,7 @@ const UserLayout = ({ children }) => {
               </li>
               <li>
                 <Link
-                  to="/daily-exercise"
+                  to="/user/daily-exercise/artikel"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >

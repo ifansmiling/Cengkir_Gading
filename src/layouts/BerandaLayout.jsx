@@ -9,7 +9,7 @@ import {
   FaLinkedinIn,
   FaInstagram,
   FaPhone,
-  FaEnvelope,
+  FaUser,
   FaPaperPlane,
 } from "react-icons/fa";
 
@@ -29,7 +29,7 @@ const BerandaLayout = ({ children }) => {
   return (
     <div className="bg-[#2e9e46] min-h-screen flex flex-col">
       {/* Navbar */}
-      <nav className="bg-white py-2 px-2 shadow-md sticky top-0 z-50 flex items-center">
+      <nav className="bg-white py-2 px-2 shadow-sm sticky top-0 z-50 flex items-center">
         <div className="flex items-center">
           <a
             href="/"
@@ -95,13 +95,13 @@ const BerandaLayout = ({ children }) => {
                   langsung dari kami!
                 </p>
               </div>
-              <div className="flex justify-start py-4">
+              <div className="flex items-start py-4">
                 <a
                   href="/signup"
                   onClick={handleScrollToTop}
-                  className="bg-green-800 text-sm hover:bg-green-900 px-6 py-2 rounded-lg font-bold text-white flex items-center"
+                  className="text-sm py-2 rounded-lg font-bold text-white hover:text-green-700 flex items-center"
                 >
-                  <FaEnvelope className="mr-2 text-sm" /> Sign Up
+                  <FaUser className="mr-2 text-sm" /> Gabung
                 </a>
               </div>
 
@@ -181,6 +181,10 @@ const BerandaLayout = ({ children }) => {
 
         <div className="bg-black py-2">
           <div className="container mx-auto text-center text-gray-500 text-xs font-footer-body">
+            <span className="mr-2">
+              © 2024 Cengkir Gading. All rights reserved.
+            </span>
+
             <a
               href="/"
               onClick={handleScrollToTop}
@@ -196,8 +200,6 @@ const BerandaLayout = ({ children }) => {
             >
               Support
             </a>
-            <span className="mx-2">•</span>
-            <span>© 2024 Cengkir Gading. All rights reserved.</span>
           </div>
         </div>
       </footer>
