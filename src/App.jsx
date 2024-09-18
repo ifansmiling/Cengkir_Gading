@@ -136,7 +136,7 @@ function App() {
 
         {/* Rute User dengan proteksi */}
         <Route
-          path="/user/drama"
+          path="/user/drama/:id"
           element={<ProtectedRoute element={Drama} />}
         />
         <Route

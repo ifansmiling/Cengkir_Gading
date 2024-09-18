@@ -31,7 +31,7 @@ const Login = () => {
       if (role === "Admin") {
         navigate("/admin/dashboard");
       } else {
-        navigate("/user/drama");
+        navigate("/user/drama/:id");
       }
     } catch (error) {
       setErrorMessage(

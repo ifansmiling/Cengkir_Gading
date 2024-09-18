@@ -132,21 +132,23 @@ const UserLayout = ({ children }) => {
             <ul>
               {/* Drama Library */}
               <li className="mb-3">
-                <Link
-                  to="/user/drama"
-                  className={`text-gray-700 text-sm border-b-2 border-green-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
-                    activeLink === "/user/drama"
-                      ? "bg-green-700 text-white"
-                      : "hover:bg-green-700 hover:text-white"
-                  }`}
-                  onClick={() => {
-                    handleLinkClick("/user/drama");
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                >
-                  <FaTheaterMasks className="mr-3 text-xl" />
-                  <span>Perpustakaan Drama</span>
-                </Link>
+                {id && (
+                  <Link
+                    to={`/user/drama/${id}`}
+                    className={`text-gray-700 text-sm border-b-2 border-green-700 font-sidebar-menu font-bold flex items-center px-2 py-2 rounded transition duration-300 ${
+                      activeLink === `/user/drama/${id}`
+                        ? "bg-green-700 text-white"
+                        : "hover:bg-green-700 hover:text-white"
+                    }`}
+                    onClick={() => {
+                      handleLinkClick(`/user/drama/${id}`);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                  >
+                    <FaTheaterMasks className="mr-3 text-xl" />
+                    <span>Perpustakaan Drama</span>
+                  </Link>
+                )}
               </li>
 
               {/* Daily Exercise */}
@@ -335,7 +337,7 @@ const UserLayout = ({ children }) => {
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-start">
           {/* Logo Section */}
           <div className="flex flex-col items-center md:items-start mb-4 md:mb-0">
-            <Link to="/user/drama" onClick={scrollToTop}>
+            <Link to="/user/drama/:id" onClick={scrollToTop}>
               <img
                 src="/logo2.png"
                 alt="Logo"
@@ -355,7 +357,7 @@ const UserLayout = ({ children }) => {
             <ul className="space-y-2 font-dramatic-body">
               <li>
                 <Link
-                  to="/user/drama"
+                  to="/user/drama/:id"
                   className="text-white hover:text-gray-700"
                   onClick={scrollToTop}
                 >
