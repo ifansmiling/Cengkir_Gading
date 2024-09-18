@@ -50,9 +50,9 @@ const ExerciseArtikel = () => {
                     <a
                       key={index}
                       href={file}
-                      className={`font-dramatic-header-user text-base text-${
-                        isPdf ? "red" : "blue"
-                      }-600 hover:underline`}
+                      className={`font-dramatic-subtitle text-base ${
+                        isPdf ? "text-red-700" : "text-blue-700"
+                      } hover:underline`}
                       download
                     >
                       Download {isPdf ? "PDF" : "Word"}

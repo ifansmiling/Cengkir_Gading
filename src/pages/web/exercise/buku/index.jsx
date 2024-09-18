@@ -22,7 +22,7 @@ const ExerciseBuku = () => {
   return (
     <UserLayout>
       <div className="container mx-auto px-4 py-8 bg-white">
-        <h1 className="mt-2 font-dramatic-header text-2xl font-extrabold text-left text-green-800 mb-8 underline underline-offset-2 decoration-green-800">
+        <h1 className="font-dramatic-header text-2xl font-extrabold text-left text-green-800 mb-8 underline underline-offset-2 decoration-green-800">
           Daftar Semua Buku
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
