@@ -28,14 +28,18 @@ const monthNames = [
 ];
 
 const DashboardAdmin = () => {
-  const [totalUsers, setTotalUsers] = useState(0); // State untuk total users
-  const [totalSkenario, setTotalSkenario] = useState(0); // State untuk total skenario
-  const [totalKalenderAcara, setTotalKalenderAcara] = useState(0); // State untuk total acara bulan ini
-  const [totalExercise, setTotalExercise] = useState(0); // State untuk total exercise
-  const [kalenderAcaraPerMonth, setKalenderAcaraPerMonth] = useState([]); // Data Kalender Acara per bulan
-  const [skenarioPerMonth, setSkenarioPerMonth] = useState([]); // Data Skenario per bulan
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalSkenario, setTotalSkenario] = useState(0);
+  const [totalKalenderAcara, setTotalKalenderAcara] = useState(0);
+  const [totalExercise, setTotalExercise] = useState(0);
+  const [kalenderAcaraPerMonth, setKalenderAcaraPerMonth] = useState([]);
+  const [skenarioPerMonth, setSkenarioPerMonth] = useState([]);
 
-  // Fetch data dari API saat komponen di-mount
+  const [animatedUsers, setAnimatedUsers] = useState(0);
+  const [animatedSkenario, setAnimatedSkenario] = useState(0);
+  const [animatedKalenderAcara, setAnimatedKalenderAcara] = useState(0);
+  const [animatedExercise, setAnimatedExercise] = useState(0);
+
   useEffect(() => {
     const fetchTotalUsers = async () => {
       try {
@@ -75,13 +79,12 @@ const DashboardAdmin = () => {
       }
     };
 
-    // Fetch Kalender Acara per Month
     const fetchKalenderAcaraPerMonth = async () => {
       try {
         const response = await api.get("/kalenderAcara/per-month/total");
-        const kalenderData = response.data["2024"]; // Adjust for specific year
+        const kalenderData = response.data["2024"];
         const formattedData = Object.keys(kalenderData).map((month) => ({
-          name: monthNames[parseInt(month) - 1], // Ambil nama bulan sesuai dengan angkanya
+          name: monthNames[parseInt(month) - 1],
           KalenderAcara: kalenderData[month].length,
         }));
         setKalenderAcaraPerMonth(formattedData);
@@ -90,13 +93,12 @@ const DashboardAdmin = () => {
       }
     };
 
-    // Fetch Skenario per Bulan
     const fetchSkenarioPerMonth = async () => {
       try {
         const response = await api.get("/skenario/count/month/year");
         const skenarioData = response.data.totalSkenarioPerMonth;
         const formattedData = Object.keys(skenarioData).map((month) => ({
-          name: monthNames[parseInt(month) - 1], // Ambil nama bulan sesuai dengan angkanya
+          name: monthNames[parseInt(month) - 1],
           Skenario: skenarioData[month],
         }));
         setSkenarioPerMonth(formattedData);
@@ -113,7 +115,6 @@ const DashboardAdmin = () => {
     fetchSkenarioPerMonth();
   }, []);
 
-  // Gabungkan data Kalender Acara dan Skenario berdasarkan bulan
   const chartData = kalenderAcaraPerMonth.map((acaraData) => {
     const skenarioData = skenarioPerMonth.find(
       (skenario) => skenario.name === acaraData.name
@@ -125,16 +126,47 @@ const DashboardAdmin = () => {
     };
   });
 
+  useEffect(() => {
+    if (totalUsers) {
+      animateNumber(totalUsers, setAnimatedUsers);
+    }
+    if (totalSkenario) {
+      animateNumber(totalSkenario, setAnimatedSkenario);
+    }
+    if (totalKalenderAcara) {
+      animateNumber(totalKalenderAcara, setAnimatedKalenderAcara);
+    }
+    if (totalExercise) {
+      animateNumber(totalExercise, setAnimatedExercise);
+    }
+  }, [totalUsers, totalSkenario, totalKalenderAcara, totalExercise]);
+
+  // Fungsi animasi angka
+  const animateNumber = (target, setState) => {
+    let current = 0;
+    const increment = Math.ceil(target / 300);
+    const interval = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setState(target);
+        clearInterval(interval);
+      } else {
+        setState(current);
+      }
+    }, 200);
+  };
+
   return (
     <AdminLayout>
       <div className="min-h-screen bg-blue-100">
-        {/* Top navigation */}
         <nav className="flex justify-between items-center bg-blue-600 p-4 text-white">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-2xl font-dramatic-header-user font-bold">
+            Dashboard
+          </h1>
           <div className="flex items-center space-x-4">
             <input
               type="text"
-              placeholder="Type here..."
+              placeholder="Ketik Disini..."
               className="px-4 py-2 rounded-lg text-black"
             />
           </div>
@@ -142,59 +174,74 @@ const DashboardAdmin = () => {
 
         {/* Dashboard content */}
         <div className="p-6">
-          {/* Stat cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
             {/* Card 1 - Total Users */}
-            <div className="bg-white p-4 rounded-lg shadow-lg">
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition-all hover:scale-105 duration-300">
               <div className="flex justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">
+                  <p className="text-sm font-medium text-gray-500 font-event-header">
                     Total Users
                   </p>
-                  <h2 className="text-2xl font-bold">{totalUsers}</h2>
-                  <p className="text-green-500">+3% since last week</p>
+                  <h2 className="text-2xl font-bold font-dramatic-header">
+                    {animatedUsers}
+                  </h2>
+                  <p className="text-green-500 font-dramatic-header">
+                    +3% since last week
+                  </p>
                 </div>
                 <FaUsers className="text-4xl text-red-500 bg-red-100 p-2 rounded-full" />
               </div>
             </div>
 
             {/* Card 2 - Skenario Bulan Ini */}
-            <div className="bg-white p-4 rounded-lg shadow-lg">
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition-all hover:scale-105 duration-300">
               <div className="flex justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">
+                  <p className="text-sm font-medium text-gray-500 font-event-header">
                     Skenario Bulan ini
                   </p>
-                  <h2 className="text-2xl font-bold">{totalSkenario}</h2>
-                  <p className="text-green-500">+55% since yesterday</p>
+                  <h2 className="text-2xl font-bold font-dramatic-header">
+                    {animatedSkenario}
+                  </h2>
+                  <p className="text-green-500 font-dramatic-header">
+                    +55% since yesterday
+                  </p>
                 </div>
                 <FaFileAlt className="text-4xl text-purple-500 bg-purple-100 p-2 rounded-full" />
               </div>
             </div>
 
             {/* Card 3 - Acara Bulan Ini */}
-            <div className="bg-white p-4 rounded-lg shadow-lg">
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition-all hover:scale-105 duration-300">
               <div className="flex justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">
+                  <p className="text-sm font-medium text-gray-500 font-event-header">
                     Acara Bulan ini
                   </p>
-                  <h2 className="text-2xl font-bold">{totalKalenderAcara}</h2>
-                  <p className="text-red-500">-2% since last quarter</p>
+                  <h2 className="text-2xl font-bold font-dramatic-header">
+                    {animatedKalenderAcara}
+                  </h2>
+                  <p className="text-red-500 font-dramatic-header">
+                    -2% since last quarter
+                  </p>
                 </div>
                 <FaCalendarAlt className="text-4xl text-green-500 bg-green-100 p-2 rounded-full" />
               </div>
             </div>
 
             {/* Card 4 - Total Exercise */}
-            <div className="bg-white p-4 rounded-lg shadow-lg">
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition-all hover:scale-105 duration-300">
               <div className="flex justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">
+                  <p className="text-sm font-medium text-gray-500 font-event-header">
                     Total Exercise
                   </p>
-                  <h2 className="text-2xl font-bold">{totalExercise}</h2>
-                  <p className="text-green-500">+5% than last month</p>
+                  <h2 className="text-2xl font-bold font-dramatic-header">
+                    {animatedExercise}
+                  </h2>
+                  <p className="text-green-500 font-dramatic-header">
+                    +5% than last month
+                  </p>
                 </div>
                 <FaDumbbell className="text-4xl text-orange-500 bg-orange-100 p-2 rounded-full" />
               </div>
@@ -203,8 +250,8 @@ const DashboardAdmin = () => {
 
           {/* Sales Overview Chart */}
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-lg font-bold mb-4">
-              Kalender Acara dan Skenario per Bulan
+            <h2 className="text-xl font-bold mb-4 font-dramatic-header">
+              Chart Overflow
             </h2>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={chartData}>
