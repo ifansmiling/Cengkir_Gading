@@ -4,6 +4,8 @@ import api from "../../../services/api";
 
 const KalenderAcara = () => {
   const [events, setEvents] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -24,6 +26,16 @@ const KalenderAcara = () => {
     const month = date.toLocaleString("en-US", { month: "short" });
     const year = date.getFullYear();
     return { day, month, year };
+  };
+
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedImage("");
   };
 
   return (
@@ -48,7 +60,8 @@ const KalenderAcara = () => {
                     <img
                       src={event.file_paths[0]}
                       alt={event.judul}
-                      className="font-dramatic-header-user w-full h-56 object-cover"
+                      className="font-dramatic-header-user w-full h-56 object-cover cursor-pointer"
+                      onClick={() => handleImageClick(event.file_paths[0])}
                     />
                     <div className="absolute top-4 left-4 bg-black text-white text-center p-2 rounded-lg">
                       <span className="block text-sm font-bold">{month}</span>
@@ -78,6 +91,33 @@ const KalenderAcara = () => {
             );
           })}
         </div>
+
+        {/* Modal */}
+        {isModalOpen && (
+          <div
+            className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 transition-opacity duration-300 ease-in-out ${
+              isModalOpen ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <div
+              className={`relative transform transition-transform duration-300 ease-in-out ${
+                isModalOpen ? "scale-100" : "scale-95"
+              }`}
+            >
+              <img
+                src={selectedImage}
+                alt="Selected event"
+                className="w-full max-w-sm h-auto object-cover"
+              />
+              <button
+                className="absolute top-2 right-2 bg-white text-black p-2 rounded-full focus:outline-none focus:ring-0"
+                onClick={handleCloseModal}
+              >
+                <span className="text-black">✖</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </UserLayout>
   );

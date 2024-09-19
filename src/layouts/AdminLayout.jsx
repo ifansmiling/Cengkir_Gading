@@ -34,10 +34,10 @@ const AdminLayout = ({ children }) => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-white">
       {/* Sidebar */}
       <sidebar className="w-60 bg-green-700 text-white flex flex-col fixed h-full z-20">
-        <div className="flex items-center justify-center h-20 bg-gray-300">
+        <div className="flex items-center justify-center h-20 bg-blue-50">
           <img src="/logo1.png" alt="Cengkir Gading Logo" className="h-16" />
         </div>
         <nav className="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
@@ -90,7 +90,7 @@ const AdminLayout = ({ children }) => {
 
       {/* Navbar */}
       <div className="flex flex-col flex-1">
-        <nav className="flex items-center justify-between h-20 px-6 bg-green-700 border-b border-gray-200 fixed w-full z-10 ml-60">
+        <nav className="flex items-center justify-between h-20 px-6 bg-green-700 border-b border-white fixed w-full z-10 ml-60">
           <div className="flex items-center space-x-6">
             <NavLink to="/" className="text-white hover:text-black">
               <FaHome className="text-3xl" />
