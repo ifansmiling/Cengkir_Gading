@@ -141,7 +141,7 @@ const Exercise = () => {
         </form>
 
         <button
-          className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
+          className="font-dramatic-header flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
           onClick={handleClick}
         >
           <FaPlus className="mr-2" />
@@ -151,9 +151,9 @@ const Exercise = () => {
         <table className="min-w-full bg-white border border-gray-300 text-center rounded-lg shadow-md mb-2">
           <thead>
             <tr className="bg-gray-200">
-              <th className="py-2 px-4 border-b">No</th>
-              <th className="py-2 px-4 border-b">Judul</th>
-              <th className="py-2 px-4 border-b relative">
+              <th className="py-2 px-4 border-b font-dramatic-header">No</th>
+              <th className="py-2 px-4 border-b font-dramatic-header">Judul</th>
+              <th className="py-2 px-4 border-b relative font-dramatic-header">
                 Tipe
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -162,7 +162,7 @@ const Exercise = () => {
                   <FaChevronDown />
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg">
+                  <div className=" font-dramatic-header absolute right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg">
                     {[
                       "Semua",
                       "Artikel",
@@ -185,24 +185,24 @@ const Exercise = () => {
                   </div>
                 )}
               </th>
-              <th className="py-2 px-4 border-b">File</th>
-              <th className="py-2 px-4 border-b">Aksi</th>
+              <th className="py-2 px-4 border-b font-dramatic-header">File</th>
+              <th className="py-2 px-4 border-b font-dramatic-header">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {filteredExercises.length > 0 ? (
               filteredExercises.map((exercise, index) => (
                 <tr key={exercise.id} className="hover:bg-gray-100">
-                  <td className="py-2 px-6 border-b border text-center align-middle">
+                  <td className="py-2 px-6 border-b border text-center align-middle font-dramatic-header">
                     {index + 1}
                   </td>
-                  <td className="py-2 px-4 border-b border text-center align-middle">
+                  <td className="py-2 px-4 border-b border text-center align-middle font-event-body">
                     {exercise.judul}
                   </td>
-                  <td className="py-2 px-6 border-b border text-center align-middle">
+                  <td className="py-2 px-6 border-b border text-center align-middle font-dramatic-body-user">
                     {exercise.tipe}
                   </td>
-                  <td className="py-2 px-2 border-b border text-center align-middle">
+                  <td className="py-2 px-2 border-b border text-center align-middle font-dramatic-body-user">
                     {exercise.file_path && exercise.file_path.length > 0
                       ? exercise.file_path.map((path, idx) => (
                           <a

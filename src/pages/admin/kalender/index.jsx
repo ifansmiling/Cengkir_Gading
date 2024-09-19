@@ -55,7 +55,7 @@ const Kalender = () => {
           <span className="block h-1 bg-green-800"></span>
         </h1>
         <button
-          className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
+          className="font-dramatic-header flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
           onClick={handleClick}
         >
           <FaPlus className="mr-2" />
@@ -64,7 +64,7 @@ const Kalender = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md mb-2">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-gray-200 font-dramatic-header">
                 <th className="py-2 px-4 border-b text-center">No</th>
                 <th className="py-2 px-4 border-b text-center">Judul</th>
                 <th className="py-2 px-4 border-b text-center">Tanggal</th>
@@ -75,13 +75,13 @@ const Kalender = () => {
             <tbody>
               {kalenderAcaras.map((event, index) => (
                 <tr key={event.id} className="hover:bg-gray-100">
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b text-center font-dramatic-header">
                     {index + 1}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b text-center font-dramatic-body-user">
                     {event.judul}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b text-center font-dramatic-body-user">
                     {new Date(event.tanggal_event).toLocaleDateString()}
                   </td>
                   <td className="py-2 px-4 border-b text-center">

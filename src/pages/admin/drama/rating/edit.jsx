@@ -77,11 +77,11 @@ const EditRating = () => {
                 {userRating.map((ratingData) => (
                   <div
                     key={ratingData.parameter_id}
-                    className="flex flex-col items-start"
+                    className="flex flex-col items-start font-dramatic-header"
                   >
                     <label
                       htmlFor={`rating-${ratingData.parameter_id}`}
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-gray-700 font-dramatic-header"
                     >
                       {ratingData.drama.nama}:
                     </label>
@@ -99,7 +99,7 @@ const EditRating = () => {
                       }
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-green"
                     />
-                    <div className="mt-2 text-sm text-gray-500">
+                    <div className="mt-2 text-sm text-gray-500 font-dramatic-header">
                       {ratingMap[ratingData.parameter_id] || 50} / 100
                     </div>
                   </div>

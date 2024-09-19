@@ -120,7 +120,7 @@ const Skenario = () => {
         </form>
 
         <button
-          className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
+          className="font-dramatic-header flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
           onClick={() => navigate("/admin/skenario/create")}
         >
           <FaPlus className="mr-2" />
@@ -131,24 +131,36 @@ const Skenario = () => {
           <table className="min-w-full bg-white border rounded-lg shadow-md mb-2">
             <thead>
               <tr className="bg-gray-200">
-                <th className="px-4 py-2 border text-center">No</th>
-                <th className="px-4 py-2 border text-center">Judul</th>
-                <th className="px-4 py-2 border text-center">Deskripsi</th>
-                <th className="px-4 py-2 border text-center">Naskah Drama</th>
-                <th className="px-4 py-2 border text-center">Aksi</th>
+                <th className="px-4 py-2 border text-center font-dramatic-header">
+                  No
+                </th>
+                <th className="px-4 py-2 border text-center font-dramatic-header">
+                  Judul
+                </th>
+                <th className="px-4 py-2 border text-center font-dramatic-header">
+                  Deskripsi
+                </th>
+                <th className="px-4 py-2 border text-center font-dramatic-header">
+                  Naskah Drama
+                </th>
+                <th className="px-4 py-2 border text-center font-dramatic-header">
+                  Aksi
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredSkenarios.map((skenario, index) => (
                 <tr key={skenario.id} className="border-b hover:bg-gray-100">
-                  <td className="px-4 py-2 border text-center">{index + 1}</td>
-                  <td className="px-2 py-2 border text-center">
+                  <td className="px-4 py-2 border text-center font-dramatic-header">
+                    {index + 1}
+                  </td>
+                  <td className="px-2 py-2 border text-center font-dramatic-body-user">
                     {skenario.judul}
                   </td>
-                  <td className="px-4 py-2 border text-center">
+                  <td className="px-4 py-2 border text-center font-natural-body">
                     {skenario.deskripsi}
                   </td>
-                  <td className="px-2 py-2 border text-center">
+                  <td className="px-2 py-2 border text-center font-dramatic-header">
                     {skenario.file_paths.length > 0 ? (
                       <div className="flex flex-col">
                         {skenario.file_paths.map((filePath, i) => (

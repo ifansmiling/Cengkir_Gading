@@ -64,7 +64,7 @@ const CreateRating = () => {
               <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {parameters.map((param) => (
                   <div key={param.id} className="flex flex-col items-start">
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-gray-700 font-dramatic-body-user">
                       {param.nama}
                     </label>
                     <input
@@ -78,7 +78,7 @@ const CreateRating = () => {
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-green" // Tambahkan kelas range-green
                     />
 
-                    <div className="mt-2 text-sm text-gray-500">
+                    <div className="mt-2 text-sm text-gray-500 font-dramatic-header">
                       {selectedRatings[param.id] || 50} / 100
                     </div>
                   </div>

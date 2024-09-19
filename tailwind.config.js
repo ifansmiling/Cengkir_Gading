@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         "dramatic-header": ["Playfair Display", "serif"],
+        "natural-body": ["Lora", "serif"],
         "dramatic-body": ["Merriweather", "serif"],
         "dramatic-body-user": ["Crimson Text", "serif"],
         "dramatic-header-user": ["Cormorant Garamond", "serif"],

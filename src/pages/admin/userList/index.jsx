@@ -119,7 +119,7 @@ const UserList = () => {
         </form>
         <button
           onClick={handleClick}
-          className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
+          className="font-dramatic-header flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
         >
           <FaPlus className="mr-2" />
           <span>Tambah User</span>
@@ -129,7 +129,7 @@ const UserList = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-300 text-center rounded-lg shadow-md mb-2">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-gray-200 font-dramatic-header">
                 <th className="py-2 px-4">No</th>
                 <th className="py-2 px-4">Nama</th>
                 <th className="py-2 px-4">NIM</th>
@@ -176,10 +176,18 @@ const UserList = () => {
             <tbody>
               {filteredUsers.map((user, index) => (
                 <tr key={user.id} className="border-b hover:bg-gray-100">
-                  <td className="py-2 px-4 border">{index + 1}</td>
-                  <td className="py-2 px-4 border">{user.nama}</td>
-                  <td className="py-2 px-4 border">{user.nim}</td>
-                  <td className="py-2 px-4 border">{user.role}</td>
+                  <td className="py-2 px-4 border font-dramatic-header">
+                    {index + 1}
+                  </td>
+                  <td className="py-2 px-4 border font-dramatic-body-user">
+                    {user.nama}
+                  </td>
+                  <td className="py-2 px-4 border font-dramatic-body-user">
+                    {user.nim}
+                  </td>
+                  <td className="py-2 px-4 border font-dramatic-body-user">
+                    {user.role}
+                  </td>
                   <td className="py-2 px-4 flex justify-center space-x-2">
                     <button
                       className="text-blue-500 hover:text-blue-700"

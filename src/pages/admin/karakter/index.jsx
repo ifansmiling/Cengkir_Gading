@@ -138,36 +138,46 @@ const Karakter = () => {
         </form>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 text-center rounded-lg shadow-md mb-8">
+          <table className=" min-w-full bg-white border border-gray-200 text-center rounded-lg shadow-md mb-8">
             <thead>
               <tr className="bg-gray-200">
-                <th className="py-2 px-4 border">No</th>
-                <th className="py-2 px-4 border">Nama</th>
-                <th className="py-2 px-4 border">Kekurangan</th>
-                <th className="py-2 px-4 border">Evaluasi</th>
-                <th className="py-2 px-4 border">Aksi</th>
+                <th className="py-2 px-4 border font-dramatic-header">No</th>
+                <th className="py-2 px-4 border font-dramatic-header">Nama</th>
+                <th className="py-2 px-4 border font-dramatic-header">
+                  Kekurangan
+                </th>
+                <th className="py-2 px-4 border font-dramatic-header">
+                  Evaluasi
+                </th>
+                <th className="py-2 px-4 border font-dramatic-header">Aksi</th>
               </tr>
             </thead>
             <tbody>
               {filteredEvaluasiKarakters.map((item, index) => (
-                <tr key={item.id} className="hover:bg-gray-100">
-                  <td className="py-2 px-4 border">{index + 1}</td>
-                  <td className="py-2 px-6 border">
+                <tr key={item.id} className="hover:bg-gray-100 ">
+                  <td className="py-2 px-4 border font-dramatic-header">
+                    {index + 1}
+                  </td>
+                  <td className="py-2 px-6 border font-dramatic-body-user">
                     {item.user?.nama || "Nama tidak ditemukan"}
                   </td>
-                  <td className="py-2 px-3 border">{item.kekurangan}</td>
-                  <td className="py-2 px-3 border">{item.evaluasi}</td>
+                  <td className="py-2 px-3 border font-natural-body">
+                    {item.kekurangan}
+                  </td>
+                  <td className="py-2 px-3 border font-dramatic-body-user">
+                    {item.evaluasi}
+                  </td>
                   <td className="py-2 px-6 border">
                     <div className="flex justify-center">
                       <button
                         className="text-blue-500 hover:text-blue-700 mr-2"
-                        onClick={() => handleEditEvaluasi(item.id)} 
+                        onClick={() => handleEditEvaluasi(item.id)}
                       >
                         <FaEdit />
                       </button>
                       <button
                         className="text-red-500 hover:text-red-700"
-                        onClick={() => handleDeleteEvaluasi(item.id)} 
+                        onClick={() => handleDeleteEvaluasi(item.id)}
                       >
                         <FaTrash />
                       </button>
@@ -187,7 +197,7 @@ const Karakter = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 text-center rounded-lg shadow-md mb-2">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-gray-200 font-dramatic-header">
                 <th className="py-2 px-4 border">No</th>
                 <th className="py-2 px-4 border">Nama</th>
                 <th className="py-2 px-4 border">NIM</th>
@@ -198,10 +208,16 @@ const Karakter = () => {
             <tbody>
               {filteredUsers.map((user, index) => (
                 <tr key={user.id} className="hover:bg-gray-100">
-                  <td className="py-2 px-4 border">{index + 1}</td>
-                  <td className="py-2 px-6 border">{user.nama}</td>
-                  <td className="py-2 px-6 border">{user.nim}</td>
-                  <td className="py-2 px-6 border">
+                  <td className="py-2 px-4 border font-dramatic-header">
+                    {index + 1}
+                  </td>
+                  <td className="py-2 px-6 border font-dramatic-body-user">
+                    {user.nama}
+                  </td>
+                  <td className="py-2 px-6 border font-dramatic-body-user">
+                    {user.nim}
+                  </td>
+                  <td className="py-2 px-6 border font-dramatic-body-user">
                     <span
                       className={
                         evaluasiKarakters.some(

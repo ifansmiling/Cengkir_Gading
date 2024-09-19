@@ -283,24 +283,36 @@ const Drama = () => {
           <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-6">
             <thead>
               <tr className="bg-gray-200">
-                <th className="py-2 px-4 border-b text-center">No</th>
-                <th className="py-2 px-4 border-b text-center">Nama</th>
-                <th className="py-2 px-4 border-b text-center">NIM</th>
-                <th className="py-2 px-4 border-b text-center">
+                <th className="py-2 px-4 border-b font-dramatic-header-user text-center">
+                  No
+                </th>
+                <th className="py-2 px-4 border-b font-event-header text-center">
+                  Nama
+                </th>
+                <th className="py-2 px-4 border-b font-event-header text-center">
+                  NIM
+                </th>
+                <th className="py-2 px-4 border-b font-event-header text-center">
                   Rating Anggota
                 </th>
-                <th className="py-2 px-4 border-b text-center">Aksi</th>
+                <th className="py-2 px-4 border-b font-event-header text-center">
+                  Aksi
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredRatings.map((user, index) => (
                 <tr
                   key={user.user_id}
-                  className="text-center hover:bg-gray-100"
+                  className="text-center hover:bg-gray-100 font-dramatic-header-user"
                 >
                   <td className="py-2 px-4 border-b border">{index + 1}</td>
-                  <td className="py-2 px-4 border-b border">{user.nama}</td>
-                  <td className="py-2 px-4 border-b border">{user.nim}</td>
+                  <td className="py-2 px-4 border-b font-event-body border">
+                    {user.nama}
+                  </td>
+                  <td className="py-2 px-4 border-b font-event-body border">
+                    {user.nim}
+                  </td>
                   <td className="py-2 px-4 border-b text-center">
                     <FontAwesomeIcon
                       icon={faCircleCheck}
@@ -351,26 +363,30 @@ const Drama = () => {
               </h2>
               <div>
                 <h3 className="text-lg font-medium">Nama Pengguna:</h3>
-                <p className="text-gray-700 mb-4">{selectedUserName}</p>
+                <p className="text-gray-700 mb-4 font-event-body">
+                  {selectedUserName}
+                </p>
                 <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
                   <thead>
                     <tr className="bg-gray-200">
-                      <th className="py-2 px-4 border-b text-center">
+                      <th className="py-2 px-4 border-b text-center font-event-header">
                         Parameter
                       </th>
-                      <th className="py-2 px-4 border-b text-center">Nilai</th>
+                      <th className="py-2 px-4 border-b text-center font-event-header">
+                        Nilai
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {selectedUserRatings.length > 0 ? (
                       selectedUserRatings.map((rating) => (
                         <tr key={rating.id}>
-                          <td className="py-2 px-4 border-b text-center">
+                          <td className="py-2 px-4 border-b text-center font-sidebar-heading">
                             {rating.drama
                               ? rating.drama.nama
                               : "Unknown Parameter"}
                           </td>
-                          <td className="py-2 px-4 border-b text-center text-green-600">
+                          <td className="py-2 px-4 border-b text-center text-green-600 font-dramatic-header">
                             {rating.rating}
                           </td>
                         </tr>
@@ -403,18 +419,32 @@ const Drama = () => {
           <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-6">
             <thead>
               <tr className="bg-gray-200">
-                <th className="py-2 px-4 border-b text-center">No</th>
-                <th className="py-2 px-4 border-b text-center">Nama</th>
-                <th className="py-2 px-4 border-b text-center">NIM</th>
-                <th className="py-2 px-4 border-b text-center">Nilai</th>
+                <th className="py-2 px-4 border-b text-center font-dramatic-header-user">
+                  No
+                </th>
+                <th className="py-2 px-4 border-b text-center font-dramatic-header-user">
+                  Nama
+                </th>
+                <th className="py-2 px-4 border-b text-center font-dramatic-header-user">
+                  NIM
+                </th>
+                <th className="py-2 px-4 border-b text-center font-dramatic-header-user">
+                  Nilai
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredUsers.map((user, index) => (
                 <tr key={user.id} className="text-center hover:bg-gray-100">
-                  <td className="py-2 px-4 border-b border">{index + 1}</td>
-                  <td className="py-2 px-4 border-b border">{user.nama}</td>
-                  <td className="py-2 px-4 border-b border">{user.nim}</td>
+                  <td className="py-2 px-4 border-b border font-dramatic-header-user">
+                    {index + 1}
+                  </td>
+                  <td className="py-2 px-4 border-b border font-event-body">
+                    {user.nama}
+                  </td>
+                  <td className="py-2 px-4 border-b border font-event-body">
+                    {user.nim}
+                  </td>
                   <td className="py-2 px-4 border-b text-center">
                     <div className="flex justify-center items-center h-full">
                       <FontAwesomeIcon
@@ -438,7 +468,7 @@ const Drama = () => {
         </div>
 
         <button
-          className="flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
+          className="font-event-header flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
           onClick={handleClick}
         >
           <FaPlus className="mr-2" />
@@ -450,12 +480,18 @@ const Drama = () => {
           <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-2">
             <thead>
               <tr className="bg-gray-200">
-                <th className="py-2 px-4 border-b text-center">No</th>
-                <th className="py-2 px-4 border-b text-center">
+                <th className="py-2 px-4 border-b text-center font-dramatic-header">
+                  No
+                </th>
+                <th className="py-2 px-4 border-b text-center font-dramatic-header">
                   Nama Parameter
                 </th>
-                <th className="py-2 px-4 border-b text-center">Deskripsi</th>
-                <th className="py-2 px-4 border-b text-center">Aksi</th>
+                <th className="py-2 px-4 border-b text-center font-dramatic-header">
+                  Deskripsi
+                </th>
+                <th className="py-2 px-4 border-b text-center font-dramatic-header">
+                  Aksi
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -464,11 +500,13 @@ const Drama = () => {
                   key={parameter.id}
                   className="text-center hover:bg-gray-100"
                 >
-                  <td className="py-2 px-4 border-b border">{index + 1}</td>
-                  <td className="py-2 px-4 border-b border">
+                  <td className="py-2 px-4 border-b border font-dramatic-header">
+                    {index + 1}
+                  </td>
+                  <td className="py-2 px-4 border-b border font-dramatic-body-user">
                     {parameter.nama}
                   </td>
-                  <td className="py-2 px-4 border-b border">
+                  <td className="py-2 px-4 border-b border font-dramatic-body-user">
                     {parameter.deskripsi}
                   </td>
                   <td className="py-2 px-4 border-b">
