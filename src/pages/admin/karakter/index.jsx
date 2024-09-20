@@ -39,8 +39,20 @@ const Karakter = () => {
         const usersWithRoleUser = response.data.filter(
           (user) => user.role === "User"
         );
-        setUsers(usersWithRoleUser);
-        setFilteredUsers(usersWithRoleUser);
+
+        const sortedUsers = usersWithRoleUser.sort((a, b) => {
+          const aHasEvaluation = evaluasiKarakters.some(
+            (evaluasi) => evaluasi.user?.id === a.id
+          );
+          const bHasEvaluation = evaluasiKarakters.some(
+            (evaluasi) => evaluasi.user?.id === b.id
+          );
+
+          return aHasEvaluation - bHasEvaluation;
+        });
+
+        setUsers(sortedUsers);
+        setFilteredUsers(sortedUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -95,7 +107,6 @@ const Karakter = () => {
     }
   };
 
-  // Pagination logic for Evaluasi Karakter
   const indexOfLastEvaluasi = activePageEvaluasi * itemsPerPageEvaluasi;
   const indexOfFirstEvaluasi = indexOfLastEvaluasi - itemsPerPageEvaluasi;
   const currentEvaluasi = filteredEvaluasiKarakters.slice(
@@ -106,7 +117,6 @@ const Karakter = () => {
     filteredEvaluasiKarakters.length / itemsPerPageEvaluasi
   );
 
-  // Pagination logic for Users
   const indexOfLastUser = activePageUsers * itemsPerPageUsers;
   const indexOfFirstUser = indexOfLastUser - itemsPerPageUsers;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);

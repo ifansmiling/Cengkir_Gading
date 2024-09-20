@@ -10,6 +10,7 @@ import { FaPlus } from "react-icons/fa";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 import "./ModalTransisition.css";
 
@@ -24,6 +25,12 @@ const Drama = () => {
   const [selectedUserRatings, setSelectedUserRatings] = useState([]);
   const [selectedUserName, setSelectedUserName] = useState("");
 
+  // Pagination state for both tables
+  const [activePageParameters, setActivePageParameters] = useState(1);
+  const [activePageUsers, setActivePageUsers] = useState(1);
+  const [activePageRatings, setActivePageRatings] = useState(1);
+  const itemsPerPage = 10;
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -37,7 +44,23 @@ const Drama = () => {
         const usersWithRoleUser = response.data.filter(
           (user) => user.role === "User"
         );
-        setFilteredUsers(usersWithRoleUser);
+
+        const updatedUsers = usersWithRoleUser.map((user) => {
+          const hasRating = userRatings.some(
+            (rating) => rating.user_id === user.id
+          );
+          return { ...user, sudahDirating: hasRating };
+        });
+
+        const sortedUsers = updatedUsers.sort((a, b) => {
+          return a.sudahDirating === b.sudahDirating
+            ? 0
+            : a.sudahDirating
+            ? 1
+            : -1;
+        });
+
+        setFilteredUsers(sortedUsers);
       } catch (error) {
         console.error("Gagal mengambil data pengguna:", error);
       }
@@ -228,6 +251,77 @@ const Drama = () => {
     navigate(`/admin/drama/rating/edit/${userId}`);
   };
 
+  // Pagination logic function
+  const paginate = (items, activePage, itemsPerPage) => {
+    const start = (activePage - 1) * itemsPerPage;
+    return items.slice(start, start + itemsPerPage);
+  };
+
+  // Inside your component
+  const currentParameters = paginate(
+    parameters,
+    activePageParameters,
+    itemsPerPage
+  );
+  const currentUsers = paginate(filteredUsers, activePageUsers, itemsPerPage);
+  const currentRatings = paginate(
+    filteredRatings,
+    activePageRatings,
+    itemsPerPage
+  );
+
+  const totalPagesParameters = Math.ceil(parameters.length / itemsPerPage);
+  const totalPagesUsers = Math.ceil(filteredUsers.length / itemsPerPage);
+  const totalPagesRatings = Math.ceil(filteredRatings.length / itemsPerPage);
+
+  // SimplePagination component
+  const SimplePagination = ({ activePage, setActivePage, totalPages }) => {
+    const next = () => {
+      if (activePage < totalPages) {
+        setActivePage(activePage + 1);
+      }
+    };
+
+    const prev = () => {
+      if (activePage > 1) {
+        setActivePage(activePage - 1);
+      }
+    };
+
+    return (
+      <div className="flex items-center justify-center gap-4 mt-4 mb-6">
+        <button
+          onClick={prev}
+          disabled={activePage === 1}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === 1
+              ? "text-green-300 cursor-not-allowed"
+              : "text-gray-700 hover:text-green-700"
+          }`}
+        >
+          <ArrowLeftIcon className="h-5 w-5" />
+        </button>
+
+        <span className="text-gray-500">
+          Page <strong className="text-green-700">{activePage}</strong> of{" "}
+          <strong className="text-green-600">{totalPages}</strong>
+        </span>
+
+        <button
+          onClick={next}
+          disabled={activePage === totalPages}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === totalPages
+              ? "text-green-300 cursor-not-allowed"
+              : "text-black hover:text-green-700"
+          }`}
+        >
+          <ArrowRightIcon className="h-5 w-5" />
+        </button>
+      </div>
+    );
+  };
+
   return (
     <AdminLayout>
       <div className="p-6">
@@ -279,7 +373,7 @@ const Drama = () => {
           </button>
         </form>
 
-        <div className="overflow-x-auto mb-6">
+        <div className="overflow-x-auto mb-4">
           <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-6">
             <thead>
               <tr className="bg-gray-200">
@@ -301,12 +395,14 @@ const Drama = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredRatings.map((user, index) => (
+              {currentRatings.map((user, index) => (
                 <tr
                   key={user.user_id}
                   className="text-center hover:bg-gray-100 font-dramatic-header-user"
                 >
-                  <td className="py-2 px-4 border-b border">{index + 1}</td>
+                  <td className="py-2 px-4 border-b border">
+                    {(activePageRatings - 1) * itemsPerPage + index + 1}
+                  </td>
                   <td className="py-2 px-4 border-b font-event-body border">
                     {user.nama}
                   </td>
@@ -328,7 +424,6 @@ const Drama = () => {
                       >
                         <FaEdit />
                       </button>
-
                       <button
                         className="text-red-500 hover:text-red-700"
                         onClick={() =>
@@ -346,6 +441,11 @@ const Drama = () => {
               ))}
             </tbody>
           </table>
+          <SimplePagination
+            activePage={activePageRatings}
+            setActivePage={setActivePageRatings}
+            totalPages={totalPagesRatings}
+          />
         </div>
 
         {/* Modal */}
@@ -419,45 +519,69 @@ const Drama = () => {
           <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-6">
             <thead>
               <tr className="bg-gray-200">
-                <th className="py-2 px-4 border-b text-center font-dramatic-header-user">
+                <th className="py-2 px-4 border-b font-dramatic-header-user text-center">
                   No
                 </th>
-                <th className="py-2 px-4 border-b text-center font-dramatic-header-user">
+                <th className="py-2 px-4 border-b font-event-header text-center">
                   Nama
                 </th>
-                <th className="py-2 px-4 border-b text-center font-dramatic-header-user">
+                <th className="py-2 px-4 border-b font-event-header text-center">
                   NIM
                 </th>
-                <th className="py-2 px-4 border-b text-center font-dramatic-header-user">
-                  Nilai
+                <th className="py-2 px-4 border-b font-event-header text-center">
+                  Status Rating
+                </th>
+                <th className="py-2 px-4 border-b font-event-header text-center">
+                  Aksi
                 </th>
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user, index) => (
-                <tr key={user.id} className="text-center hover:bg-gray-100">
-                  <td className="py-2 px-4 border-b border font-dramatic-header-user">
-                    {index + 1}
-                  </td>
-                  <td className="py-2 px-4 border-b border font-event-body">
-                    {user.nama}
-                  </td>
-                  <td className="py-2 px-4 border-b border font-event-body">
-                    {user.nim}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center">
-                    <div className="flex justify-center items-center h-full">
-                      <FontAwesomeIcon
-                        icon={faPlus}
-                        className="text-blue-500 text-xl hover:text-blue-700 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
-                        onClick={() => handleClickRating(user.id)}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {currentUsers.map((user, index) => {
+                const hasRated = userRatings.some(
+                  (rating) => rating.user_id === user.id
+                );
+                return (
+                  <tr key={user.id} className="text-center hover:bg-gray-100">
+                    <td className="py-2 px-4 border-b border font-dramatic-header-user">
+                      {(activePageUsers - 1) * itemsPerPage + index + 1}
+                    </td>
+                    <td className="py-2 px-4 border-b border font-event-body">
+                      {user.nama}
+                    </td>
+                    <td className="py-2 px-4 border-b border font-event-body">
+                      {user.nim}
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      <span
+                        className={
+                          hasRated
+                            ? "text-green-500 font-dramatic-header"
+                            : "text-red-500 font-dramatic-header"
+                        }
+                      >
+                        {hasRated ? "Sudah Ada Rating" : "Belum Ada Rating"}
+                      </span>
+                    </td>
+                    <td className="py-2 px-4 border-b text-center">
+                      <div className="flex justify-center items-center h-full">
+                        <FontAwesomeIcon
+                          icon={faPlus}
+                          className="text-blue-500 text-xl hover:text-blue-700 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
+                          onClick={() => handleClickRating(user.id)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
+          <SimplePagination
+            activePage={activePageUsers}
+            setActivePage={setActivePageUsers}
+            totalPages={totalPagesUsers}
+          />
         </div>
 
         <div className="flex items-center justify-between mb-4">
@@ -495,13 +619,13 @@ const Drama = () => {
               </tr>
             </thead>
             <tbody>
-              {parameters.map((parameter, index) => (
+              {currentParameters.map((parameter, index) => (
                 <tr
                   key={parameter.id}
                   className="text-center hover:bg-gray-100"
                 >
                   <td className="py-2 px-4 border-b border font-dramatic-header">
-                    {index + 1}
+                    {(activePageParameters - 1) * itemsPerPage + index + 1}
                   </td>
                   <td className="py-2 px-4 border-b border font-dramatic-body-user">
                     {parameter.nama}
@@ -529,6 +653,11 @@ const Drama = () => {
               ))}
             </tbody>
           </table>
+          <SimplePagination
+            activePage={activePageParameters}
+            setActivePage={setActivePageParameters}
+            totalPages={totalPagesParameters}
+          />
         </div>
       </div>
     </AdminLayout>
