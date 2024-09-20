@@ -177,13 +177,13 @@ const CreateUser = () => {
               >
                 <option
                   className="block text-gray-600 font-dramatic-subtitle"
-                  value="admin"
+                  value="Admin"
                 >
                   Admin
                 </option>
                 <option
                   className="block text-gray-600 font-dramatic-subtitle mb-2"
-                  value="user"
+                  value="User"
                 >
                   User
                 </option>

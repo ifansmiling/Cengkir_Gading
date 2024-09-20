@@ -3,11 +3,16 @@ import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline"; 
 
 const Skenario = () => {
   const [skenarios, setSkenarios] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredSkenarios, setFilteredSkenarios] = useState([]);
+
+  // Pagination state
+  const [activePage, setActivePage] = useState(1);
+  const itemsPerPage = 10;
 
   const navigate = useNavigate();
 
@@ -37,6 +42,7 @@ const Skenario = () => {
     } else {
       setFilteredSkenarios(skenarios);
     }
+    setActivePage(1); 
   };
 
   const handleEditClick = (id) => {
@@ -66,6 +72,59 @@ const Skenario = () => {
       console.error("Failed to delete skenario", error);
       alert("Gagal menghapus skenario");
     }
+  };
+
+  // Pagination logic
+  const indexOfLastItem = activePage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentSkenarios = filteredSkenarios.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(filteredSkenarios.length / itemsPerPage);
+
+  // SimplePagination component
+  const SimplePagination = () => {
+    const next = () => {
+      if (activePage < totalPages) setActivePage(activePage + 1);
+    };
+
+    const prev = () => {
+      if (activePage > 1) setActivePage(activePage - 1);
+    };
+
+    return (
+      <div className="flex items-center justify-center gap-4 mt-4">
+        <button
+          onClick={prev}
+          disabled={activePage === 1}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === 1
+              ? "text-green-300 cursor-not-allowed"
+              : "text-gray-700 hover:text-green-700"
+          }`}
+        >
+          <ArrowLeftIcon className="h-5 w-5" />
+        </button>
+
+        <span className="text-gray-500">
+          Page <strong className="text-green-700">{activePage}</strong> of{" "}
+          <strong className="text-green-600">{totalPages}</strong>
+        </span>
+
+        <button
+          onClick={next}
+          disabled={activePage === totalPages}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === totalPages
+              ? "text-green-300 cursor-not-allowed"
+              : "text-black hover:text-green-700"
+          }`}
+        >
+          <ArrowRightIcon className="h-5 w-5" />
+        </button>
+      </div>
+    );
   };
 
   return (
@@ -149,57 +208,66 @@ const Skenario = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredSkenarios.map((skenario, index) => (
-                <tr key={skenario.id} className="border-b hover:bg-gray-100">
-                  <td className="px-4 py-2 border text-center font-dramatic-header">
-                    {index + 1}
-                  </td>
-                  <td className="px-2 py-2 border text-center font-dramatic-body-user">
-                    {skenario.judul}
-                  </td>
-                  <td className="px-4 py-2 border text-center font-natural-body">
-                    {skenario.deskripsi}
-                  </td>
-                  <td className="px-2 py-2 border text-center font-dramatic-header">
-                    {skenario.file_paths.length > 0 ? (
-                      <div className="flex flex-col">
-                        {skenario.file_paths.map((filePath, i) => (
-                          <a
-                            key={i}
-                            href={filePath}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline"
-                          >
-                            {extractFileName(filePath)}
-                          </a>
-                        ))}
+              {currentSkenarios.length > 0 ? (
+                currentSkenarios.map((skenario, index) => (
+                  <tr key={skenario.id} className="border-b hover:bg-gray-100">
+                    <td className="px-4 py-2 border text-center font-dramatic-header">
+                      {index + 1 + indexOfFirstItem}
+                    </td>
+                    <td className="px-2 py-2 border text-center font-dramatic-body-user">
+                      {skenario.judul}
+                    </td>
+                    <td className="px-4 py-2 border text-center font-natural-body">
+                      {skenario.deskripsi}
+                    </td>
+                    <td className="px-2 py-2 border text-center font-dramatic-header">
+                      {skenario.file_paths.length > 0 ? (
+                        <div className="flex flex-col">
+                          {skenario.file_paths.map((filePath, i) => (
+                            <a
+                              key={i}
+                              href={filePath}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 hover:underline"
+                            >
+                              {extractFileName(filePath)}
+                            </a>
+                          ))}
+                        </div>
+                      ) : (
+                        "Tidak ada file"
+                      )}
+                    </td>
+                    <td className="px-6 py-2 border text-center align-middle">
+                      <div className="flex justify-center items-center space-x-2">
+                        <button
+                          className="text-blue-500 hover:text-blue-700"
+                          onClick={() => handleEditClick(skenario.id)}
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          className="text-red-500 hover:text-red-700"
+                          onClick={() => handleDeleteClick(skenario.id)}
+                        >
+                          <FaTrash />
+                        </button>
                       </div>
-                    ) : (
-                      "Tidak ada file"
-                    )}
-                  </td>
-                  <td className="px-6 py-2 border text-center align-middle">
-                    <div className="flex justify-center items-center space-x-2">
-                      <button
-                        className="text-blue-500 hover:text-blue-700"
-                        onClick={() => handleEditClick(skenario.id)}
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        className="text-red-500 hover:text-red-700"
-                        onClick={() => handleDeleteClick(skenario.id)}
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center py-4">
+                    Tidak ada skenario ditemukan
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
+        <SimplePagination />
       </div>
     </AdminLayout>
   );

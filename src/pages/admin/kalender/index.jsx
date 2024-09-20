@@ -3,15 +3,21 @@ import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 const Kalender = () => {
   const [kalenderAcaras, setKalenderAcaras] = useState([]);
+  const [activePage, setActivePage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchKalenderAcaras = async () => {
       try {
         const response = await api.get("/kalenderAcara");
-        setKalenderAcaras(response.data);
+        const sortedData = response.data.sort(
+          (a, b) => new Date(b.tanggal_event) - new Date(a.tanggal_event)
+        );
+        setKalenderAcaras(sortedData);
       } catch (error) {
         console.error("Gagal mengambil data kalender acara:", error);
       }
@@ -47,6 +53,59 @@ const Kalender = () => {
     navigate(`/admin/kalender/edit/${id}`);
   };
 
+  // Pagination logic
+  const indexOfLastItem = activePage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentKalenderAcaras = kalenderAcaras.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(kalenderAcaras.length / itemsPerPage);
+
+  // SimplePagination component
+  const SimplePagination = () => {
+    const next = () => {
+      if (activePage < totalPages) setActivePage(activePage + 1);
+    };
+
+    const prev = () => {
+      if (activePage > 1) setActivePage(activePage - 1);
+    };
+
+    return (
+      <div className="flex items-center justify-center gap-4 mt-4">
+        <button
+          onClick={prev}
+          disabled={activePage === 1}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === 1
+              ? "text-green-300 cursor-not-allowed"
+              : "text-gray-700 hover:text-green-700"
+          }`}
+        >
+          <ArrowLeftIcon className="h-5 w-5" />
+        </button>
+
+        <span className="text-gray-500">
+          Page <strong className="text-green-700">{activePage}</strong> of{" "}
+          <strong className="text-green-600">{totalPages}</strong>
+        </span>
+
+        <button
+          onClick={next}
+          disabled={activePage === totalPages}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === totalPages
+              ? "text-green-300 cursor-not-allowed"
+              : "text-black hover:text-green-700"
+          }`}
+        >
+          <ArrowRightIcon className="h-5 w-5" />
+        </button>
+      </div>
+    );
+  };
+
   return (
     <AdminLayout>
       <div className="p-6">
@@ -73,10 +132,10 @@ const Kalender = () => {
               </tr>
             </thead>
             <tbody>
-              {kalenderAcaras.map((event, index) => (
+              {currentKalenderAcaras.map((event, index) => (
                 <tr key={event.id} className="hover:bg-gray-100">
                   <td className="py-2 px-4 border-b text-center font-dramatic-header">
-                    {index + 1}
+                    {index + 1 + indexOfFirstItem}
                   </td>
                   <td className="py-2 px-4 border-b text-center font-dramatic-body-user">
                     {event.judul}
@@ -129,6 +188,8 @@ const Kalender = () => {
             </tbody>
           </table>
         </div>
+        {/* Pagination */}
+        <SimplePagination />
       </div>
     </AdminLayout>
   );

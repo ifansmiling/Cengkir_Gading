@@ -3,6 +3,7 @@ import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { FaEdit, FaTrash, FaPlus, FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 const Exercise = () => {
   const [exercises, setExercises] = useState([]);
@@ -10,6 +11,10 @@ const Exercise = () => {
   const [filteredExercises, setFilteredExercises] = useState([]);
   const [filterType, setFilterType] = useState("Semua");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Pagination state
+  const [activePage, setActivePage] = useState(1);
+  const itemsPerPage = 5;
 
   const getOriginalFileName = (filePath) => {
     if (!filePath) return "Tidak Ada File";
@@ -29,6 +34,7 @@ const Exercise = () => {
       exercise.judul.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredExercises(filtered);
+    setActivePage(1);
   };
 
   const handleFilterType = (type) => {
@@ -39,6 +45,7 @@ const Exercise = () => {
       type === "Semua" ? true : exercise.tipe === type
     );
     setFilteredExercises(filtered);
+    setActivePage(1);
   };
 
   const navigate = useNavigate();
@@ -87,6 +94,58 @@ const Exercise = () => {
     if (confirmDelete) {
       deleteExercise(id);
     }
+  };
+
+  // Pagination logic
+  const indexOfLastItem = activePage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentExercises = filteredExercises.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+  const totalPages = Math.ceil(filteredExercises.length / itemsPerPage);
+
+  const SimplePagination = () => {
+    const next = () => {
+      if (activePage < totalPages) setActivePage(activePage + 1);
+    };
+
+    const prev = () => {
+      if (activePage > 1) setActivePage(activePage - 1);
+    };
+
+    return (
+      <div className="flex items-center justify-center gap-4 mt-4">
+        <button
+          onClick={prev}
+          disabled={activePage === 1}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === 1
+              ? "text-green-300 cursor-not-allowed"
+              : "text-gray-700 hover:text-green-700"
+          }`}
+        >
+          <ArrowLeftIcon className="h-5 w-5" />
+        </button>
+
+        <span className="text-gray-500">
+          Page <strong className="text-green-700">{activePage}</strong> of{" "}
+          <strong className="text-green-600">{totalPages}</strong>
+        </span>
+
+        <button
+          onClick={next}
+          disabled={activePage === totalPages}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === totalPages
+              ? "text-green-300 cursor-not-allowed"
+              : "text-black hover:text-green-700"
+          }`}
+        >
+          <ArrowRightIcon className="h-5 w-5" />
+        </button>
+      </div>
+    );
   };
 
   return (
@@ -190,11 +249,11 @@ const Exercise = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredExercises.length > 0 ? (
-              filteredExercises.map((exercise, index) => (
+            {currentExercises.length > 0 ? (
+              currentExercises.map((exercise, index) => (
                 <tr key={exercise.id} className="hover:bg-gray-100">
                   <td className="py-2 px-6 border-b border text-center align-middle font-dramatic-header">
-                    {index + 1}
+                    {index + 1 + indexOfFirstItem}
                   </td>
                   <td className="py-2 px-4 border-b border text-center align-middle font-event-body">
                     {exercise.judul}
@@ -244,6 +303,8 @@ const Exercise = () => {
             )}
           </tbody>
         </table>
+
+        <SimplePagination />
       </div>
     </AdminLayout>
   );

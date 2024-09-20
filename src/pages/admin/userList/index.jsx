@@ -3,6 +3,7 @@ import AdminLayout from "../../../layouts/AdminLayout";
 import { FaEdit, FaTrash, FaPlus, FaCaretDown } from "react-icons/fa";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
+import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 const UserList = () => {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ const UserList = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [activePage, setActivePage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -66,6 +69,56 @@ const UserList = () => {
     });
     setFilteredUsers(filtered);
   }, [searchTerm, selectedRole, users]);
+
+  // Pagination logic
+  const indexOfLastItem = activePage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
+  // SimplePagination component
+  const SimplePagination = () => {
+    const next = () => {
+      if (activePage < totalPages) setActivePage(activePage + 1);
+    };
+
+    const prev = () => {
+      if (activePage > 1) setActivePage(activePage - 1);
+    };
+
+    return (
+      <div className="flex items-center justify-center gap-4 mt-4">
+        <button
+          onClick={prev}
+          disabled={activePage === 1}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === 1
+              ? "text-green-300 cursor-not-allowed"
+              : "text-gray-700 hover:text-green-700"
+          }`}
+        >
+          <ArrowLeftIcon className="h-5 w-5" />
+        </button>
+
+        <span className="text-gray-500">
+          Page <strong className="text-green-700">{activePage}</strong> of{" "}
+          <strong className="text-green-600">{totalPages}</strong>
+        </span>
+
+        <button
+          onClick={next}
+          disabled={activePage === totalPages}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === totalPages
+              ? "text-green-300 cursor-not-allowed"
+              : "text-black hover:text-green-700"
+          }`}
+        >
+          <ArrowRightIcon className="h-5 w-5" />
+        </button>
+      </div>
+    );
+  };
 
   return (
     <AdminLayout>
@@ -174,10 +227,10 @@ const UserList = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user, index) => (
+              {currentUsers.map((user, index) => (
                 <tr key={user.id} className="border-b hover:bg-gray-100">
                   <td className="py-2 px-4 border font-dramatic-header">
-                    {index + 1}
+                    {indexOfFirstItem + index + 1}
                   </td>
                   <td className="py-2 px-4 border font-dramatic-body-user">
                     {user.nama}
@@ -188,16 +241,16 @@ const UserList = () => {
                   <td className="py-2 px-4 border font-dramatic-body-user">
                     {user.role}
                   </td>
-                  <td className="py-2 px-4 flex justify-center space-x-2">
+                  <td className="py-2 px-4 border">
                     <button
-                      className="text-blue-500 hover:text-blue-700"
                       onClick={() => navigate(`/admin/user/edit/${user.id}`)}
+                      className="text-blue-600 hover:text-blue-900 mr-2"
                     >
                       <FaEdit />
                     </button>
                     <button
-                      className="text-red-500 hover:text-red-700"
                       onClick={() => handleDelete(user.id)}
+                      className="text-red-600 hover:text-red-900"
                     >
                       <FaTrash />
                     </button>
@@ -207,6 +260,9 @@ const UserList = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        <SimplePagination />
       </div>
     </AdminLayout>
   );

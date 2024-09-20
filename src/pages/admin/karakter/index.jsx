@@ -3,6 +3,7 @@ import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { FaEdit, FaTrash, FaClipboardCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 const Karakter = () => {
   const [evaluasiKarakters, setEvaluasiKarakters] = useState([]);
@@ -14,6 +15,12 @@ const Karakter = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   const navigate = useNavigate();
+
+  // Pagination state for both tables
+  const [activePageEvaluasi, setActivePageEvaluasi] = useState(1);
+  const [activePageUsers, setActivePageUsers] = useState(1);
+  const itemsPerPageEvaluasi = 10;
+  const itemsPerPageUsers = 10;
 
   useEffect(() => {
     const fetchEvaluasiKarakters = async () => {
@@ -88,6 +95,67 @@ const Karakter = () => {
     }
   };
 
+  // Pagination logic for Evaluasi Karakter
+  const indexOfLastEvaluasi = activePageEvaluasi * itemsPerPageEvaluasi;
+  const indexOfFirstEvaluasi = indexOfLastEvaluasi - itemsPerPageEvaluasi;
+  const currentEvaluasi = filteredEvaluasiKarakters.slice(
+    indexOfFirstEvaluasi,
+    indexOfLastEvaluasi
+  );
+  const totalPagesEvaluasi = Math.ceil(
+    filteredEvaluasiKarakters.length / itemsPerPageEvaluasi
+  );
+
+  // Pagination logic for Users
+  const indexOfLastUser = activePageUsers * itemsPerPageUsers;
+  const indexOfFirstUser = indexOfLastUser - itemsPerPageUsers;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPagesUsers = Math.ceil(filteredUsers.length / itemsPerPageUsers);
+
+  // SimplePagination component
+  const SimplePagination = ({ activePage, setActivePage, totalPages }) => {
+    const next = () => {
+      if (activePage < totalPages) setActivePage(activePage + 1);
+    };
+
+    const prev = () => {
+      if (activePage > 1) setActivePage(activePage - 1);
+    };
+
+    return (
+      <div className="flex items-center justify-center gap-4 mt-4 mb-6">
+        <button
+          onClick={prev}
+          disabled={activePage === 1}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === 1
+              ? "text-green-300 cursor-not-allowed"
+              : "text-gray-700 hover:text-green-700"
+          }`}
+        >
+          <ArrowLeftIcon className="h-5 w-5" />
+        </button>
+
+        <span className="text-gray-500">
+          Page <strong className="text-green-700">{activePage}</strong> of{" "}
+          <strong className="text-green-600">{totalPages}</strong>
+        </span>
+
+        <button
+          onClick={next}
+          disabled={activePage === totalPages}
+          className={`border border-green-300 rounded-full p-2 ${
+            activePage === totalPages
+              ? "text-green-300 cursor-not-allowed"
+              : "text-black hover:text-green-700"
+          }`}
+        >
+          <ArrowRightIcon className="h-5 w-5" />
+        </button>
+      </div>
+    );
+  };
+
   return (
     <AdminLayout>
       <div className="p-4">
@@ -138,7 +206,7 @@ const Karakter = () => {
         </form>
 
         <div className="overflow-x-auto">
-          <table className=" min-w-full bg-white border border-gray-200 text-center rounded-lg shadow-md mb-8">
+          <table className="min-w-full bg-white border border-gray-200 text-center rounded-lg shadow-md mb-4">
             <thead>
               <tr className="bg-gray-200">
                 <th className="py-2 px-4 border font-dramatic-header">No</th>
@@ -153,10 +221,10 @@ const Karakter = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredEvaluasiKarakters.map((item, index) => (
-                <tr key={item.id} className="hover:bg-gray-100 ">
+              {currentEvaluasi.map((item, index) => (
+                <tr key={item.id} className="hover:bg-gray-100">
                   <td className="py-2 px-4 border font-dramatic-header">
-                    {index + 1}
+                    {index + 1 + indexOfFirstEvaluasi}
                   </td>
                   <td className="py-2 px-6 border font-dramatic-body-user">
                     {item.user?.nama || "Nama tidak ditemukan"}
@@ -187,6 +255,11 @@ const Karakter = () => {
               ))}
             </tbody>
           </table>
+          <SimplePagination
+            activePage={activePageEvaluasi}
+            setActivePage={setActivePageEvaluasi}
+            totalPages={totalPagesEvaluasi}
+          />
         </div>
 
         {/* Tabel Pengguna dengan Role User */}
@@ -206,10 +279,10 @@ const Karakter = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user, index) => (
+              {currentUsers.map((user, index) => (
                 <tr key={user.id} className="hover:bg-gray-100">
                   <td className="py-2 px-4 border font-dramatic-header">
-                    {index + 1}
+                    {index + 1 + indexOfFirstUser}
                   </td>
                   <td className="py-2 px-6 border font-dramatic-body-user">
                     {user.nama}
@@ -246,6 +319,11 @@ const Karakter = () => {
               ))}
             </tbody>
           </table>
+          <SimplePagination
+            activePage={activePageUsers}
+            setActivePage={setActivePageUsers}
+            totalPages={totalPagesUsers}
+          />
         </div>
       </div>
     </AdminLayout>
