@@ -11,7 +11,13 @@ const KalenderAcara = () => {
     const fetchEvents = async () => {
       try {
         const response = await api.get("/kalenderAcara");
-        setEvents(response.data);
+
+        // Sort events by date in ascending order (upcoming first)
+        const sortedEvents = response.data.sort((b, a) => {
+          return new Date(a.tanggal_event) - new Date(b.tanggal_event);
+        });
+
+        setEvents(sortedEvents);
       } catch (error) {
         console.error("Failed to fetch events:", error);
       }

@@ -35,80 +35,86 @@ const EvaluasiKarakter = () => {
   if (loading)
     return (
       <UserLayout>
-        <p>Loading...</p>
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="text-green-700 font-semibold text-lg">Loading...</div>
+        </div>
       </UserLayout>
     );
   if (error)
     return (
       <UserLayout>
-        <p>Error: {error}</p>
+        <div className="flex justify-center items-center min-h-screen">
+          <p className="text-red-500 font-semibold text-lg">Error: {error}</p>
+        </div>
       </UserLayout>
     );
 
   return (
     <UserLayout>
-      <div className="bg-white min-h-screen py-8">
-        <div className="max-w-full mx-auto px-4">
-          {" "}
-          <h1 className="font-dramatic-header text-2xl font-extrabold text-left text-green-800 mb-8 underline underline-offset-2 decoration-green-800">
-            Evaluasi Karakter Anggota
-          </h1>
+      <div className="bg-white min-h-screen py-10">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="flex justify-center mb-10">
+            <h1 className="font-dramatic-header text-2xl font-extrabold text-left text-green-800 underline underline-offset-2 decoration-green-800">
+              Evaluasi Karakter Anggota
+            </h1>
+          </div>
+
           {message && (
-            <div className="bg-white p-4 text-red-500 text-center mb-4 rounded-md shadow-md">
+            <div className="bg-red-100 text-red-500 p-4 text-center mb-6 rounded-lg shadow-lg">
               {message}
             </div>
           )}
+
           {evaluation && evaluation.length > 0 ? (
-            <div className="grid grid-cols-1  gap-8 max-w-6xl items-center mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {evaluation.map((evalItem) => (
                 <div
                   key={evalItem.id}
-                  className="bg-white shadow-lg p-6 rounded-xl hover:bg-green-50 transition-all duration-300 max-w-full"
+                  className="relative group bg-white shadow-lg rounded-xl p-8 hover:shadow-xl hover:bg-gradient-to-r from-green-100 to-blue-200 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105"
                 >
-                  <h2 className="font-dramatic-body-user text-2xl font-bold text-green-700 mb-6 border-b border-green-300 pb-3 text-center">
+                  <h2 className="font-dramatic-body-user text-xl font-extrabold text-green-700 mb-6 text-center">
                     {evalItem.judul_evaluasi}
                   </h2>
 
                   <div className="mb-6">
-                    <h3 className="font-dramatic-body-user text-lg font-semibold text-green-800 mb-2">
-                      Kekurangan:
+                    <h3 className="font-dramatic-body-user text-base font-semibold text-green-800 mb-3">
+                      Kekurangan
                     </h3>
-                    <ul className="list-disc list-inside mt-2 space-y-2 text-justify text-gray-700">
+                    <div className="space-y-2 text-justify text-gray-600 font-dramatic-body-user text-sm">
                       {evalItem.kekurangan
                         ?.split("\n")
                         .map((weakness, index) => (
-                          <li
-                            key={index}
-                            className="text-gray-600 font-dramatic-subtitle text-base"
-                          >
+                          <p key={index} className="text-gray-700">
                             {weakness}
-                          </li>
+                          </p>
                         ))}
-                    </ul>
+                    </div>
                   </div>
 
                   <div>
-                    <h3 className="font-dramatic-body-user text-lg font-semibold text-green-800 mb-2">
-                      Evaluasi yang Harus Dilakukan:
+                    <h3 className="font-dramatic-body-user text-base font-semibold text-green-800 mb-3">
+                      Evaluasi yang Harus Dilakukan
                     </h3>
-                    <ul className="list-disc list-inside mt-2 space-y-2 text-justify text-gray-700">
+                    <div className="space-y-2 text-justify text-gray-600 font-dramatic-body-user text-sm">
                       {evalItem.evaluasi
                         ?.split("\n")
                         .map((improvement, index) => (
-                          <li
-                            key={index}
-                            className="text-gray-600 font-dramatic-subtitle text-base"
-                          >
+                          <p key={index} className="text-gray-700">
                             {improvement}
-                          </li>
+                          </p>
                         ))}
-                    </ul>
+                    </div>
                   </div>
+
+                  {/* Decorative Line */}
+                  <div className="absolute inset-0 h-1 w-full bg-gradient-to-r from-green-400 to-green-700 rounded-lg group-hover:h-3 transition-all duration-500"></div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-center text-gray-700"></p>
+            <p className="text-center text-gray-700">
+              Tidak ada evaluasi yang tersedia.
+            </p>
           )}
         </div>
       </div>
