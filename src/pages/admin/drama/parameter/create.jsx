@@ -14,7 +14,7 @@ const CreateParameter = () => {
     e.preventDefault();
     try {
       const response = await api.post("/drama", { nama, deskripsi });
-      setSuccessMessage("Drama berhasil dibuat!");
+      setSuccessMessage("Parameter berhasil dibuat!");
       setError(null);
       setNama("");
       setDeskripsi("");
@@ -60,14 +60,14 @@ const CreateParameter = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-gray-700 font-dramatic-subtitle mb-2 font-semibold">
-                Nama Drama
+                Nama Parameter
               </label>
               <input
                 type="text"
                 value={nama}
                 onChange={(e) => setNama(e.target.value)}
                 className="text-gray-600 w-full px-4 py-2 border focus:border-green-400 hover:border-green-500 focus:outline-none rounded-md"
-                placeholder="Nama Drama"
+                placeholder="Nama Parameter"
                 required
               />
             </div>
@@ -80,7 +80,7 @@ const CreateParameter = () => {
                 value={deskripsi}
                 onChange={(e) => setDeskripsi(e.target.value)}
                 className="text-gray-600 w-full px-4 py-2 border focus:border-green-400 hover:border-green-500 focus:outline-none rounded-md"
-                placeholder="Deskripsi Drama"
+                placeholder="Deskripsi Parameter"
                 required
               ></textarea>
             </div>

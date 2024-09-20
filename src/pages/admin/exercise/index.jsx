@@ -14,7 +14,7 @@ const Exercise = () => {
 
   // Pagination state
   const [activePage, setActivePage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   const getOriginalFileName = (filePath) => {
     if (!filePath) return "Tidak Ada File";

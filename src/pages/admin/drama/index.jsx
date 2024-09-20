@@ -462,7 +462,7 @@ const Drama = () => {
                 Detail Penilaian
               </h2>
               <div>
-                <h3 className="text-lg font-medium">Nama Pengguna:</h3>
+                <h3 className="text-lg font-dramatic-header">Nama Pengguna:</h3>
                 <p className="text-gray-700 mb-4 font-event-body">
                   {selectedUserName}
                 </p>
@@ -481,7 +481,7 @@ const Drama = () => {
                     {selectedUserRatings.length > 0 ? (
                       selectedUserRatings.map((rating) => (
                         <tr key={rating.id}>
-                          <td className="py-2 px-4 border-b text-center font-sidebar-heading">
+                          <td className="py-2 px-4 border-b text-center font-natural-body">
                             {rating.drama
                               ? rating.drama.nama
                               : "Unknown Parameter"}
