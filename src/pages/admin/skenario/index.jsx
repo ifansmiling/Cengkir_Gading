@@ -3,7 +3,7 @@ import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline"; 
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 const Skenario = () => {
   const [skenarios, setSkenarios] = useState([]);
@@ -12,7 +12,7 @@ const Skenario = () => {
 
   // Pagination state
   const [activePage, setActivePage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
 
   const navigate = useNavigate();
 
@@ -42,7 +42,7 @@ const Skenario = () => {
     } else {
       setFilteredSkenarios(skenarios);
     }
-    setActivePage(1); 
+    setActivePage(1);
   };
 
   const handleEditClick = (id) => {
@@ -211,13 +211,13 @@ const Skenario = () => {
               {currentSkenarios.length > 0 ? (
                 currentSkenarios.map((skenario, index) => (
                   <tr key={skenario.id} className="border-b hover:bg-gray-100">
-                    <td className="px-4 py-2 border text-center font-dramatic-header">
+                    <td className="px-2 py-2 border text-center font-dramatic-header">
                       {index + 1 + indexOfFirstItem}
                     </td>
-                    <td className="px-2 py-2 border text-center font-dramatic-body-user">
+                    <td className="px-4 py-2 border text-center font-dramatic-body-user">
                       {skenario.judul}
                     </td>
-                    <td className="px-4 py-2 border text-center font-natural-body">
+                    <td className="px-3 py-2 border items-center font-natural-body text-justify">
                       {skenario.deskripsi}
                     </td>
                     <td className="px-2 py-2 border text-center font-dramatic-header">

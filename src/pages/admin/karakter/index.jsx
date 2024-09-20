@@ -239,10 +239,10 @@ const Karakter = () => {
                   <td className="py-2 px-6 border font-dramatic-body-user">
                     {item.user?.nama || "Nama tidak ditemukan"}
                   </td>
-                  <td className="py-2 px-3 border font-natural-body">
+                  <td className="py-2 px-3 border font-natural-body text-justify">
                     {item.kekurangan}
                   </td>
-                  <td className="py-2 px-3 border font-dramatic-body-user">
+                  <td className="py-2 px-3 border font-dramatic-body-user text-justify">
                     {item.evaluasi}
                   </td>
                   <td className="py-2 px-6 border">

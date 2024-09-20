@@ -43,7 +43,7 @@ const CreateUser = () => {
   };
 
   const handleCancel = () => {
-    navigate("/admin/user"); 
+    navigate("/admin/user");
   };
 
   return (
@@ -175,6 +175,13 @@ const CreateUser = () => {
                 onChange={handleChange}
                 className="text-gray-600 w-full px-4 py-2 border focus:border-green-400 hover:border-green-500 focus:outline-none rounded-md"
               >
+                <option
+                  className="block text-gray-600 font-dramatic-subtitle"
+                  value=""
+                  disabled
+                >
+                  Pilih Role
+                </option>
                 <option
                   className="block text-gray-600 font-dramatic-subtitle"
                   value="Admin"
