@@ -3,9 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { ToastContainer, toast } from "react-toastify";
 
 const EditUser = () => {
-  const { id } = useParams(); // Mendapatkan ID dari URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -18,7 +19,6 @@ const EditUser = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  // Mengambil data user berdasarkan ID saat page load
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -26,7 +26,7 @@ const EditUser = () => {
         setFormData({
           nama: response.data.nama,
           email: response.data.email,
-          kataSandi: "", // Kata sandi kosong (biar user bisa ubah kalo perlu)
+          kataSandi: "",
           nim: response.data.nim,
           role: response.data.role,
         });
@@ -37,7 +37,6 @@ const EditUser = () => {
     fetchUser();
   }, [id]);
 
-  // Menghandle perubahan input
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -45,24 +44,27 @@ const EditUser = () => {
     });
   };
 
-  // Menghandle submit form untuk update user
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await api.put(`/user/${id}`, formData);
-      navigate("/admin/user"); // Redirect setelah update berhasil
+      toast.success("User Berhasil Diperbarui!");
+      setTimeout(() => {
+        navigate("/admin/user");
+      }, 2000);
     } catch (error) {
+      toast.error("Error updating user");
       console.error("Error updating user:", error);
     }
   };
 
-  // Menghandle tombol cancel
   const handleCancel = () => {
     navigate("/admin/user");
   };
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-bold text-center mb-8 font-dramatic-header">

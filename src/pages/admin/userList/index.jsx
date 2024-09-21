@@ -4,6 +4,10 @@ import { FaEdit, FaTrash, FaPlus, FaCaretDown } from "react-icons/fa";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { ToastContainer, toast } from "react-toastify";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const UserList = () => {
   const navigate = useNavigate();
@@ -15,6 +19,10 @@ const UserList = () => {
   const [activePage, setActivePage] = useState(1);
   const itemsPerPage = 10;
 
+  // State untuk modal
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -24,6 +32,7 @@ const UserList = () => {
         setFilteredUsers(userList);
       } catch (error) {
         console.error("Error fetching users:", error);
+        toast.error("Gagal memuat pengguna");
       }
     };
 
@@ -38,18 +47,29 @@ const UserList = () => {
     navigate("/admin/user/create");
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
-      try {
-        await api.delete(`/user/${id}`);
-        setUsers(users.filter((user) => user.id !== id));
-        setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
-        alert("Pengguna berhasil dihapus");
-      } catch (error) {
-        console.error("Error deleting user:", error);
-        alert("Gagal menghapus pengguna");
-      }
+  const handleDelete = async () => {
+    try {
+      await api.delete(`/user/${selectedUserId}`);
+      setUsers(users.filter((user) => user.id !== selectedUserId));
+      setFilteredUsers(
+        filteredUsers.filter((user) => user.id !== selectedUserId)
+      );
+      toast.success("Pengguna berhasil dihapus", { id: "deleteUser" });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Gagal menghapus pengguna", { id: "deleteUser" });
     }
+    closeModal();
+  };
+
+  const openModal = (id) => {
+    setSelectedUserId(id);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedUserId(null);
+    setModalIsOpen(false);
   };
 
   const handleRoleFilter = (role) => {
@@ -101,7 +121,7 @@ const UserList = () => {
         </button>
 
         <span className="text-gray-500">
-          Page <strong className="text-green-700">{activePage}</strong> of{" "}
+          Halaman <strong className="text-green-700">{activePage}</strong> dari{" "}
           <strong className="text-green-600">{totalPages}</strong>
         </span>
 
@@ -122,6 +142,7 @@ const UserList = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="mt-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto">
@@ -135,7 +156,7 @@ const UserList = () => {
           className="flex items-center max-w-sm mx-auto mb-4"
         >
           <label htmlFor="user-search" className="sr-only">
-            Search
+            Cari
           </label>
           <div className="relative w-full">
             <input
@@ -167,7 +188,7 @@ const UserList = () => {
                 d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
               />
             </svg>
-            <span className="sr-only">Search</span>
+            <span className="sr-only">Cari</span>
           </button>
         </form>
         <button
@@ -178,7 +199,7 @@ const UserList = () => {
           <span>Tambah User</span>
         </button>
 
-        {/* User Table */}
+        {/* Tabel Pengguna */}
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-300 text-center rounded-lg shadow-md mb-2">
             <thead>
@@ -205,20 +226,20 @@ const UserList = () => {
                         Semua
                       </button>
                       <button
-                        onClick={() => handleRoleFilter("User")}
+                        onClick={() => handleRoleFilter("admin")}
                         className={`block w-full text-left text-gray-600 px-4 py-2 text-sm hover:bg-gray-100 ${
-                          selectedRole === "User" ? "bg-gray-100" : ""
-                        }`}
-                      >
-                        User
-                      </button>
-                      <button
-                        onClick={() => handleRoleFilter("Admin")}
-                        className={`block w-full text-left text-gray-600 px-4 py-2 text-sm hover:bg-gray-100 ${
-                          selectedRole === "Admin" ? "bg-gray-100" : ""
+                          selectedRole === "admin" ? "bg-gray-100" : ""
                         }`}
                       >
                         Admin
+                      </button>
+                      <button
+                        onClick={() => handleRoleFilter("user")}
+                        className={`block w-full text-left text-gray-600 px-4 py-2 text-sm hover:bg-gray-100 ${
+                          selectedRole === "user" ? "bg-gray-100" : ""
+                        }`}
+                      >
+                        User
                       </button>
                     </div>
                   )}
@@ -228,28 +249,23 @@ const UserList = () => {
             </thead>
             <tbody>
               {currentUsers.map((user, index) => (
-                <tr key={user.id} className="border-b hover:bg-gray-100">
-                  <td className="py-2 px-4 border font-dramatic-header">
-                    {indexOfFirstItem + index + 1}
-                  </td>
-                  <td className="py-2 px-4 border font-dramatic-body-user">
-                    {user.nama}
-                  </td>
-                  <td className="py-2 px-4 border font-dramatic-body-user">
-                    {user.nim}
-                  </td>
-                  <td className="py-2 px-4 border font-dramatic-body-user">
-                    {user.role}
-                  </td>
-                  <td className="py-2 px-4 border">
+                <tr
+                  key={user.id}
+                  className="font-dramatic-header hover:bg-gray-100"
+                >
+                  <td className="py-2 px-4">{indexOfFirstItem + index + 1}</td>
+                  <td className="py-2 px-4">{user.nama}</td>
+                  <td className="py-2 px-4">{user.nim}</td>
+                  <td className="py-2 px-4">{user.role}</td>
+                  <td className="py-2 px-4">
                     <button
                       onClick={() => navigate(`/admin/user/edit/${user.id}`)}
-                      className="text-blue-600 hover:text-blue-900 mr-2"
+                      className="text-green-600 hover:text-green-900 mr-2"
                     >
                       <FaEdit />
                     </button>
                     <button
-                      onClick={() => handleDelete(user.id)}
+                      onClick={() => openModal(user.id)}
                       className="text-red-600 hover:text-red-900"
                     >
                       <FaTrash />
@@ -260,9 +276,35 @@ const UserList = () => {
             </tbody>
           </table>
         </div>
-
-        {/* Pagination */}
         <SimplePagination />
+
+        {/* Modal Konfirmasi */}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Konfirmasi Hapus"
+          className="fixed inset-0 flex ml-64 items-center justify-center"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+        >
+          <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
+            <p>Apakah Anda yakin ingin menghapus pengguna ini?</p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={closeModal}
+                className="mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+              >
+                Hapus
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </AdminLayout>
   );

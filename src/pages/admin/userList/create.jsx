@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../../../index.css";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
@@ -30,14 +32,17 @@ const CreateUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.kataSandi !== formData.konfirmasiKataSandi) {
-      alert("Kata sandi dan konfirmasi kata sandi tidak cocok.");
+      toast.error("Kata sandi dan konfirmasi kata sandi tidak cocok.");
       return;
     }
     try {
       const response = await api.post("/user", formData);
-      console.log("User created:", response.data);
-      navigate("/admin/user/"); // Navigasi ke path /admin/user setelah sukses
+      toast.success("User berhasil dibuat!");
+      setTimeout(() => {
+        navigate("/admin/user/");
+      }, 2000);
     } catch (error) {
+      toast.error("Error membuat user. Silakan coba lagi.");
       console.error("Error creating user:", error);
     }
   };
@@ -212,6 +217,7 @@ const CreateUser = () => {
           </form>
         </div>
       </div>
+      <ToastContainer /> 
     </AdminLayout>
   );
 };

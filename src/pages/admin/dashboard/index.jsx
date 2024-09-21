@@ -186,7 +186,7 @@ const DashboardAdmin = () => {
                     {animatedUsers}
                   </h2>
                   <p className="text-green-500 font-dramatic-header">
-                    +3% since last week
+                    Registered Users
                   </p>
                 </div>
                 <FaUsers className="text-4xl text-red-500 bg-red-100 p-2 rounded-full" />
@@ -204,7 +204,7 @@ const DashboardAdmin = () => {
                     {animatedSkenario}
                   </h2>
                   <p className="text-green-500 font-dramatic-header">
-                    +55% since yesterday
+                    Latest Scenario
                   </p>
                 </div>
                 <FaFileAlt className="text-4xl text-purple-500 bg-purple-100 p-2 rounded-full" />
@@ -221,8 +221,8 @@ const DashboardAdmin = () => {
                   <h2 className="text-2xl font-bold font-dramatic-header">
                     {animatedKalenderAcara}
                   </h2>
-                  <p className="text-red-500 font-dramatic-header">
-                    -2% since last quarter
+                  <p className="text-green-500 font-dramatic-header">
+                    News Event
                   </p>
                 </div>
                 <FaCalendarAlt className="text-4xl text-green-500 bg-green-100 p-2 rounded-full" />
@@ -240,7 +240,7 @@ const DashboardAdmin = () => {
                     {animatedExercise}
                   </h2>
                   <p className="text-green-500 font-dramatic-header">
-                    +5% than last month
+                    All Exercise
                   </p>
                 </div>
                 <FaDumbbell className="text-4xl text-orange-500 bg-orange-100 p-2 rounded-full" />
