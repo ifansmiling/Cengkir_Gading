@@ -4,11 +4,19 @@ import api from "../../../services/api";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { ToastContainer, toast } from "react-toastify";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const Kalender = () => {
   const [kalenderAcaras, setKalenderAcaras] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const itemsPerPage = 5;
+
+  // State untuk modal
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   useEffect(() => {
     const fetchKalenderAcaras = async () => {
@@ -32,21 +40,33 @@ const Kalender = () => {
     navigate("/admin/kalender/create");
   };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Apakah Anda yakin ingin menghapus acara ini?"
-    );
-    if (!confirmDelete) return;
-
+  const handleDelete = async () => {
     try {
-      await api.delete(`/kalenderAcara/${id}`);
-      setKalenderAcaras(kalenderAcaras.filter((event) => event.id !== id));
+      await api.delete(`/kalenderAcara/${selectedUserId}`);
+      setKalenderAcaras(
+        kalenderAcaras.filter((event) => event.id !== selectedUserId)
+      );
+      toast.success("Kalender Acara berhasil dihapus", {
+        id: "deleteKalender",
+      });
     } catch (error) {
       console.error(
         "Gagal menghapus acara:",
         error.response?.data?.message || error.message
       );
+      toast.error("Gagal menghapus acara", { id: "deleteKalender" });
     }
+    closeModal();
+  };
+
+  const openModal = (id) => {
+    setSelectedUserId(id);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedUserId(null);
+    setModalIsOpen(false);
   };
 
   const handleEdit = (id) => {
@@ -108,6 +128,7 @@ const Kalender = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="p-6">
         <h1 className="text-2xl font-bold text-center mb-8 relative w-max mx-auto font-dramatic-header">
           Kalender Acara
@@ -164,12 +185,12 @@ const Kalender = () => {
                     <div className="flex justify-center space-x-2">
                       <button
                         onClick={() => handleEdit(event.id)}
-                        className="text-blue-500 hover:text-blue-700"
+                        className="text-green-600 hover:text-green-900"
                       >
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete(event.id)}
+                        onClick={() => openModal(event.id)}
                         className="text-red-500 hover:text-red-700"
                       >
                         <FaTrash />
@@ -188,8 +209,39 @@ const Kalender = () => {
             </tbody>
           </table>
         </div>
-        {/* Pagination */}
         <SimplePagination />
+
+        {/* Modal Konfirmasi */}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Konfirmasi Hapus"
+          className="fixed inset-0 flex ml-64 items-center justify-center"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+        >
+          <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4 font-footer-body">
+              Konfirmasi Hapus
+            </h2>
+            <p className="font-footer-body text-base text-gray-600">
+              Apakah Anda yakin ingin menghapus acara ini?
+            </p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={closeModal}
+                className="font-footer-body mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleDelete}
+                className="font-footer-body px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+              >
+                Hapus
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </AdminLayout>
   );

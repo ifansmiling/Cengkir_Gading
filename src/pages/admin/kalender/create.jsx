@@ -3,6 +3,7 @@ import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
 import "../../../index.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const CreateKalender = () => {
   const navigate = useNavigate();
@@ -44,8 +45,12 @@ const CreateKalender = () => {
       await api.post("/kalenderAcara", form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      navigate("/admin/kalender");
+      toast.success("Kalender Acara berhasil dibuat!");
+      setTimeout(() => {
+        navigate("/admin/kalender");
+      }, 2000);
     } catch (error) {
+      toast.error("Error membuat user. Silakan coba lagi.");
       console.error("Submission error:", error);
       setError(error.response?.data?.message || "Error creating event");
     }
@@ -57,6 +62,7 @@ const CreateKalender = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">

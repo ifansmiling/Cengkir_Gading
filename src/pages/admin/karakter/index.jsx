@@ -4,6 +4,10 @@ import api from "../../../services/api";
 import { FaEdit, FaTrash, FaClipboardCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ToastContainer, toast } from "react-toastify";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const Karakter = () => {
   const [evaluasiKarakters, setEvaluasiKarakters] = useState([]);
@@ -13,6 +17,10 @@ const Karakter = () => {
     []
   );
   const [filteredUsers, setFilteredUsers] = useState([]);
+
+  // State untuk modal
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedEvaluasiId, setSelectedEvaluasiId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -89,22 +97,34 @@ const Karakter = () => {
     navigate(`/admin/karakter/edit/${id}`);
   };
 
-  const handleDeleteEvaluasi = async (id) => {
-    if (window.confirm("Apakah Anda yakin ingin menghapus evaluasi ini?")) {
-      try {
-        await api.delete(`/evaluasiKarakter/${id}`);
-        setEvaluasiKarakters((prev) =>
-          prev.filter((evaluasi) => evaluasi.id !== id)
-        );
-        setFilteredEvaluasiKarakters((prev) =>
-          prev.filter((evaluasi) => evaluasi.id !== id)
-        );
-        alert("Evaluasi Karakter berhasil dihapus.");
-      } catch (error) {
-        console.error("Error deleting evaluasi karakter:", error);
-        alert("Gagal menghapus evaluasi karakter.");
-      }
+  const handleDeleteEvaluasi = async () => {
+    if (selectedEvaluasiId === null) return;
+
+    try {
+      await api.delete(`/evaluasiKarakter/${selectedEvaluasiId}`);
+      setEvaluasiKarakters((prev) =>
+        prev.filter((evaluasi) => evaluasi.id !== selectedEvaluasiId)
+      );
+      setFilteredEvaluasiKarakters((prev) =>
+        prev.filter((evaluasi) => evaluasi.id !== selectedEvaluasiId)
+      );
+      toast.success("Evaluasi berhasil dihapus!");
+    } catch (error) {
+      console.error("Error deleting evaluasi karakter:", error);
+      toast.error("Gagal menghapus evaluasi.");
+    } finally {
+      closeModal();
     }
+  };
+
+  const openModal = (id) => {
+    setSelectedEvaluasiId(id);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedEvaluasiId(null);
+    setModalIsOpen(false);
   };
 
   const indexOfLastEvaluasi = activePageEvaluasi * itemsPerPageEvaluasi;
@@ -168,6 +188,7 @@ const Karakter = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="p-4">
         {/* Tabel Evaluasi Karakter */}
         <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto mb-6">
@@ -248,14 +269,14 @@ const Karakter = () => {
                   <td className="py-2 px-6 border">
                     <div className="flex justify-center">
                       <button
-                        className="text-blue-500 hover:text-blue-700 mr-2"
+                        className="text-green-600 hover:text-green-900 mr-2"
                         onClick={() => handleEditEvaluasi(item.id)}
                       >
                         <FaEdit />
                       </button>
                       <button
+                        onClick={() => openModal(item.id)}
                         className="text-red-500 hover:text-red-700"
-                        onClick={() => handleDeleteEvaluasi(item.id)}
                       >
                         <FaTrash />
                       </button>
@@ -270,6 +291,38 @@ const Karakter = () => {
             setActivePage={setActivePageEvaluasi}
             totalPages={totalPagesEvaluasi}
           />
+
+          {/* Modal Konfirmasi */}
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            contentLabel="Konfirmasi Hapus"
+            className="fixed inset-0 flex ml-64 items-center justify-center"
+            overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+          >
+            <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
+              <h2 className="text-xl font-bold mb-4 font-footer-body">
+                Konfirmasi Hapus
+              </h2>
+              <p className="font-footer-body text-base text-gray-600">
+                Apakah Anda yakin ingin menghapus evaluasi ini?
+              </p>
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={closeModal}
+                  className="mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400 font-footer-body"
+                >
+                  Batal
+                </button>
+                <button
+                  onClick={handleDeleteEvaluasi}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 font-footer-body"
+                >
+                  Hapus
+                </button>
+              </div>
+            </div>
+          </Modal>
         </div>
 
         {/* Tabel Pengguna dengan Role User */}

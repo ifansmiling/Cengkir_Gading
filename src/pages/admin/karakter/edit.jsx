@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
+import { ToastContainer, toast } from "react-toastify";
 
 const EditKarakter = () => {
   const { id } = useParams();
@@ -44,8 +45,12 @@ const EditKarakter = () => {
     e.preventDefault();
     try {
       await api.put(`/evaluasiKarakter/${id}`, formData);
-      navigate("/admin/karakter");
+      toast.success("Evaluasi Berhasil Diperbarui!");
+      setTimeout(() => {
+        navigate("/admin/karakter");
+      }, 2000);
     } catch (error) {
+      toast.error("Error updating evaluasi");
       console.error("Error updating evaluasi karakter:", error);
       setError("Gagal mengupdate evaluasi karakter.");
     }
@@ -57,6 +62,7 @@ const EditKarakter = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-bold text-center mb-8 font-dramatic-header">

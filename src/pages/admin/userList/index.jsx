@@ -287,18 +287,22 @@ const UserList = () => {
           overlayClassName="fixed inset-0 bg-black bg-opacity-50"
         >
           <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
-            <p>Apakah Anda yakin ingin menghapus pengguna ini?</p>
+            <h2 className="text-xl font-bold mb-4 font-footer-body">
+              Konfirmasi Hapus
+            </h2>
+            <p className="font-footer-body text-base text-gray-600">
+              Apakah Anda yakin ingin menghapus pengguna ini?
+            </p>
             <div className="flex justify-end mt-4">
               <button
                 onClick={closeModal}
-                className="mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400"
+                className="font-footer-body mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400"
               >
                 Batal
               </button>
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+                className="font-footer-body after:px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
               >
                 Hapus
               </button>

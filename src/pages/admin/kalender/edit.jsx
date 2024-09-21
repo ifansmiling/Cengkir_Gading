@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
+import { ToastContainer, toast } from "react-toastify";
 
 const EditCalender = () => {
   const { id } = useParams();
@@ -60,8 +61,12 @@ const EditCalender = () => {
       await api.put(`/kalenderAcara/${id}`, form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      navigate("/admin/kalender");
+      toast.success("Kalender Acara Berhasil Diperbarui!");
+      setTimeout(() => {
+        navigate("/admin/Kalender");
+      }, 2000);
     } catch (error) {
+      toast.error("Error updating user");
       console.error("Failed to update event:", error);
       setError(error.response?.data?.message || "Failed to update event");
     }
@@ -73,6 +78,7 @@ const EditCalender = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-bold font-dramatic-header text-center mb-8">
