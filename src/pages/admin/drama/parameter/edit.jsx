@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../../../layouts/AdminLayout";
 import api from "../../../../services/api";
+import { ToastContainer, toast } from "react-toastify";
 
 const EditParameter = () => {
   const { id } = useParams();
@@ -30,14 +31,12 @@ const EditParameter = () => {
     e.preventDefault();
     try {
       const response = await api.put(`/drama/${id}`, { nama, deskripsi });
-      setSuccessMessage("Parameter berhasil diperbarui!");
-      setError(null);
+      toast.success("Parameter Berhasil Diperbarui!");
       setTimeout(() => {
         navigate("/admin/drama");
-      }, 1500);
+      }, 2000);
     } catch (err) {
-      setError("Gagal memperbarui drama: " + err.response.data.error);
-      setSuccessMessage(null);
+      toast.error("Error updating exercise");
     }
   };
 
@@ -47,6 +46,7 @@ const EditParameter = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">

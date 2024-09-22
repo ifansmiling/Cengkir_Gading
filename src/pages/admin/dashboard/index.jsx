@@ -164,11 +164,14 @@ const DashboardAdmin = () => {
             Dashboard
           </h1>
           <div className="flex items-center space-x-4">
-            <input
-              type="text"
-              placeholder="Ketik Disini..."
-              className="px-4 py-2 rounded-lg text-black"
-            />
+            <p className="text-lg font-semibold text-white font-dramatic-body-user">
+              {new Date().toLocaleDateString("id-ID", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
           </div>
         </nav>
 

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../../../layouts/AdminLayout";
 import api from "../../../../services/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateRating = () => {
   const { id: userId } = useParams();
@@ -37,10 +39,12 @@ const CreateRating = () => {
         rating: Object.values(selectedRatings).map((r) => Number(r)),
       };
       await api.post("/user-rating", data);
-      alert("Rating berhasil dikirim!");
-      navigate("/admin/drama");
+      toast.success("Rating berhasil dibuat!");
+      setTimeout(() => {
+        navigate("/admin/drama");
+      }, 2000);
     } catch (error) {
-      console.error("Error submitting rating:", error);
+      toast.error("Error membuat exercise. Silakan coba lagi.");
     }
   };
 
@@ -50,6 +54,7 @@ const CreateRating = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">

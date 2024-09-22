@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "../../../../layouts/AdminLayout";
 import api from "../../../../services/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateParameter = () => {
   const [nama, setNama] = useState("");
@@ -14,17 +16,15 @@ const CreateParameter = () => {
     e.preventDefault();
     try {
       const response = await api.post("/drama", { nama, deskripsi });
-      setSuccessMessage("Parameter berhasil dibuat!");
       setError(null);
       setNama("");
       setDeskripsi("");
-
+      toast.success("Parameter berhasil dibuat!");
       setTimeout(() => {
         navigate("/admin/drama");
-      }, 1500);
+      }, 2000);
     } catch (err) {
-      setError("Gagal membuat drama: " + err.response.data.error);
-      setSuccessMessage(null);
+      toast.error("Error membuat parameter. Silakan coba lagi.");
     }
   };
 
@@ -39,10 +39,11 @@ const CreateParameter = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">
-            Tambah Drama Parameter
+            Tambah Parameter
           </h2>
 
           {error && (

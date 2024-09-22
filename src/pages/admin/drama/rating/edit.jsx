@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../../../layouts/AdminLayout";
 import api from "../../../../services/api";
 import "./style.css";
+import { ToastContainer, toast } from "react-toastify";
 
 const EditRating = () => {
   const { id } = useParams();
@@ -49,11 +50,12 @@ const EditRating = () => {
         rating: updates.map((update) => update.rating),
       });
 
-      alert("Rating berhasil diperbarui!");
-      navigate("/admin/drama");
+      toast.success("Rating Berhasil Diperbarui!");
+      setTimeout(() => {
+        navigate("/admin/drama");
+      }, 2000);
     } catch (err) {
-      console.error("Error updating rating:", err);
-      alert("Gagal memperbarui rating");
+      toast.error("Error updating exercise");
     }
   };
 
@@ -62,6 +64,7 @@ const EditRating = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">
