@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
+import { ToastContainer, toast } from "react-toastify";
 
 const EditSkenario = () => {
   const { id } = useParams();
@@ -42,8 +43,12 @@ const EditSkenario = () => {
       await api.put(`/skenario/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      navigate("/admin/skenario");
+      toast.success("Skenario Berhasil Diperbarui!");
+      setTimeout(() => {
+        navigate("/admin/skenario");
+      }, 2000);
     } catch (error) {
+      toast.error("Error updating evaluasi");
       setError("Failed to update skenario");
     }
   };
@@ -54,6 +59,7 @@ const EditSkenario = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-bold font-dramatic-header text-center mb-8">

@@ -59,14 +59,14 @@ const KalenderAcara = () => {
             return (
               <div
                 key={event.id}
-                className="bg-white shadow-md overflow-hidden flex flex-col justify-between hover:shadow-lg"
+                className="bg-white shadow-md overflow-hidden flex flex-col justify-between hover:shadow-xl rounded-lg"
               >
                 <div>
                   <div className="relative">
                     <img
                       src={event.file_paths[0]}
                       alt={event.judul}
-                      className="font-dramatic-header-user w-full h-56 object-cover cursor-pointer"
+                      className="font-dramatic-header-user w-full h-56 object-cover cursor-pointer rounded-lg"
                       onClick={() => handleImageClick(event.file_paths[0])}
                     />
                     <div className="absolute top-4 left-4 bg-black text-white text-center p-2 rounded-lg">

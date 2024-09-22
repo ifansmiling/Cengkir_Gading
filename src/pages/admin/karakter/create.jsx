@@ -31,7 +31,7 @@ const AddEvaluasi = () => {
         navigate("/admin/karakter");
       }, 2000);
     } catch (error) {
-      toast.error("Error membuat user. Silakan coba lagi.");
+      toast.error("Error membuat evaluasi. Silakan coba lagi.");
       console.error("Error creating evaluasi:", error);
     }
   };

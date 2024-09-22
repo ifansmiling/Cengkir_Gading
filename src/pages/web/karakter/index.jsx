@@ -70,9 +70,9 @@ const EvaluasiKarakter = () => {
               {evaluation.map((evalItem) => (
                 <div
                   key={evalItem.id}
-                  className="relative group bg-white shadow-lg rounded-xl p-8 hover:shadow-xl hover:bg-gradient-to-r from-green-100 to-blue-200 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105"
+                  className="relative group bg-white shadow-lg rounded-xl p-8 hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105"
                 >
-                  <h2 className="font-dramatic-body-user text-xl font-extrabold text-green-700 mb-6 text-center">
+                  <h2 className="underline underline-offset-2 font-dramatic-body-user text-xl font-extrabold text-green-700 mb-6 text-center">
                     {evalItem.judul_evaluasi}
                   </h2>
 

@@ -3,6 +3,8 @@ import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
 import "../../../index.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateExercise = () => {
   const navigate = useNavigate();
@@ -12,8 +14,6 @@ const CreateExercise = () => {
     tipe: "",
     files: [],
   });
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,18 +45,12 @@ const CreateExercise = () => {
       const response = await api.post("/daily-exercise", form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-      if (response.status === 201) {
-        setSuccessMessage("Exercise berhasil ditambahkan!");
-        setFormData({ judul: "", deskripsi: "", tipe: "", files: [] });
-        setError(null);
-        setTimeout(() => {
-          navigate("/admin/exercise");
-        }, 1500);
-      }
+      toast.success("Exercise berhasil dibuat!");
+      setTimeout(() => {
+        navigate("/admin/exercise");
+      }, 2000);
     } catch (error) {
-      setError(error.response?.data?.message || "Error creating exercise");
-      setSuccessMessage(null);
+      toast.error("Error membuat exercise. Silakan coba lagi.");
     }
   };
 
@@ -66,23 +60,12 @@ const CreateExercise = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">
             Tambah Exercise
           </h2>
-
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
-            </div>
-          )}
-
-          {successMessage && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-              {successMessage}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">

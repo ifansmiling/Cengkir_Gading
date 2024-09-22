@@ -190,7 +190,6 @@ const Karakter = () => {
     <AdminLayout>
       <ToastContainer />
       <div className="p-4">
-        {/* Tabel Evaluasi Karakter */}
         <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto mb-6">
           Evaluasi Karakter
           <span className="block h-1 bg-green-800"></span>

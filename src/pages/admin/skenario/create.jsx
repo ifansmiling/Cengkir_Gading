@@ -3,6 +3,8 @@ import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
 import "../../../index.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateSkenario = () => {
   const [judul, setJudul] = useState("");
@@ -31,12 +33,12 @@ const CreateSkenario = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("Skenario berhasil dibuat:", response.data);
-      setJudul("");
-      setDeskripsi("");
-      setFiles([]);
-      navigate("/admin/skenario");
+      toast.success("Skenario berhasil dibuat!");
+      setTimeout(() => {
+        navigate("/admin/skenario");
+      }, 2000);
     } catch (error) {
+      toast.error("Error membuat skenario. Silakan coba lagi.");
       console.error("Gagal membuat skenario:", error);
     }
   };
@@ -47,6 +49,7 @@ const CreateSkenario = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">

@@ -3,6 +3,7 @@ import AdminLayout from "../../../layouts/AdminLayout";
 import api from "../../../services/api";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
 
 const EditExercise = () => {
   const { id } = useParams();
@@ -53,10 +54,13 @@ const EditExercise = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      navigate("/admin/exercise");
+      toast.success("Exercise Berhasil Diperbarui!");
+      setTimeout(() => {
+        navigate("/admin/exercise");
+      }, 2000);
     } catch (error) {
+      toast.error("Error updating exercise");
       console.error("Error updating exercise", error);
-      setError(error.response?.data?.message || "Failed to update exercise");
     }
   };
 
@@ -76,6 +80,7 @@ const EditExercise = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="py-6">
         <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-3xl text-green-600 font-bold font-dramatic-header text-center mb-8">

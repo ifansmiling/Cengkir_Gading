@@ -40,36 +40,52 @@ const Skenario = () => {
             Perpustakaan Skenario
           </h1>
 
-          <div className="ml-10 mr-10 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {/* Grid container dengan gap dan padding */}
+          <div className="ml-10 mr-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {skenarioList.map((skenario) => (
               <div
                 key={skenario.id}
-                className="border border-gray-300 shadow-sm hover:shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:border-green-600"
+                className="group relative border border-gray-200 rounded-lg overflow-hidden bg-white transition-shadow duration-300 hover:shadow-xl"
               >
-                <div className="p-6 flex flex-col h-full justify-between">
-                  <div>
+                <div className="p-6 flex flex-col h-full">
+                  <div className="mb-4">
                     <div className="flex items-center justify-between mb-4 font-dramatic-header">
-                      <h2 className="text-base font-bold text-gray-700 ">
+                      <h2 className="text-lg font-semibold text-gray-800 truncate">
                         {skenario.judul}
                       </h2>
+                      {/* Icon file pdf/word */}
                       {skenario.file_paths[0].endsWith(".pdf") ? (
                         <FaFilePdf className="text-red-600 text-2xl" />
                       ) : (
                         <FaFileWord className="text-blue-600 text-2xl" />
                       )}
                     </div>
-                    <p className="text-gray-500 mb-6 text-sm text-justify font-event-body">
+
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-3 font-event-body">
                       {skenario.deskripsi}
                     </p>
                   </div>
-                  <a
-                    href={skenario.file_paths[0]}
-                    download
-                    className="text-base font-event-body inline-block bg-gradient-to-r from-blue-500 to-green-500 text-white text-center w-full py-2 rounded-lg shadow-sm hover:from-blue-600 hover:to-green-600 transition-all duration-300"
-                  >
-                    Unduh{" "}
-                    {skenario.file_paths[0].split(".").pop().toUpperCase()} File
-                  </a>
+                  <div className="mt-auto">
+                    <p className="text-gray-500 text-sm mb-2 font-event-body">
+                      Untuk lebih lengkapnya bisa download file di bawah ini:
+                    </p>
+
+                    <a
+                      href={skenario.file_paths[0]}
+                      download
+                      className={`inline-block w-full text-center text-white py-1.5 px-4 rounded-md text-sm shadow-sm transition-all duration-300 font-event-body
+                       ${
+                         skenario.file_paths[0].endsWith(".pdf")
+                           ? "bg-red-800 hover:bg-red-900 focus:ring-white"
+                           : "bg-blue-800 hover:bg-blue-900 focus:ring-blue-500"
+                       }
+                       focus:outline-none focus:ring-2 focus:ring-offset-2`}
+                    >
+                      Unduh{" "}
+                      {skenario.file_paths[0].split(".").pop().toUpperCase()}{" "}
+                      File
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}

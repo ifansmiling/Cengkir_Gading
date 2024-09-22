@@ -409,7 +409,7 @@ const Drama = () => {
                   <td className="py-2 px-4 border-b font-event-body border">
                     {user.nim}
                   </td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b text-center border">
                     <FontAwesomeIcon
                       icon={faCircleCheck}
                       className="text-green-500 text-xl cursor-pointer"
@@ -420,7 +420,7 @@ const Drama = () => {
                     <div className="flex justify-center gap-2">
                       <button
                         onClick={() => handleEditRating(user.user_id)}
-                        className="text-blue-500 hover:text-blue-700"
+                        className="text-green-600 hover:text-green-900"
                       >
                         <FaEdit />
                       </button>
@@ -563,11 +563,11 @@ const Drama = () => {
                         {hasRated ? "Sudah Ada Rating" : "Belum Ada Rating"}
                       </span>
                     </td>
-                    <td className="py-2 px-4 border-b text-center">
+                    <td className="py-2 px-4 border-b text-center border">
                       <div className="flex justify-center items-center h-full">
                         <FontAwesomeIcon
                           icon={faPlus}
-                          className="text-blue-500 text-xl hover:text-blue-700 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
+                          className="text-green-600 text-xl hover:text-green-900 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
                           onClick={() => handleClickRating(user.id)}
                         />
                       </div>
@@ -636,7 +636,7 @@ const Drama = () => {
                   <td className="py-2 px-4 border-b">
                     <div className="flex justify-center gap-2">
                       <button
-                        className="text-blue-500 hover:text-blue-700"
+                        className="text-green-600 hover:text-green-900"
                         onClick={() => handleEditParameter(parameter.id)}
                       >
                         <FaEdit />

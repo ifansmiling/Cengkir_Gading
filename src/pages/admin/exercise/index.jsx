@@ -4,6 +4,10 @@ import api from "../../../services/api";
 import { FaEdit, FaTrash, FaPlus, FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { ToastContainer, toast } from "react-toastify";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const Exercise = () => {
   const [exercises, setExercises] = useState([]);
@@ -15,6 +19,10 @@ const Exercise = () => {
   // Pagination state
   const [activePage, setActivePage] = useState(1);
   const itemsPerPage = 10;
+
+  // State untuk modal
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedExerciseId, setSelectedExerciseId] = useState(null);
 
   const getOriginalFileName = (filePath) => {
     if (!filePath) return "Tidak Ada File";
@@ -73,27 +81,31 @@ const Exercise = () => {
   }, []);
 
   const deleteExercise = async (id) => {
+    if (!id) return; // memastikan id ada sebelum menghapus
     try {
       await api.delete(`/daily-exercise/${id}`);
 
       const updatedExercises = exercises.filter(
-        (exercise) => exercise.id !== id
+        (exercise) => exercise.id !== id // gunakan id dari parameter
       );
       setExercises(updatedExercises);
       setFilteredExercises(updatedExercises);
+      toast.success("Exercise berhasil dihapus!");
     } catch (error) {
+      toast.error("Gagal menghapus exercise.");
       console.error("Error deleting exercise", error);
-      alert("Gagal menghapus exercise.");
     }
+    closeModal();
   };
 
-  const handleDeleteClick = (id) => {
-    const confirmDelete = window.confirm(
-      "Apakah Anda yakin ingin menghapus exercise ini?"
-    );
-    if (confirmDelete) {
-      deleteExercise(id);
-    }
+  const openModal = (id) => {
+    setSelectedExerciseId(id);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedExerciseId(null);
+    setModalIsOpen(false);
   };
 
   // Pagination logic
@@ -150,6 +162,7 @@ const Exercise = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="container mx-auto p-4">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto mb-4">
@@ -279,14 +292,14 @@ const Exercise = () => {
                   <td className="py-2 px-6 border-b text-center align-middle">
                     <div className="flex justify-center items-center space-x-2">
                       <button
-                        className="text-blue-500 hover:text-blue-700"
+                        className="text-green-600 hover:text-green-900"
                         onClick={() => handleEditClick(exercise.id)}
                       >
                         <FaEdit />
                       </button>
                       <button
                         className="text-red-500 hover:text-red-700"
-                        onClick={() => handleDeleteClick(exercise.id)}
+                        onClick={() => openModal(exercise.id)}
                       >
                         <FaTrash />
                       </button>
@@ -303,8 +316,39 @@ const Exercise = () => {
             )}
           </tbody>
         </table>
-
         <SimplePagination />
+
+        {/* Modal Konfirmasi */}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Konfirmasi Hapus"
+          className="fixed inset-0 flex ml-64 items-center justify-center"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+        >
+          <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4 font-footer-body">
+              Konfirmasi Hapus
+            </h2>
+            <p className="font-footer-body text-base text-gray-600">
+              Apakah Anda yakin ingin menghapus Exercise ini?
+            </p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={closeModal}
+                className="mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400 font-footer-body"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => deleteExercise(selectedExerciseId)} // kirimkan id yang dipilih
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 font-footer-body"
+              >
+                Hapus
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </AdminLayout>
   );

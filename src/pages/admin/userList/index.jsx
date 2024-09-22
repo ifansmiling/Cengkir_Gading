@@ -121,7 +121,7 @@ const UserList = () => {
         </button>
 
         <span className="text-gray-500">
-          Halaman <strong className="text-green-700">{activePage}</strong> dari{" "}
+          Page <strong className="text-green-700">{activePage}</strong> of{" "}
           <strong className="text-green-600">{totalPages}</strong>
         </span>
 

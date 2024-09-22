@@ -4,6 +4,10 @@ import api from "../../../services/api";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ToastContainer, toast } from "react-toastify";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 const Skenario = () => {
   const [skenarios, setSkenarios] = useState([]);
@@ -13,6 +17,10 @@ const Skenario = () => {
   // Pagination state
   const [activePage, setActivePage] = useState(1);
   const itemsPerPage = 5;
+
+  // State untuk modal
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedSkenarioId, setSelectedSkenarioId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -58,20 +66,34 @@ const Skenario = () => {
     return fileName.charAt(0).toUpperCase() + fileName.split(".")[0].slice(1);
   };
 
-  const handleDeleteClick = async (id) => {
+  const handleDeleteClick = async () => {
+    if (selectedSkenarioId === null) return;
     try {
-      if (window.confirm("Apakah Anda yakin ingin menghapus skenario ini?")) {
-        await api.delete(`/skenario/${id}`);
-        setSkenarios(skenarios.filter((skenario) => skenario.id !== id));
-        setFilteredSkenarios(
-          filteredSkenarios.filter((skenario) => skenario.id !== id)
-        );
-        alert("Skenario berhasil dihapus");
-      }
+      await api.delete(`/skenario/${selectedSkenarioId}`);
+      setSkenarios(
+        skenarios.filter((skenario) => skenario.id !== selectedSkenarioId)
+      );
+      setFilteredSkenarios(
+        filteredSkenarios.filter(
+          (skenario) => skenario.id !== selectedSkenarioId
+        )
+      );
+      toast.success("Skenario berhasil dihapus!");
     } catch (error) {
+      toast.error("Gagal menghapus skenario.");
       console.error("Failed to delete skenario", error);
-      alert("Gagal menghapus skenario");
     }
+    closeModal();
+  };
+
+  const openModal = (id) => {
+    setSelectedSkenarioId(id);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedSkenarioId(null);
+    setModalIsOpen(false);
   };
 
   // Pagination logic
@@ -129,6 +151,7 @@ const Skenario = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-center relative w-max mx-auto font-dramatic-header">
@@ -242,14 +265,14 @@ const Skenario = () => {
                     <td className="px-6 py-2 border text-center align-middle">
                       <div className="flex justify-center items-center space-x-2">
                         <button
-                          className="text-blue-500 hover:text-blue-700"
+                          className="text-green-600 hover:text-green-900"
                           onClick={() => handleEditClick(skenario.id)}
                         >
                           <FaEdit />
                         </button>
                         <button
                           className="text-red-500 hover:text-red-700"
-                          onClick={() => handleDeleteClick(skenario.id)}
+                          onClick={() => openModal(skenario.id)}
                         >
                           <FaTrash />
                         </button>
@@ -268,6 +291,38 @@ const Skenario = () => {
           </table>
         </div>
         <SimplePagination />
+
+        {/* Modal Konfirmasi */}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Konfirmasi Hapus"
+          className="fixed inset-0 flex ml-64 items-center justify-center"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+        >
+          <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4 font-footer-body">
+              Konfirmasi Hapus
+            </h2>
+            <p className="font-footer-body text-base text-gray-600">
+              Apakah Anda yakin ingin menghapus skenario ini?
+            </p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={closeModal}
+                className="mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400 font-footer-body"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleDeleteClick}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 font-footer-body"
+              >
+                Hapus
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </AdminLayout>
   );
