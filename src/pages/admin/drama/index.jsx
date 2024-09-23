@@ -139,9 +139,7 @@ const Drama = () => {
     if (value) {
       const filtered = userRatings.filter(
         (rating) =>
-          rating.user &&
-          rating.user.nama &&
-          rating.user.nama.toLowerCase().includes(value.toLowerCase())
+          rating.nama && rating.nama.toLowerCase().includes(value.toLowerCase())
       );
       setFilteredRatings(filtered);
     } else {
@@ -477,16 +475,18 @@ const Drama = () => {
           className="fixed inset-0 flex items-center justify-center"
           overlayClassName="fixed inset-0 bg-black bg-opacity-50"
         >
-          <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
-            <p className="text-base text-gray-600">
+          <div className="bg-white rounded-lg ml-64 p-6 shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4 font-footer-body">
+              Konfirmasi Hapus
+            </h2>
+            <p className="font-footer-body text-base text-gray-600">
               Apakah Anda yakin ingin menghapus semua rating pengguna ini dengan
               parameter yang diberikan?
             </p>
             <div className="flex justify-end mt-4">
               <button
                 onClick={closeModalRating}
-                className="mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400"
+                className="mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400 font-footer-body"
               >
                 Batal
               </button>
@@ -494,7 +494,7 @@ const Drama = () => {
                 onClick={() =>
                   handleDeleteUserRating(selectedRatingId, parameterIds)
                 }
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 font-footer-body"
               >
                 Hapus
               </button>

@@ -45,7 +45,7 @@ const Skenario = () => {
             {skenarioList.map((skenario) => (
               <div
                 key={skenario.id}
-                className="group relative border border-gray-200 rounded-lg overflow-hidden bg-white transition-shadow duration-300 hover:shadow-xl"
+                className="group relative border border-gray-200 rounded-lg overflow-hidden bg-white transition-shadow duration-300 hover:shadow-xl hover:border-green-500"
               >
                 <div className="p-6 flex flex-col h-full">
                   <div className="mb-4">
