@@ -81,12 +81,12 @@ const Exercise = () => {
   }, []);
 
   const deleteExercise = async (id) => {
-    if (!id) return; // memastikan id ada sebelum menghapus
+    if (!id) return;
     try {
       await api.delete(`/daily-exercise/${id}`);
 
       const updatedExercises = exercises.filter(
-        (exercise) => exercise.id !== id // gunakan id dari parameter
+        (exercise) => exercise.id !== id
       );
       setExercises(updatedExercises);
       setFilteredExercises(updatedExercises);

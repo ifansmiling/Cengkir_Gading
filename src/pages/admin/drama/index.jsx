@@ -11,8 +11,11 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-
+import { ToastContainer, toast } from "react-toastify";
+import Modal from "react-modal";
 import "./ModalTransisition.css";
+
+Modal.setAppElement("#root");
 
 const Drama = () => {
   const [users, setUsers] = useState([]);
@@ -30,6 +33,13 @@ const Drama = () => {
   const [activePageUsers, setActivePageUsers] = useState(1);
   const [activePageRatings, setActivePageRatings] = useState(1);
   const itemsPerPage = 10;
+
+  // State untuk modal
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedParameterId, setSelectedParameterId] = useState(null);
+  const [modalIsOpenRating, setModalIsOpenRating] = useState(false);
+  const [selectedRatingId, setSelectedRatingId] = useState(null);
+  const [parameterIds, setParameterIds] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -183,23 +193,71 @@ const Drama = () => {
   };
 
   const handleDeleteParameter = async (id) => {
-    if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-      try {
-        const response = await api.delete(`/drama/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-
-        if (response.status === 200) {
-          setParameters(parameters.filter((parameter) => parameter.id !== id));
-          alert("Drama berhasil dihapus.");
-        }
-      } catch (error) {
-        console.error("Gagal menghapus drama:", error);
-        alert("Terjadi kesalahan saat menghapus drama.");
-      }
+    if (!id) return;
+    try {
+      const response = await api.delete(`/drama/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      toast.success("Paremeter berhasil dihapus!");
+    } catch (error) {
+      toast.error("Gagal menghapus parameter.");
     }
+    closeModalParameter();
+  };
+
+  const handleDeleteUserRating = async (userId, parameterIds) => {
+    try {
+      const response = await api.delete(`/user-rating`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          user_id: userId,
+          parameter_ids: parameterIds,
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Rating pengguna berhasil dihapus.");
+
+        setUserRatings((prevRatings) =>
+          prevRatings.filter((rating) => rating.user_id !== userId)
+        );
+        setFilteredRatings((prevRatings) =>
+          prevRatings.filter((rating) => rating.user_id !== userId)
+        );
+
+        closeModalRating();
+      }
+    } catch (error) {
+      console.error("Gagal menghapus rating pengguna:", error);
+      toast.error("Terjadi kesalahan saat menghapus rating pengguna.");
+    }
+  };
+
+  const openModalParameter = (id) => {
+    setSelectedParameterId(id);
+    setModalIsOpen(true);
+  };
+
+  const closeModalParameter = () => {
+    setSelectedParameterId(null);
+    setModalIsOpen(false);
+  };
+
+  const openModalRating = (userId, parameterIds) => {
+    setSelectedRatingId(userId);
+    setParameterIds(parameterIds);
+    setModalIsOpenRating(true);
+  };
+
+  const closeModalRating = () => {
+    setSelectedRatingId(null);
+    setParameterIds([]);
+    setModalIsOpenRating(false);
   };
 
   const handleIconClick = (userId) => {
@@ -208,43 +266,6 @@ const Drama = () => {
 
   const handleClickRating = (userId) => {
     navigate(`/admin/drama/rating/create/${userId}`);
-  };
-
-  const handleDeleteUserRating = async (userId, parameterIds) => {
-    if (
-      window.confirm(
-        "Apakah Anda yakin ingin menghapus semua rating pengguna ini dengan parameter yang diberikan?"
-      )
-    ) {
-      try {
-        const response = await api.delete(`/user-rating`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-          data: {
-            user_id: userId,
-            parameter_ids: parameterIds,
-          },
-        });
-
-        console.log("Respons dari API:", response);
-
-        if (response.status === 200) {
-          alert("User Rating berhasil dihapus.");
-
-          setUserRatings((prevRatings) =>
-            prevRatings.filter((rating) => rating.user_id !== userId)
-          );
-          setFilteredRatings((prevRatings) =>
-            prevRatings.filter((rating) => rating.user_id !== userId)
-          );
-        }
-      } catch (error) {
-        console.error("Gagal menghapus User Rating:", error);
-        alert("Terjadi kesalahan saat menghapus User Rating.");
-      }
-    }
   };
 
   const handleEditRating = (userId) => {
@@ -324,6 +345,7 @@ const Drama = () => {
 
   return (
     <AdminLayout>
+      <ToastContainer />
       <div className="p-6">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-dramatic-header-user font-bold text-center relative w-max mx-auto">
@@ -427,7 +449,7 @@ const Drama = () => {
                       <button
                         className="text-red-500 hover:text-red-700"
                         onClick={() =>
-                          handleDeleteUserRating(
+                          openModalRating(
                             user.user_id,
                             user.ratings.map((r) => r.parameter_id)
                           )
@@ -447,6 +469,38 @@ const Drama = () => {
             totalPages={totalPagesRatings}
           />
         </div>
+
+        <Modal
+          isOpen={modalIsOpenRating}
+          onRequestClose={closeModalRating}
+          contentLabel="Konfirmasi Hapus"
+          className="fixed inset-0 flex items-center justify-center"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+        >
+          <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
+            <p className="text-base text-gray-600">
+              Apakah Anda yakin ingin menghapus semua rating pengguna ini dengan
+              parameter yang diberikan?
+            </p>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={closeModalRating}
+                className="mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() =>
+                  handleDeleteUserRating(selectedRatingId, parameterIds)
+                }
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+              >
+                Hapus
+              </button>
+            </div>
+          </div>
+        </Modal>
 
         {/* Modal */}
         {isModalOpen && (
@@ -643,7 +697,7 @@ const Drama = () => {
                       </button>
                       <button
                         className="text-red-500 hover:text-red-700"
-                        onClick={() => handleDeleteParameter(parameter.id)}
+                        onClick={() => openModalParameter(parameter.id)}
                       >
                         <FaTrash />
                       </button>
@@ -658,6 +712,38 @@ const Drama = () => {
             setActivePage={setActivePageParameters}
             totalPages={totalPagesParameters}
           />
+
+          {/* Modal Konfirmasi */}
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModalParameter}
+            contentLabel="Konfirmasi Hapus"
+            className="fixed inset-0 flex ml-64 items-center justify-center"
+            overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+          >
+            <div className="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
+              <h2 className="text-xl font-bold mb-4 font-footer-body">
+                Konfirmasi Hapus
+              </h2>
+              <p className="font-footer-body text-base text-gray-600">
+                Apakah Anda yakin ingin menghapus Parameter ini?
+              </p>
+              <div className="flex justify-end mt-4">
+                <button
+                  onClick={closeModalParameter}
+                  className="mr-2 px-4 py-2 bg-gray-300 rounded-lg text-black hover:bg-gray-400 font-footer-body"
+                >
+                  Batal
+                </button>
+                <button
+                  onClick={() => handleDeleteParameter(selectedParameterId)}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 font-footer-body"
+                >
+                  Hapus
+                </button>
+              </div>
+            </div>
+          </Modal>
         </div>
       </div>
     </AdminLayout>
