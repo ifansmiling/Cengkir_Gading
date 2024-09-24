@@ -36,7 +36,7 @@ const ExerciseVideo = () => {
   return (
     <UserLayout>
       <div className="container mx-auto px-4 py-8 bg-white">
-        <h1 className="font-dramatic-header text-2xl font-extrabold text-left text-green-800 mb-6 underline underline-offset-2 decoration-green-800">
+        <h1 className="font-dramatic-header text-2xl font-extrabold text-left text-green-800 mb-9 underline underline-offset-2 decoration-green-800">
           Video-video Drama
         </h1>
 
