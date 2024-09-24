@@ -7,6 +7,7 @@ const ExerciseBuku = () => {
   const [books, setBooks] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -31,19 +32,59 @@ const ExerciseBuku = () => {
     setIsModalOpen(false);
   };
 
+  const filteredBooks = books.filter((book) =>
+    book.judul.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <UserLayout>
       <div className="container mx-auto px-4 py-12">
-        <div className="flex justify-center mb-10">
-          <h1 className="font-dramatic-header text-2xl font-extrabold text-left text-green-800 underline underline-offset-2 decoration-green-800">
+        <div className="flex flex-col items-center justify-center mb-10">
+          <h1 className="font-dramatic-header text-2xl font-extrabold text-green-800 underline underline-offset-2 decoration-green-800 text-center">
             Daftar Semua Buku
           </h1>
+          <div className="relative flex w-full max-w-md mt-6 ml-8">
+            <input
+              type="search"
+              className="relative block w-full rounded border bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-black outline-none transition duration-200 ease-in-out placeholder-black focus:z-[3] focus:border-primary focus:text-black focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-green-600 dark:placeholder:text-neutral-600 dark:focus:border-primary"
+              placeholder="Cari Buku..."
+              aria-label="Search"
+              aria-describedby="button-addon2"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <span
+              className="input-group-text flex items-center whitespace-nowrap rounded px-3 py-1.5 text-center text-base font-normal text-neutral-700 dark:text-neutral-200"
+              id="basic-addon2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="h-5 w-5 text-neutral-600"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </span>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {books.map((book) => (
-            <BookCard key={book.id} book={book} openModal={openModal} />
-          ))}
-        </div>
+
+        {/* Jika tidak ada hasil pencarian */}
+        {filteredBooks.length === 0 ? (
+          <p className="text-gray-500 text-center">
+            Tidak ada buku yang cocok dengan pencarian.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredBooks.map((book) => (
+              <BookCard key={book.id} book={book} openModal={openModal} />
+            ))}
+          </div>
+        )}
 
         {isModalOpen && selectedBook && (
           <Modal book={selectedBook} closeModal={closeModal} />
