@@ -41,7 +41,7 @@ const ExerciseAkting = () => {
                 className="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 hover:border-green-500"
               >
                 <div className="p-4 bg-blue-200 rounded-t-lg">
-                  <h2 className="text-base font-dramatic-body-user text-green-900">
+                  <h2 className="text-base font-dramatic-body-user font-bold text-gray-900">
                     {theory.judul}
                   </h2>
                 </div>
@@ -55,7 +55,7 @@ const ExerciseAkting = () => {
                   </p>
                   <button
                     onClick={() => toggleDescription(theory.id)}
-                    className="mt-2 text-sm text-blue-600 hover:underline"
+                    className="mt-2 text-sm text-blue-900 hover:underline"
                   >
                     {isExpanded ? "Lihat lebih sedikit" : "Lihat selengkapnya"}
                   </button>
