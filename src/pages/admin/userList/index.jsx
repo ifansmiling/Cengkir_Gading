@@ -90,7 +90,6 @@ const UserList = () => {
     setFilteredUsers(filtered);
   }, [searchTerm, selectedRole, users]);
 
-  // Pagination logic
   const indexOfLastItem = activePage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
@@ -302,7 +301,7 @@ const UserList = () => {
               </button>
               <button
                 onClick={handleDelete}
-                className="font-footer-body after:px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 font-footer-body"
               >
                 Hapus
               </button>

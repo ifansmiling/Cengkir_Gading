@@ -31,10 +31,12 @@ const CreateUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (formData.kataSandi !== formData.konfirmasiKataSandi) {
       toast.error("Kata sandi dan konfirmasi kata sandi tidak cocok.");
       return;
     }
+
     try {
       const response = await api.post("/user", formData);
       toast.success("User berhasil dibuat!");
@@ -42,7 +44,11 @@ const CreateUser = () => {
         navigate("/admin/user/");
       }, 2000);
     } catch (error) {
-      toast.error("Error membuat user. Silakan coba lagi.");
+      if (error.response?.status === 409) {
+        toast.error("Email sudah terdaftar. Silakan gunakan email lain.");
+      } else {
+        toast.error("Error membuat user. Silakan coba lagi.");
+      }
       console.error("Error creating user:", error);
     }
   };
@@ -217,7 +223,7 @@ const CreateUser = () => {
           </form>
         </div>
       </div>
-      <ToastContainer /> 
+      <ToastContainer />
     </AdminLayout>
   );
 };

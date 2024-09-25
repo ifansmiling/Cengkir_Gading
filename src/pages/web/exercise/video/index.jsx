@@ -40,15 +40,12 @@ const ExerciseVideo = () => {
           Video-video Drama
         </h1>
 
-        {/* Grid dengan 2 kolom */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {videos.map((video) => (
             <div key={video.id} className="mb-8 max-w-xl">
-              {/* Judul Video */}
               <h2 className="text-xl font-bold font-dramatic-body-user text-gray-800 mb-2">
                 {video.judul}
               </h2>
-              {/* Bagian Video */}
               <video
                 src={encodeURI(video.file_path[0])}
                 className="w-full h-auto max-w-md rounded-lg cursor-pointer mb-4"
@@ -58,7 +55,6 @@ const ExerciseVideo = () => {
                   console.error("Error loading video:", e.target.error)
                 }
               />
-              {/* Deskripsi Video */}
               <p className="text-gray-700 text-base font-dramatic-body-user text-justify max-w-md">
                 {video.deskripsi}
               </p>

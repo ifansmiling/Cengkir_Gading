@@ -132,7 +132,15 @@ const BerandaLayout = ({ children }) => {
                   <FaPhone className="mr-2 text-sm" />
                   (628) 7770-8333-47
                 </p>
-                <button className="bg-green-800 text-sm hover:bg-green-900 px-3 py-2 rounded-md mt-4 text-white flex items-center">
+                <button
+                  className="bg-green-800 text-sm hover:bg-green-900 px-3 py-2 rounded-md mt-4 text-white flex items-center"
+                  onClick={() =>
+                    window.open(
+                      "https://wa.me/6287770833347?text=Halo%20Admin%2C%20saya%20mau%20bertanya...",
+                      "_blank"
+                    )
+                  }
+                >
                   <FaPaperPlane className="mr-2 text-sm" /> Contact
                 </button>
               </div>

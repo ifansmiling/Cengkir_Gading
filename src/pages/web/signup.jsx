@@ -3,6 +3,8 @@ import WebLayout from "../../layouts/BerandaLayout";
 import api from "../../services/api";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const Signup = () => {
   const initialFormData = {
@@ -18,6 +20,13 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+
+  // Inisialisasi notyf
+  const notyf = new Notyf({
+    duration: 3000,
+    position: { x: "center", y: "top", yOffset: "150px" },
+    dismissible: true,
+  });
 
   const handleChange = (e) => {
     setFormData({
@@ -38,7 +47,7 @@ const Signup = () => {
     e.preventDefault();
 
     if (formData.kataSandi !== formData.konfirmasiKataSandi) {
-      setError("Kata sandi dan konfirmasi kata sandi tidak cocok.");
+      notyf.error("Kata sandi dan konfirmasi kata sandi tidak cocok.");
       return;
     }
 
@@ -50,13 +59,21 @@ const Signup = () => {
         nim: formData.nim,
         role: "User",
       });
-      alert("Pendaftaran berhasil!");
+
+      notyf.success("Pendaftaran berhasil!");
       setFormData(initialFormData);
       setError("");
+      navigate("/login");
     } catch (err) {
-      setError(
-        err.response?.data?.error || "Terjadi kesalahan. Silakan coba lagi."
-      );
+      let errorMessage = "Terjadi kesalahan. Silakan coba lagi.";
+
+      if (err.response?.status === 409) {
+        errorMessage = "Email sudah terdaftar. Silakan gunakan email lain.";
+      } else if (err.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      }
+
+      notyf.error(errorMessage);
     }
   };
 
