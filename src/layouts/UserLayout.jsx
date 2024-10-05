@@ -73,7 +73,7 @@ const UserLayout = ({ children }) => {
         <div className="flex items-center justify-between">
           <div className="text-lg font-bold flex items-center space-x-2 font-dramatic-header-user">
             <Link
-              to="/user/drama"
+              to="/user/drama/:id"
               className="flex items-center space-x-2"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             >
@@ -83,7 +83,7 @@ const UserLayout = ({ children }) => {
           </div>
 
           <div className="flex items-center mr-14">
-            <Link to="/user/drama">
+            <Link to="/user/drama/:id">
               <img
                 src="/logo1.png"
                 alt="Logo"
@@ -95,7 +95,7 @@ const UserLayout = ({ children }) => {
           </div>
           <div className="flex items-center space-x-2 font-sidebar-menu ">
             <Link
-              to="/user/drama"
+              to="/user/drama/:id"
               className="text-green-600"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             >
@@ -120,7 +120,7 @@ const UserLayout = ({ children }) => {
               {nama || "Unknown User"}
             </div>
             <Link
-              to="/user/drama"
+              to="/user/drama/:id"
               className="text-sm text-green-600 mt-1 font-sidebar-menu"
             >
               {nim || "Unknown User"}
