@@ -27,6 +27,7 @@ const Drama = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserRatings, setSelectedUserRatings] = useState([]);
   const [selectedUserName, setSelectedUserName] = useState("");
+  const [userName, setUserName] = useState("");
 
   // Pagination state for both tables
   const [activePageParameters, setActivePageParameters] = useState(1);
@@ -262,12 +263,13 @@ const Drama = () => {
     openModal(userId);
   };
 
-  const handleClickRating = (userId) => {
-    navigate(`/admin/drama/rating/create/${userId}`);
+  const handleClickRating = (userId, userName) => {
+    setUserName(userName);
+    navigate(`/admin/drama/rating/create/${userId}`, { state: { userName } });
   };
 
-  const handleEditRating = (userId) => {
-    navigate(`/admin/drama/rating/edit/${userId}`);
+  const handleEditRating = (userId, userName) => {
+    navigate(`/admin/drama/rating/edit/${userId}`, { state: { userName } });
   };
 
   // Pagination logic function
@@ -439,7 +441,9 @@ const Drama = () => {
                   <td className="py-2 px-4 border-b">
                     <div className="flex justify-center gap-2">
                       <button
-                        onClick={() => handleEditRating(user.user_id)}
+                        onClick={() =>
+                          handleEditRating(user.user_id, user.nama)
+                        }
                         className="text-green-600 hover:text-green-900"
                       >
                         <FaEdit />
@@ -622,7 +626,7 @@ const Drama = () => {
                         <FontAwesomeIcon
                           icon={faPlus}
                           className="text-green-600 text-xl hover:text-green-900 cursor-pointer transition duration-300 ease-in-out transform hover:scale-110"
-                          onClick={() => handleClickRating(user.id)}
+                          onClick={() => handleClickRating(user.id, user.nama)}
                         />
                       </div>
                     </td>

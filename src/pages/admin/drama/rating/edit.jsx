@@ -4,6 +4,7 @@ import AdminLayout from "../../../../layouts/AdminLayout";
 import api from "../../../../services/api";
 import "./style.css";
 import { ToastContainer, toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
 
 const EditRating = () => {
   const { id } = useParams();
@@ -12,7 +13,8 @@ const EditRating = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [ratingMap, setRatingMap] = useState({});
-
+  const location = useLocation();
+  const userName = location.state?.userName || "User Tidak Diketahui";
   const fetchUserRating = async () => {
     try {
       const response = await api.get("/user-rating/rating", {
@@ -67,9 +69,14 @@ const EditRating = () => {
       <ToastContainer />
       <div className="py-6">
         <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">
+          <h2 className="text-3xl text-green-600 font-semibold text-center mb-4 font-dramatic-header">
             Edit User Rating
           </h2>
+
+          <p className="text-xl text-center font-dramatic-header text-gray-700 mb-6">
+            {" "}
+            <span className="font-bold text-green-800">{userName}</span>
+          </p>
 
           <form onSubmit={handleUpdate} className="space-y-6">
             <div>

@@ -4,12 +4,15 @@ import AdminLayout from "../../../../layouts/AdminLayout";
 import api from "../../../../services/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useLocation } from "react-router-dom";
 
 const CreateRating = () => {
+  const location = useLocation();
   const { id: userId } = useParams();
   const [parameters, setParameters] = useState([]);
   const [selectedRatings, setSelectedRatings] = useState({});
   const navigate = useNavigate();
+  const userName = location.state?.userName || "User Tidak Diketahui";
 
   useEffect(() => {
     const fetchParameters = async () => {
@@ -57,9 +60,14 @@ const CreateRating = () => {
       <ToastContainer />
       <div className="py-6">
         <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-3xl text-green-600 font-semibold text-center mb-8 font-dramatic-header">
+          <h2 className="text-3xl text-green-600 font-semibold text-center mb-4 font-dramatic-header">
             Buat User Rating
           </h2>
+
+          <p className="text-xl text-center font-dramatic-header text-gray-700 mb-6">
+            {" "}
+            <span className="font-bold text-green-800">{userName}</span>
+          </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -80,7 +88,7 @@ const CreateRating = () => {
                       onChange={(e) =>
                         handleRatingChange(param.id, e.target.value)
                       }
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-green" // Tambahkan kelas range-green
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-green"
                     />
 
                     <div className="mt-2 text-sm text-gray-500 font-dramatic-header">
