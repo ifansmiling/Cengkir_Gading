@@ -11,6 +11,9 @@ const CreateRating = () => {
   const { id: userId } = useParams();
   const [parameters, setParameters] = useState([]);
   const [selectedRatings, setSelectedRatings] = useState({});
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0]
+  ); // Default tanggal hari ini
   const navigate = useNavigate();
   const userName = location.state?.userName || "User Tidak Diketahui";
 
@@ -35,19 +38,25 @@ const CreateRating = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Membuat array tanggal_rating yang berisi tanggal yang sama untuk semua parameter
+    const tanggalRating = new Array(parameters.length).fill(selectedDate);
+
+    const data = {
+      user_id: userId,
+      parameter_id: parameters.map((param) => param.id), // Menyertakan ID semua parameter
+      rating: Object.values(selectedRatings).map((r) => Number(r)), // Menyertakan rating untuk setiap parameter
+      tanggal_rating: tanggalRating, // Menyertakan tanggal untuk setiap parameter
+    };
+
     try {
-      const data = {
-        user_id: userId,
-        parameter_id: Object.keys(selectedRatings),
-        rating: Object.values(selectedRatings).map((r) => Number(r)),
-      };
       await api.post("/user-rating", data);
       toast.success("Rating berhasil dibuat!");
       setTimeout(() => {
         navigate("/admin/drama");
       }, 2000);
     } catch (error) {
-      toast.error("Error membuat exercise. Silakan coba lagi.");
+      toast.error("Error membuat rating. Silakan coba lagi.");
     }
   };
 
@@ -63,23 +72,37 @@ const CreateRating = () => {
           <h2 className="text-3xl text-green-600 font-semibold text-center mb-4 font-dramatic-header">
             Buat User Rating
           </h2>
-
-          <p className="text-xl text-center font-dramatic-header text-gray-700 mb-6">
-            {" "}
-            <span className="font-bold text-green-800">{userName}</span>
-          </p>
-
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-xl font-bold font-dramatic-subtitle text-gray-700">
-                Pilih Rating Parameter
-              </label>
+              <div className="flex justify-center items-center mb-6">
+                <label className="text-xl font-bold font-dramatic-subtitle text-gray-800 mr-2">
+                  Pilih Rating Parameter
+                </label>
+                <p className="text-xl font-dramatic-header text-gray-900">
+                  <span className="font-bold text-green-800">{userName}</span>
+                </p>
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-lg font-natural-body text-gray-700">
+                  Tanggal Rating
+                </label>
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="w-auto font-natural-body text-sm px-4 py-2 border rounded-md focus:outline-none focus:border-green-400"
+                  required
+                />
+              </div>
+
               <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {parameters.map((param) => (
                   <div key={param.id} className="flex flex-col items-start">
                     <label className="block text-sm font-medium text-gray-700 font-dramatic-body-user">
                       {param.nama}
                     </label>
+
                     <input
                       type="range"
                       min="1"
@@ -90,7 +113,6 @@ const CreateRating = () => {
                       }
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-green"
                     />
-
                     <div className="mt-2 text-sm text-gray-500 font-dramatic-header">
                       {selectedRatings[param.id] || 50} / 100
                     </div>

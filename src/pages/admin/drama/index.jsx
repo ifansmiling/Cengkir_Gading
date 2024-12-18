@@ -108,8 +108,8 @@ const Drama = () => {
               user_id: rating.user_id,
               nama: rating.user.nama,
               nim: rating.user.nim,
-              tanggal_rating: rating.tanggal_rating,
               ratings: [],
+              tanggal_rating: [],
             };
           }
           acc[rating.user_id].ratings.push({
@@ -117,11 +117,18 @@ const Drama = () => {
             rating: rating.rating,
             drama: rating.drama.nama,
           });
+          acc[rating.user_id].tanggal_rating.push(rating.tanggal_rating);
           return acc;
         }, {});
 
+        // Pastikan tanggal_rating diurutkan untuk setiap pengguna
+        Object.values(groupedRatings).forEach((group) => {
+          group.tanggal_rating.sort((a, b) => new Date(b) - new Date(a));
+        });
+
         const uniqueUserRatings = Object.values(groupedRatings);
 
+        // Pastikan data yang sudah digrouping benar
         setUserRatings(uniqueUserRatings);
         setFilteredRatings(uniqueUserRatings);
       } catch (error) {
@@ -421,58 +428,70 @@ const Drama = () => {
               </tr>
             </thead>
             <tbody>
-              {currentRatings.map((user, index) => (
-                <tr
-                  key={user.user_id}
-                  className="text-center hover:bg-gray-100 font-dramatic-header-user"
-                >
-                  <td className="py-2 px-4 border-b border">
-                    {(activePageRatings - 1) * itemsPerPage + index + 1}
-                  </td>
-                  <td className="py-2 px-4 border-b font-event-body border">
-                    {user.nama}
-                  </td>
-                  <td className="py-2 px-4 border-b font-event-body border">
-                    {user.nim}
-                  </td>
-                  <td className="py-2 px-4 border-b text-center border">
-                    <FontAwesomeIcon
-                      icon={faCircleCheck}
-                      className="text-green-500 text-xl cursor-pointer"
-                      onClick={() => handleIconClick(user.user_id)}
-                    />
-                  </td>
-                  <td className="py-2 px-4 border-b text-center border">
-                    {/* Menampilkan tanggal_rating sesuai data yang diterima */}
-                    {user.tanggal_rating
-                      ? new Date(user.tanggal_rating).toLocaleDateString()
-                      : "Tidak Tersedia"}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    <div className="flex justify-center gap-2">
-                      <button
-                        onClick={() =>
-                          handleEditRating(user.user_id, user.nama)
-                        }
-                        className="text-green-600 hover:text-green-900"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        className="text-red-500 hover:text-red-700"
-                        onClick={() =>
-                          openModalRating(
-                            user.user_id,
-                            user.ratings.map((r) => r.parameter_id)
-                          )
-                        }
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {currentRatings
+                .sort((a, b) => {
+                  const dateA = new Date(a.tanggal_rating[0] || "1970-01-01");
+                  const dateB = new Date(b.tanggal_rating[0] || "1970-01-01");
+                  return dateB - dateA;
+                })
+                .map((user, index) =>
+                  user.ratings.map((rating, subIndex) => (
+                    <tr
+                      key={`${user.user_id}-${subIndex}`}
+                      className="text-center hover:bg-gray-100 font-dramatic-header-user"
+                    >
+                      <td className="py-2 px-4 border-b border">
+                        {(activePageRatings - 1) * itemsPerPage +
+                          index +
+                          subIndex +
+                          1}
+                      </td>
+                      <td className="py-2 px-4 border-b font-event-body border">
+                        {user.nama}
+                      </td>
+                      <td className="py-2 px-4 border-b font-event-body border">
+                        {user.nim}
+                      </td>
+                      <td className="py-2 px-4 border-b text-center border">
+                        <FontAwesomeIcon
+                          icon={faCircleCheck}
+                          className="text-green-500 text-xl cursor-pointer"
+                          onClick={() => handleIconClick(user.user_id)}
+                        />
+                      </td>
+                      <td className="py-2 px-4 border-b text-center border">
+                        {user.tanggal_rating && user.tanggal_rating.length > 0
+                          ? new Date(
+                              user.tanggal_rating[subIndex]
+                            ).toLocaleDateString()
+                          : "Tidak Tersedia"}
+                      </td>
+                      <td className="py-2 px-4 border-b">
+                        <div className="flex justify-center gap-2">
+                          <button
+                            onClick={() =>
+                              handleEditRating(user.user_id, user.nama)
+                            }
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            className="text-red-500 hover:text-red-700"
+                            onClick={() =>
+                              openModalRating(
+                                user.user_id,
+                                user.ratings.map((r) => r.parameter_id)
+                              )
+                            }
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
             </tbody>
           </table>
           <SimplePagination
