@@ -195,7 +195,7 @@ const BerandaLayout = ({ children }) => {
                 <a
                   href="/"
                   onClick={handleScrollToTop}
-                  className="underline text-green-800"
+                  className="underline text-green-900 hover:text-green-700"
                 >
                   Privacy Policy
                 </a>
