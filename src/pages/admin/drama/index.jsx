@@ -108,6 +108,7 @@ const Drama = () => {
               user_id: rating.user_id,
               nama: rating.user.nama,
               nim: rating.user.nim,
+              tanggal_rating: rating.tanggal_rating,
               ratings: [],
             };
           }
@@ -412,6 +413,9 @@ const Drama = () => {
                   Rating Anggota
                 </th>
                 <th className="py-2 px-4 border-b font-event-header text-center">
+                  Tanggal Rating
+                </th>
+                <th className="py-2 px-4 border-b font-event-header text-center">
                   Aksi
                 </th>
               </tr>
@@ -437,6 +441,12 @@ const Drama = () => {
                       className="text-green-500 text-xl cursor-pointer"
                       onClick={() => handleIconClick(user.user_id)}
                     />
+                  </td>
+                  <td className="py-2 px-4 border-b text-center border">
+                    {/* Menampilkan tanggal_rating sesuai data yang diterima */}
+                    {user.tanggal_rating
+                      ? new Date(user.tanggal_rating).toLocaleDateString()
+                      : "Tidak Tersedia"}
                   </td>
                   <td className="py-2 px-4 border-b">
                     <div className="flex justify-center gap-2">

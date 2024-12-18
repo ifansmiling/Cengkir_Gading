@@ -72,9 +72,15 @@ const Drama = () => {
 
   if (loading) return <p>Loading...</p>;
 
-  const nilaiAktor1 = userRatings.map((rating) => rating.rating);
+  // Handle empty data
+  const nilaiAktor1 =
+    userRatings.length > 0
+      ? userRatings.map((rating) => rating.rating)
+      : Array(dramaData.length).fill(0);
   const rataRataNilai =
-    nilaiAktor1.reduce((a, b) => a + b, 0) / nilaiAktor1.length;
+    nilaiAktor1.length > 0
+      ? nilaiAktor1.reduce((a, b) => a + b, 0) / nilaiAktor1.length
+      : 0;
 
   const data = {
     labels: dramaData.map((drama) => drama.nama),
@@ -179,7 +185,7 @@ const Drama = () => {
         </p>
 
         <div ref={printRef}>
-          <div className="w-full max-w-lg mx-auto mb-4">
+          <div className="w-full max-w-lg mx-auto mb-2">
             <Radar
               ref={chartRef}
               data={data}
@@ -204,7 +210,7 @@ const Drama = () => {
                     {drama.nama}
                   </td>
                   <td className="p-4 text-center font-dramatic-header">
-                    {nilaiAktor1[index]}
+                    {nilaiAktor1[index] || 0}
                   </td>
                 </tr>
               ))}
