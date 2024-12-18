@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import UserLayout from "../../../layouts/UserLayout";
 import api from "../../../services/api";
-
 import { Radar } from "react-chartjs-2";
+import { FaPrint } from "react-icons/fa";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -13,7 +13,6 @@ import {
   Legend,
 } from "chart.js";
 
-// Registrasi komponen Chart.js
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -24,15 +23,16 @@ ChartJS.register(
 );
 
 const Drama = () => {
-  // State untuk menyimpan data drama dan user rating
   const [dramaData, setDramaData] = useState([]);
   const [userRatings, setUserRatings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [chartImage, setChartImage] = useState("");
 
-  // Mendapatkan userId dari localStorage
   const userId = localStorage.getItem("id");
+  const printRef = useRef();
+  const chartRef = useRef();
 
-  // Fungsi untuk mengambil data drama dari backend
+  // Ambil data
   const fetchDramaData = async () => {
     try {
       const response = await api.get("/drama");
@@ -42,7 +42,6 @@ const Drama = () => {
     }
   };
 
-  // Fungsi untuk mengambil data rating user berdasarkan userId
   const fetchUserRatings = async () => {
     try {
       const response = await api.get(`/userRating/user/rating/${userId}`);
@@ -52,7 +51,6 @@ const Drama = () => {
     }
   };
 
-  // UseEffect untuk menjalankan fetch data saat komponen mount
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -64,36 +62,22 @@ const Drama = () => {
     fetchData();
   }, []);
 
-  if (loading) {
-    return <p>Loading...</p>; // Atau tambahkan loader
-  }
+  useEffect(() => {
+    // Tunggu hingga chart selesai di-render dan ambil sebagai gambar
+    if (chartRef.current) {
+      const image = chartRef.current.toBase64Image();
+      setChartImage(image);
+    }
+  }, [userRatings]);
 
-  // Jika data rating user kosong atau belum ada
-  if (userRatings.length === 0) {
-    return (
-      <UserLayout>
-        <div className="bg-white p-8 rounded-lg max-w-5xl mx-auto mt-2">
-          <h1 className="text-2xl font-bold text-green-800 mb-6 underline decoration-green-800">
-            Perpustakaan Drama
-          </h1>
-          <p>Belum Ada Rating</p>
-        </div>
-      </UserLayout>
-    );
-  }
+  if (loading) return <p>Loading...</p>;
 
-  const borderColor = "#34d399";
-
-  // Ekstraksi nilai rating dari userRatings
   const nilaiAktor1 = userRatings.map((rating) => rating.rating);
-
-  // Menghitung rata-rata nilai Aktor 1
   const rataRataNilai =
     nilaiAktor1.reduce((a, b) => a + b, 0) / nilaiAktor1.length;
 
-  // Data chart untuk radar
   const data = {
-    labels: dramaData.map((drama) => drama.nama), // Menggunakan nama drama dari backend
+    labels: dramaData.map((drama) => drama.nama),
     datasets: [
       {
         label: "Nilai Parameter",
@@ -105,7 +89,7 @@ const Drama = () => {
       },
       {
         label: "Rata-Rata Nilai",
-        data: Array(nilaiAktor1.length).fill(rataRataNilai), // Data rata-rata untuk semua parameter
+        data: Array(nilaiAktor1.length).fill(rataRataNilai),
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 2,
@@ -114,9 +98,68 @@ const Drama = () => {
     ],
   };
 
+  const handlePrint = () => {
+    const printContent = printRef.current;
+
+    const printWindow = window.open("", "", "width=800,height=600");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print</title>
+          <style>
+            body { 
+              font-family: Arial, sans-serif; 
+              margin: 0; 
+              padding: 20px; 
+            }
+            h1 { 
+              text-align: center; 
+              color: #256D85; 
+            }
+            table { 
+              width: 100%; 
+              border-collapse: collapse; 
+              margin-top: 20px; 
+            }
+            th, td { 
+              border: 1px solid #ccc; 
+              padding: 10px; 
+              text-align: center; 
+            }
+            th { 
+              background-color: #34d399; 
+              color: white; 
+            }
+            tr:nth-child(even) { 
+              background-color: #f9f9f9; 
+            }
+            img { 
+              display: block; 
+              margin: 20px auto; 
+              max-width: 600px; 
+              max-height: 400px; 
+            }
+            @media print {
+              body { margin: 0; padding: 10px; }
+              img { max-width: 100%; height: auto; }
+              table { page-break-inside: avoid; }
+              h1 { page-break-before: always; }
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Laporan Perpustakaan Drama</h1>
+          <img src="${chartImage}" alt="Chart" />
+          ${printContent.innerHTML}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
   return (
     <UserLayout>
-      {/* Container utama dengan background putih */}
       <div className="bg-white p-8 rounded-lg max-w-5xl mx-auto mt-2">
         <h1 className="font-dramatic-header text-2xl font-extrabold text-left text-green-800 mb-4 underline underline-offset-2 decoration-green-800">
           Perpustakaan Drama
@@ -135,51 +178,54 @@ const Drama = () => {
           latihan dari waktu ke waktu.
         </p>
 
-        {/* Chart Radar untuk menampilkan parameter */}
-        <div className="w-full max-w-lg mx-auto mb-4 font-dramatic-header-user">
-          <Radar data={data} options={{ maintainAspectRatio: true }} />
-        </div>
+        <div ref={printRef}>
+          <div className="w-full max-w-lg mx-auto mb-4">
+            <Radar
+              ref={chartRef}
+              data={data}
+              options={{ maintainAspectRatio: true }}
+            />
+          </div>
 
-        {/* Tabel untuk menampilkan nilai parameter */}
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full border-separate border-spacing-0 border-green-500 mx-auto bg-white shadow-lg rounded-lg">
+          <table className="table-auto w-full border-collapse">
             <thead>
               <tr className="bg-green-700 text-white">
-                <th className="border-b border-green-500 p-4 text-left font-dramatic-body-user font-sm">
-                  Parameter
-                </th>
-                <th className="border-b border-green-500 p-4 text-center font-dramatic-body-user font-sm">
-                  Nilai
-                </th>
+                <th className="p-4 text-left font-natural-body">Parameter</th>
+                <th className="p-4 text-center font-dramatic-header">Nilai</th>
               </tr>
             </thead>
             <tbody>
               {dramaData.map((drama, index) => (
                 <tr
                   key={index}
-                  className={`${
-                    index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                  } hover:bg-green-100 transition-colors duration-200`}
+                  className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
                 >
-                  <td className="border-b border-green-500 p-4 text-left font-dramatic-body-user font-sm">
+                  <td className="p-4 text-left font-natural-body">
                     {drama.nama}
                   </td>
-                  <td className="border-b border-green-500 p-4 text-center font-dramatic-body-user font-sm">
+                  <td className="p-4 text-center font-dramatic-header">
                     {nilaiAktor1[index]}
                   </td>
                 </tr>
               ))}
               <tr className="bg-gray-200">
-                <td className="border-b border-green-500 p-4 font-bold text-left font-dramatic-body-user font-sm">
+                <td className="p-4 font-bold text-left font-natural-body">
                   Rata-Rata
                 </td>
-                <td className="border-b border-green-500 p-4 font-bold text-center font-dramatic-body-user font-sm">
+                <td className="p-4 font-bold text-center font-dramatic-header">
                   {rataRataNilai.toFixed(2)}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
+        <button
+          onClick={handlePrint}
+          className="mt-4 font-natural-body flex items-center text-gray-700 px-4 py-2 rounded-lg hover:text-gray-900 mb-2"
+        >
+          <FaPrint className="mr-2" />
+          <span>Cetak laporan</span>
+        </button>
       </div>
     </UserLayout>
   );
