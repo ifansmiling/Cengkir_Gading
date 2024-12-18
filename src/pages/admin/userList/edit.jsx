@@ -14,7 +14,7 @@ const EditUser = () => {
     email: "",
     kataSandi: "",
     nim: "",
-    role: "",
+    role: "", // Default kosong
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +28,7 @@ const EditUser = () => {
           email: response.data.email,
           kataSandi: "",
           nim: response.data.nim,
-          role: response.data.role,
+          role: response.data.role || "", // Pastikan role ada atau kosong
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -46,6 +46,13 @@ const EditUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validasi: Pastikan role sudah dipilih
+    if (!formData.role) {
+      toast.error("Harap pilih role terlebih dahulu.");
+      return;
+    }
+
     try {
       await api.put(`/user/${id}`, formData);
       toast.success("User Berhasil Diperbarui!");
@@ -164,6 +171,12 @@ const EditUser = () => {
                 onChange={handleChange}
                 className="text-gray-600 w-full px-4 py-2 border focus:border-green-400 hover:border-green-500 focus:outline-none rounded-md"
               >
+                <option
+                  className="block text-gray-600 font-dramatic-subtitle"
+                  disabled
+                >
+                  Pilih Role
+                </option>
                 <option
                   className="block text-gray-600 font-dramatic-subtitle"
                   value="admin"

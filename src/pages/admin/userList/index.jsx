@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
-import { FaEdit, FaTrash, FaPlus, FaCaretDown } from "react-icons/fa";
+import { FaEdit, FaTrash, FaPlus, FaCaretDown, FaPrint } from "react-icons/fa";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
@@ -139,6 +139,51 @@ const UserList = () => {
     );
   };
 
+  const handlePrint = () => {
+    // Ambil konten tabel tanpa tombol aksi
+    const printContent = document.getElementById("print-table").innerHTML;
+
+    // Buat jendela baru untuk cetak
+    const printWindow = window.open("", "_blank");
+
+    // Tulis konten HTML ke dalam jendela cetak
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Daftar Semua Pengguna</title>
+          <style>
+            table {
+              border-collapse: collapse;
+              width: 100%;
+            }
+            th, td {
+              border: 1px solid black;
+              padding: 8px;
+              text-align: center;
+            }
+            th {
+              background-color: #f4f4f4;
+            }
+            /* Sembunyikan tombol aksi dan kolom aksi saat mencetak */
+            @media print {
+              button, .action-buttons, th:last-child, td:last-child {
+                display: none;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <h2>Daftar Semua Pengguna</h2>
+          <table>${printContent}</table>
+        </body>
+      </html>
+    `);
+
+    // Menutup dokumen dan memicu pencetakan
+    printWindow.document.close();
+    printWindow.print();
+  };
+
   return (
     <AdminLayout>
       <ToastContainer />
@@ -190,17 +235,30 @@ const UserList = () => {
             <span className="sr-only">Cari</span>
           </button>
         </form>
-        <button
-          onClick={handleClick}
-          className="font-dramatic-header flex items-center text-white bg-green-700 hover:bg-green-900 rounded-lg px-2 py-2 mb-3"
-        >
-          <FaPlus className="mr-2" />
-          <span>Tambah User</span>
-        </button>
+
+        <div className="flex space-x-4">
+          <button
+            onClick={handleClick}
+            className="font-natural-body flex items-center text-white bg-green-700 hover:bg-green-900 px-4 py-2 rounded-lg mb-3"
+          >
+            <FaPlus className="mr-2" />
+            <span>User</span>
+          </button>
+          <button
+            onClick={handlePrint}
+            className="font-natural-body flex items-center bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-900 mb-3"
+          >
+            <FaPrint className="mr-2" />
+            <span>Cetak</span>
+          </button>
+        </div>
 
         {/* Tabel Pengguna */}
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 text-center rounded-lg shadow-md mb-2">
+          <table
+            id="print-table"
+            className="min-w-full bg-white border border-gray-300 text-center rounded-lg shadow-md mb-2"
+          >
             <thead>
               <tr className="bg-gray-200 font-dramatic-header">
                 <th className="py-2 px-4">No</th>
@@ -275,6 +333,7 @@ const UserList = () => {
             </tbody>
           </table>
         </div>
+
         <SimplePagination />
 
         {/* Modal Konfirmasi */}

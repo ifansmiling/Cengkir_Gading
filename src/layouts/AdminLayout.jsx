@@ -53,9 +53,6 @@ const AdminLayout = ({ children }) => {
           </div>
 
           <div className="flex items-center space-x-4 mr-auto ml-4">
-            <NavLink to="/" className="text-white hover:text-black">
-              <FaHome className="text-3xl" />
-            </NavLink>
             <button
               onClick={handleLogout}
               className="text-white hover:text-black"

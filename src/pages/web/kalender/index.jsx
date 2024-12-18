@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import UserLayout from "../../../layouts/UserLayout";
 import api from "../../../services/api";
+import { FaPrint } from "react-icons/fa";
 
 const KalenderAcara = () => {
   const [events, setEvents] = useState([]);
@@ -44,15 +45,37 @@ const KalenderAcara = () => {
     setSelectedImage("");
   };
 
+  const handlePrint = () => {
+    const printContents =
+      document.getElementById("printable-section").innerHTML;
+    const originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+    window.location.reload(); // Reload React state after print
+  };
+
+  const upcomingEvents = events.filter(
+    (event) => new Date(event.tanggal_event) >= new Date()
+  );
+
   return (
     <UserLayout>
       <div className="container mx-auto p-6 bg-white">
-        <div className="flex justify-center mb-10">
+        <div className="flex justify-between items-center mb-10">
           <h1 className="font-dramatic-header text-3xl font-extrabold text-left text-green-800 underline underline-offset-2 decoration-green-800">
             Kalender Acara
           </h1>
+          <button
+            onClick={handlePrint}
+            className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition"
+          >
+            <FaPrint className="text-base" />
+          </button>
         </div>
 
+        {/* Semua Event Ditampilkan */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {events.map((event) => {
             const { day, month, year } = formatDate(event.tanggal_event);
@@ -91,6 +114,40 @@ const KalenderAcara = () => {
                   </p>
                   <p className="text-xs text-green-700">
                     Event Date: {day} {month}, {year}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div id="printable-section" className="hidden">
+          <div className="mb-4 text-center">
+            <h2 className="text-2xl font-bold mb-4 font-dramatic-body">
+              Upcoming Events
+            </h2>
+          </div>
+          {upcomingEvents.map((event) => {
+            const { day, month, year } = formatDate(event.tanggal_event);
+            return (
+              <div
+                key={event.id}
+                className="flex items-center gap-4 mb-8 border-b pb-4"
+              >
+                {/* Gambar di sebelah kiri */}
+                <img
+                  src={event.file_paths[0]}
+                  alt={event.judul}
+                  className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
+                />
+                {/* Detail acara di sebelah kanan */}
+                <div>
+                  <h3 className="text-lg font-bold">{event.judul}</h3>
+                  <p className="text-sm text-gray-600">
+                    {day} {month}, {year}
+                  </p>
+                  <p className="text-xs text-gray-700 mt-1">
+                    {event.deskripsi}
                   </p>
                 </div>
               </div>
