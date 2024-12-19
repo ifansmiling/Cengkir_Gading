@@ -171,14 +171,20 @@ const Drama = () => {
     }
   };
 
+  const convertToValidDate = (tanggal) => {
+    const [day, month, year] = tanggal.split("/");
+    return `${year}-${month}-${day}`; // Format: YYYY-MM-DD
+  };
+
   const openModal = async (userId, tanggalRating) => {
     try {
+      const validDate = new Date(tanggalRating);
+      if (isNaN(validDate)) {
+        throw new Error("Invalid tanggalRating");
+      }
+
       const response = await api.get(`/user-rating/rating/user/tanggal`, {
-        params: { user_id: userId, tanggal_rating: tanggalRating },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        params: { user_id: userId, tanggal_rating: validDate.toISOString() },
       });
 
       const ratings = response.data.data;
@@ -188,7 +194,6 @@ const Drama = () => {
         setSelectedUserName(userName);
 
         setSelectedUserRatings(ratings);
-
         setIsModalOpen(true);
       } else {
         console.log("Tidak ada data rating untuk pengguna ini.");
@@ -234,8 +239,23 @@ const Drama = () => {
     closeModalParameter();
   };
 
+  // Fungsi untuk mengubah format tanggal DD/MM/YYYY ke YYYY-MM-DD
+  const convertToValidDateDelete = (tanggal) => {
+    const [day, month, year] = tanggal.split("/");
+    return `${year}-${month}-${day}`; // Format: YYYY-MM-DD
+  };
+
+  // Fungsi untuk menangani penghapusan rating pengguna
   const handleDeleteUserRating = async (userId, tanggalRating) => {
     try {
+      // Konversi tanggalRating ke format valid
+      const validTanggalRating = convertToValidDateDelete(tanggalRating);
+
+      if (isNaN(Date.parse(validTanggalRating))) {
+        toast.error("Tanggal rating tidak valid.");
+        return;
+      }
+
       const response = await api.delete(`/user-rating`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -243,7 +263,7 @@ const Drama = () => {
         },
         data: {
           user_id: userId,
-          tanggal_rating: tanggalRating, // Kirimkan tanggal_rating ke backend
+          tanggal_rating: validTanggalRating, // Kirimkan tanggal dalam format valid
         },
       });
 
@@ -302,8 +322,15 @@ const Drama = () => {
     setModalIsOpenRating(false);
   };
 
+  // Fungsi untuk menangani klik pada ikon
   const handleIconClick = (userId, tanggalRating) => {
-    openModal(userId, tanggalRating);
+    const validTanggal = convertToValidDate(tanggalRating);
+
+    if (isNaN(Date.parse(validTanggal))) {
+      console.error("Invalid date:", tanggalRating);
+      return;
+    }
+    openModal(userId, validTanggal);
   };
 
   const handleClickRating = (userId, userName) => {
@@ -385,7 +412,7 @@ const Drama = () => {
       </div>
     );
   };
-  
+
   return (
     <AdminLayout>
       <ToastContainer />
