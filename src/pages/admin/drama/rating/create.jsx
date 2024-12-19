@@ -13,7 +13,7 @@ const CreateRating = () => {
   const [selectedRatings, setSelectedRatings] = useState({});
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0]
-  ); // Default tanggal hari ini
+  ); 
   const navigate = useNavigate();
   const userName = location.state?.userName || "User Tidak Diketahui";
 
@@ -39,16 +39,15 @@ const CreateRating = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Membuat array ratings yang berisi objek untuk setiap parameter
     const ratings = parameters.map((param) => ({
       parameter_id: param.id,
-      rating: selectedRatings[param.id] || 50, // Gunakan rating yang sudah dipilih atau default 50
-      tanggal_rating: selectedDate, // Gunakan tanggal yang dipilih
+      rating: selectedRatings[param.id] || 50, 
+      tanggal_rating: selectedDate, 
     }));
 
     const data = {
       user_id: userId,
-      ratings, // Kirim array ratings ke backend
+      ratings, 
     };
 
     try {

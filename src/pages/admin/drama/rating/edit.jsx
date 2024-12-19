@@ -13,15 +13,25 @@ const EditRating = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [ratingMap, setRatingMap] = useState({});
+  const [tanggalRating, setTanggalRating] = useState(""); // State untuk tanggal rating
   const location = useLocation();
   const userName = location.state?.userName || "User Tidak Diketahui";
+
+  // Fungsi untuk mengambil rating pengguna
   const fetchUserRating = async () => {
     try {
-      const response = await api.get("/user-rating/rating", {
-        params: { ids: id },
+      const user_id = id; // Pastikan id adalah user_id yang valid
+      const tanggal_rating = "2024-12-19"; // Contoh format tanggal, ganti sesuai dengan yang diinginkan
+
+      // Memastikan parameter user_id dan tanggal_rating disertakan dalam query
+      const response = await api.get("/user-rating/rating/user/tanggal", {
+        params: { user_id, tanggal_rating },
       });
+
       const data = response.data.data;
+      console.log(data); // Log data untuk memastikan respons backend benar
       setUserRating(data);
+
       const ratings = data.reduce((acc, item) => {
         acc[item.parameter_id] = item.rating;
         return acc;
@@ -29,7 +39,8 @@ const EditRating = () => {
       setRatingMap(ratings);
       setLoading(false);
     } catch (err) {
-      setError(err.response ? err.response.data.message : "Error occurred");
+      console.error("Error:", err);
+      setError(err.response ? err.response.data.error : "Error occurred");
       setLoading(false);
     }
   };
@@ -41,13 +52,16 @@ const EditRating = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
+      // Membuat data pembaruan untuk rating yang diedit
       const updates = userRating.map((ratingData) => ({
         parameter_id: ratingData.parameter_id,
         rating: ratingMap[ratingData.parameter_id] || ratingData.rating,
       }));
 
+      // Mengirim data pembaruan ke backend
       await api.put("/user-rating/update/rating", {
         user_id: id,
+        tanggal_rating: tanggalRating, // Kirim tanggal rating yang diperbarui
         parameter_id: updates.map((update) => update.parameter_id),
         rating: updates.map((update) => update.rating),
       });
@@ -69,51 +83,68 @@ const EditRating = () => {
       <ToastContainer />
       <div className="py-6">
         <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-3xl text-green-600 font-semibold text-center mb-4 font-dramatic-header">
+          <h2 className="text-3xl text-green-600 font-semibold text-center mb-2 font-dramatic-header">
             Edit User Rating
           </h2>
 
           <p className="text-xl text-center font-dramatic-header text-gray-700 mb-6">
-            {" "}
             <span className="font-bold text-green-800">{userName}</span>
           </p>
 
           <form onSubmit={handleUpdate} className="space-y-6">
             <div>
-              <label className="block text-xl font-bold font-dramatic-subtitle text-gray-700">
-                Edit Rating Parameter
-              </label>
+              <div>
+                <label
+                  htmlFor="tanggal-rating"
+                  className="block text-lg font-natural-body text-gray-700"
+                >
+                  Edit Tanggal Rating
+                </label>
+                <input
+                  id="tanggal-rating"
+                  type="date"
+                  value={tanggalRating}
+                  onChange={(e) => setTanggalRating(e.target.value)}
+                  className="w-auto font-natural-body text-sm px-4 py-2 border rounded-md focus:outline-none focus:border-green-400"
+                />
+              </div>
+
               <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                {userRating.map((ratingData) => (
-                  <div
-                    key={ratingData.parameter_id}
-                    className="flex flex-col items-start font-dramatic-header"
-                  >
-                    <label
-                      htmlFor={`rating-${ratingData.parameter_id}`}
-                      className="block text-sm font-medium text-gray-700 font-dramatic-header"
+                {userRating.length > 0 ? (
+                  userRating.map((ratingData) => (
+                    <div
+                      key={ratingData.parameter_id}
+                      className="flex flex-col items-start font-dramatic-header"
                     >
-                      {ratingData.drama.nama}:
-                    </label>
-                    <input
-                      id={`rating-${ratingData.parameter_id}`}
-                      type="range"
-                      min="1"
-                      max="100"
-                      value={ratingMap[ratingData.parameter_id] || 50}
-                      onChange={(e) =>
-                        setRatingMap((prevRatings) => ({
-                          ...prevRatings,
-                          [ratingData.parameter_id]: e.target.value,
-                        }))
-                      }
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-green"
-                    />
-                    <div className="mt-2 text-sm text-gray-500 font-dramatic-header">
-                      {ratingMap[ratingData.parameter_id] || 50} / 100
+                      <label
+                        htmlFor={`rating-${ratingData.parameter_id}`}
+                        className="block text-sm font-medium text-gray-700 font-dramatic-header"
+                      >
+                        {ratingData.drama.nama}:
+                      </label>
+                      <input
+                        id={`rating-${ratingData.parameter_id}`}
+                        type="range"
+                        min="1"
+                        max="100"
+                        value={ratingMap[ratingData.parameter_id] || 50}
+                        onChange={(e) => {
+                          const newRating = e.target.value;
+                          setRatingMap((prevRatings) => ({
+                            ...prevRatings,
+                            [ratingData.parameter_id]: newRating,
+                          }));
+                        }}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-green"
+                      />
+                      <div className="mt-2 text-sm text-gray-500 font-dramatic-header">
+                        {ratingMap[ratingData.parameter_id] || 50} / 100
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p>No ratings found.</p>
+                )}
               </div>
             </div>
 
