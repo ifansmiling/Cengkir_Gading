@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCircleXmark,
   faCircleCheck,
   faTimes,
   faPlus,
@@ -41,6 +42,7 @@ const Drama = () => {
   const [modalIsOpenRating, setModalIsOpenRating] = useState(false);
   const [selectedRatingId, setSelectedRatingId] = useState(null);
   const [parameterIds, setParameterIds] = useState([]);
+  const [selectedRatingDate, setSelectedRatingDate] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -57,18 +59,14 @@ const Drama = () => {
         );
 
         const updatedUsers = usersWithRoleUser.map((user) => {
-          const hasRating = userRatings.some(
+          const hasRated = userRatings.some(
             (rating) => rating.user_id === user.id
           );
-          return { ...user, sudahDirating: hasRating };
+          return { ...user, hasRated };
         });
 
         const sortedUsers = updatedUsers.sort((a, b) => {
-          return a.sudahDirating === b.sudahDirating
-            ? 0
-            : a.sudahDirating
-            ? 1
-            : -1;
+          return a.hasRated === b.hasRated ? 0 : a.hasRated ? 1 : -1;
         });
 
         setFilteredUsers(sortedUsers);
@@ -103,34 +101,40 @@ const Drama = () => {
         const ratings = response.data.data;
 
         const groupedRatings = ratings.reduce((acc, rating) => {
-          if (!acc[rating.user_id]) {
-            acc[rating.user_id] = {
-              user_id: rating.user_id,
+          const key = `${rating.user_id}-${rating.tanggal_rating}`;
+
+          if (!acc[key]) {
+            acc[key] = {
+              userId: rating.user_id,
               nama: rating.user.nama,
               nim: rating.user.nim,
+              drama: rating.drama.nama,
               ratings: [],
-              tanggal_rating: [],
+              tanggalRating: new Date(
+                rating.tanggal_rating
+              ).toLocaleDateString(),
             };
           }
-          acc[rating.user_id].ratings.push({
-            parameter_id: rating.parameter_id,
-            rating: rating.rating,
-            drama: rating.drama.nama,
-          });
-          acc[rating.user_id].tanggal_rating.push(rating.tanggal_rating);
+
+          acc[key].ratings.push(rating.rating);
+
           return acc;
         }, {});
 
-        // Pastikan tanggal_rating diurutkan untuk setiap pengguna
-        Object.values(groupedRatings).forEach((group) => {
-          group.tanggal_rating.sort((a, b) => new Date(b) - new Date(a));
-        });
+        const formattedRatings = Object.values(groupedRatings).map(
+          (userRating, index) => ({
+            no: index + 1,
+            nama: userRating.nama,
+            nim: userRating.nim,
+            drama: userRating.drama,
+            ratings: userRating.ratings,
+            tanggalRating: userRating.tanggalRating,
+            userId: userRating.userId,
+          })
+        );
 
-        const uniqueUserRatings = Object.values(groupedRatings);
-
-        // Pastikan data yang sudah digrouping benar
-        setUserRatings(uniqueUserRatings);
-        setFilteredRatings(uniqueUserRatings);
+        setUserRatings(formattedRatings);
+        setFilteredRatings(formattedRatings);
       } catch (error) {
         console.error("Gagal mengambil data user rating:", error);
       }
@@ -140,6 +144,13 @@ const Drama = () => {
     fetchParameters();
     fetchUserRatings();
   }, []);
+
+  const updatedUsers = useMemo(() => {
+    return users.map((user) => {
+      const hasRated = userRatings.some((rating) => rating.user_id === user.id);
+      return { ...user, hasRated };
+    });
+  }, [users, userRatings]);
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -156,23 +167,30 @@ const Drama = () => {
     }
   };
 
-  const openModal = async (userId) => {
+  const openModal = async (userId, tanggalRating) => {
     try {
-      const response = await api.get(`/user-rating/user/${userId}`, {
+      const response = await api.get(`/user-rating/rating/user/tanggal`, {
+        params: { user_id: userId, tanggal_rating: tanggalRating },
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      console.log("Data dari API:", response.data);
+      const ratings = response.data.data;
 
-      setSelectedUserRatings(response.data.data || []);
-      setSelectedUserName(
-        response.data.data.find((rating) => rating.user_id === userId)?.user
-          ?.nama || ""
-      );
-      setIsModalOpen(true);
+      if (ratings.length > 0) {
+        // Simpan nama pengguna ke state
+        setSelectedUserName(ratings[0].user.nama);
+
+        // Simpan data rating ke state
+        setSelectedUserRatings(ratings);
+
+        // Tampilkan modal
+        setIsModalOpen(true);
+      } else {
+        console.log("Tidak ada data rating untuk pengguna ini.");
+      }
     } catch (error) {
       console.error("Gagal mengambil rating pengguna:", error);
     }
@@ -214,7 +232,7 @@ const Drama = () => {
     closeModalParameter();
   };
 
-  const handleDeleteUserRating = async (userId, parameterIds) => {
+  const handleDeleteUserRating = async (userId, tanggalRating) => {
     try {
       const response = await api.delete(`/user-rating`, {
         headers: {
@@ -223,21 +241,16 @@ const Drama = () => {
         },
         data: {
           user_id: userId,
-          parameter_ids: parameterIds,
+          tanggal_rating: tanggalRating,
         },
       });
 
       if (response.status === 200) {
         toast.success("Rating pengguna berhasil dihapus.");
 
-        setUserRatings((prevRatings) =>
-          prevRatings.filter((rating) => rating.user_id !== userId)
-        );
-        setFilteredRatings((prevRatings) =>
-          prevRatings.filter((rating) => rating.user_id !== userId)
-        );
-
-        closeModalRating();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       }
     } catch (error) {
       console.error("Gagal menghapus rating pengguna:", error);
@@ -255,9 +268,10 @@ const Drama = () => {
     setModalIsOpen(false);
   };
 
-  const openModalRating = (userId, parameterIds) => {
+  const openModalRating = (userId, parameterIds, ratingDate) => {
     setSelectedRatingId(userId);
     setParameterIds(parameterIds);
+    setSelectedRatingDate(ratingDate);
     setModalIsOpenRating(true);
   };
 
@@ -267,8 +281,8 @@ const Drama = () => {
     setModalIsOpenRating(false);
   };
 
-  const handleIconClick = (userId) => {
-    openModal(userId);
+  const handleIconClick = (userId, tanggalRating) => {
+    openModal(userId, tanggalRating);
   };
 
   const handleClickRating = (userId, userName) => {
@@ -428,70 +442,62 @@ const Drama = () => {
               </tr>
             </thead>
             <tbody>
-              {currentRatings
-                .sort((a, b) => {
-                  const dateA = new Date(a.tanggal_rating[0] || "1970-01-01");
-                  const dateB = new Date(b.tanggal_rating[0] || "1970-01-01");
-                  return dateB - dateA;
-                })
-                .map((user, index) =>
-                  user.ratings.map((rating, subIndex) => (
-                    <tr
-                      key={`${user.user_id}-${subIndex}`}
-                      className="text-center hover:bg-gray-100 font-dramatic-header-user"
-                    >
-                      <td className="py-2 px-4 border-b border">
-                        {(activePageRatings - 1) * itemsPerPage +
-                          index +
-                          subIndex +
-                          1}
-                      </td>
-                      <td className="py-2 px-4 border-b font-event-body border">
-                        {user.nama}
-                      </td>
-                      <td className="py-2 px-4 border-b font-event-body border">
-                        {user.nim}
-                      </td>
-                      <td className="py-2 px-4 border-b text-center border">
-                        <FontAwesomeIcon
-                          icon={faCircleCheck}
-                          className="text-green-500 text-xl cursor-pointer"
-                          onClick={() => handleIconClick(user.user_id)}
-                        />
-                      </td>
-                      <td className="py-2 px-4 border-b text-center border">
-                        {user.tanggal_rating && user.tanggal_rating.length > 0
-                          ? new Date(
-                              user.tanggal_rating[subIndex]
-                            ).toLocaleDateString()
-                          : "Tidak Tersedia"}
-                      </td>
-                      <td className="py-2 px-4 border-b">
-                        <div className="flex justify-center gap-2">
-                          <button
-                            onClick={() =>
-                              handleEditRating(user.user_id, user.nama)
-                            }
-                            className="text-green-600 hover:text-green-900"
-                          >
-                            <FaEdit />
-                          </button>
-                          <button
-                            className="text-red-500 hover:text-red-700"
-                            onClick={() =>
-                              openModalRating(
-                                user.user_id,
-                                user.ratings.map((r) => r.parameter_id)
-                              )
-                            }
-                          >
-                            <FaTrash />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
+              {currentRatings.map((user, index) => (
+                <tr
+                  key={user.userId + user.tanggalRating}
+                  className="text-center hover:bg-gray-100 font-dramatic-header-user"
+                >
+                  <td className="py-2 px-4 border-b border">{user.no}</td>
+                  <td className="py-2 px-4 border-b font-event-body border">
+                    {user.nama}
+                  </td>
+                  <td className="py-2 px-4 border-b font-event-body border">
+                    {user.nim}
+                  </td>
+                  <td className="py-2 px-4 border-b text-center border">
+                    {/* Ambil rating tertinggi */}
+                    <FontAwesomeIcon
+                      icon={
+                        Math.max(...user.ratings) >= 80
+                          ? faCircleCheck
+                          : faCircleXmark
+                      }
+                      className={`text-${
+                        Math.max(...user.ratings) >= 80 ? "green" : "red"
+                      }-500 text-xl`}
+                      onClick={() =>
+                        handleIconClick(user.userId, user.tanggalRating)
+                      } // Menambahkan onClick
+                    />
+                  </td>
+
+                  <td className="py-2 px-4 border-b text-center border">
+                    {user.tanggalRating}
+                  </td>
+                  <td className="py-2 px-4 border-b">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        onClick={() => handleEditRating(user.userId, user.nama)}
+                        className="text-green-600 hover:text-green-900"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() =>
+                          openModalRating(
+                            user.userId,
+                            user.parameterIds,
+                            user.tanggalRating
+                          )
+                        }
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
           <SimplePagination
@@ -513,8 +519,8 @@ const Drama = () => {
               Konfirmasi Hapus
             </h2>
             <p className="font-footer-body text-base text-gray-600">
-              Apakah Anda yakin ingin menghapus semua rating pengguna ini dengan
-              parameter yang diberikan?
+              Apakah Anda yakin ingin menghapus semua rating pengguna ini pada
+              tanggal {selectedRatingDate}?
             </p>
             <div className="flex justify-end mt-4">
               <button
@@ -524,8 +530,9 @@ const Drama = () => {
                 Batal
               </button>
               <button
-                onClick={() =>
-                  handleDeleteUserRating(selectedRatingId, parameterIds)
+                onClick={
+                  () =>
+                    handleDeleteUserRating(selectedRatingId, selectedRatingDate) // Kirimkan tanggal yang dipilih
                 }
                 className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 font-footer-body"
               >
@@ -549,9 +556,9 @@ const Drama = () => {
                 Detail Penilaian
               </h2>
               <div>
-                <h3 className="text-lg font-dramatic-header">Nama Pengguna:</h3>
+                <h3 className="text-lg font-dramatic-header">Nama Anggota:</h3>
                 <p className="text-gray-700 mb-4 font-event-body">
-                  {selectedUserName}
+                  {selectedUserName} {/* Menampilkan nama pengguna */}
                 </p>
                 <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
                   <thead>
@@ -566,8 +573,8 @@ const Drama = () => {
                   </thead>
                   <tbody>
                     {selectedUserRatings.length > 0 ? (
-                      selectedUserRatings.map((rating) => (
-                        <tr key={rating.id}>
+                      selectedUserRatings.map((rating, index) => (
+                        <tr key={index}>
                           <td className="py-2 px-4 border-b text-center font-natural-body">
                             {rating.drama
                               ? rating.drama.nama
@@ -625,9 +632,11 @@ const Drama = () => {
             </thead>
             <tbody>
               {currentUsers.map((user, index) => {
-                const hasRated = userRatings.some(
-                  (rating) => rating.user_id === user.id
+                const userRating = userRatings.find(
+                  (rating) => rating.userId === user.id
                 );
+                const hasRated = userRating ? true : false;
+
                 return (
                   <tr key={user.id} className="text-center hover:bg-gray-100">
                     <td className="py-2 px-4 border-b border font-dramatic-header-user">
@@ -650,6 +659,7 @@ const Drama = () => {
                         {hasRated ? "Sudah Ada Rating" : "Belum Ada Rating"}
                       </span>
                     </td>
+
                     <td className="py-2 px-4 border-b text-center border">
                       <div className="flex justify-center items-center h-full">
                         <FontAwesomeIcon

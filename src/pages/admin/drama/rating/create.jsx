@@ -39,14 +39,16 @@ const CreateRating = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Membuat array tanggal_rating yang berisi tanggal yang sama untuk semua parameter
-    const tanggalRating = new Array(parameters.length).fill(selectedDate);
+    // Membuat array ratings yang berisi objek untuk setiap parameter
+    const ratings = parameters.map((param) => ({
+      parameter_id: param.id,
+      rating: selectedRatings[param.id] || 50, // Gunakan rating yang sudah dipilih atau default 50
+      tanggal_rating: selectedDate, // Gunakan tanggal yang dipilih
+    }));
 
     const data = {
       user_id: userId,
-      parameter_id: parameters.map((param) => param.id), // Menyertakan ID semua parameter
-      rating: Object.values(selectedRatings).map((r) => Number(r)), // Menyertakan rating untuk setiap parameter
-      tanggal_rating: tanggalRating, // Menyertakan tanggal untuk setiap parameter
+      ratings, // Kirim array ratings ke backend
     };
 
     try {
