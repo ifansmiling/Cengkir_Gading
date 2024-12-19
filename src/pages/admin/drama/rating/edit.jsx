@@ -18,27 +18,34 @@ const EditRating = () => {
 
   const fetchUserRating = async () => {
     try {
+      const formattedTanggalRating = tanggalRating
+        ? tanggalRating
+        : new Date().toISOString().split("T")[0];
+
       const response = await api.get("/user-rating/rating/user/tanggal", {
-        params: { user_id: id, tanggal_rating: "2024-12-20" }, // Sesuaikan tanggal_rating sesuai kebutuhan
+        params: { user_id: id, tanggal_rating: formattedTanggalRating },
       });
 
       const data = response.data.data;
-      setUserRating(data);
 
       if (data.length > 0) {
+        setUserRating(data);
+
         const date = new Date(data[0].tanggal_rating);
         setTanggalRating(date.toISOString().split("T")[0]);
-      }
 
-      const ratings = data.reduce((acc, item) => {
-        acc[item.parameter_id] = item.rating;
-        return acc;
-      }, {});
-      setRatingMap(ratings);
+        const ratings = data.reduce((acc, item) => {
+          acc[item.parameter_id] = item.rating;
+          return acc;
+        }, {});
+        setRatingMap(ratings);
+      } else {
+        console.log("Tidak ada data rating untuk user_id:", id);
+      }
 
       setLoading(false);
     } catch (err) {
-      console.error("Error:", err);
+      console.error("Error in API call:", err);
       setError(err.response ? err.response.data.error : "Error occurred");
       setLoading(false);
     }
