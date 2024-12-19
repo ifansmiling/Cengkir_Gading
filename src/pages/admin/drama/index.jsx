@@ -173,7 +173,15 @@ const Drama = () => {
 
   const convertToValidDate = (tanggal) => {
     const [day, month, year] = tanggal.split("/");
-    return `${year}-${month}-${day}`; // Format: YYYY-MM-DD
+    return `${year}-${month}-${day}`; 
+  };
+
+  const formatTanggalToDisplay = (tanggalISO) => {
+    const date = new Date(tanggalISO);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
   const openModal = async (userId, tanggalRating) => {
@@ -239,23 +247,8 @@ const Drama = () => {
     closeModalParameter();
   };
 
-  // Fungsi untuk mengubah format tanggal DD/MM/YYYY ke YYYY-MM-DD
-  const convertToValidDateDelete = (tanggal) => {
-    const [day, month, year] = tanggal.split("/");
-    return `${year}-${month}-${day}`; // Format: YYYY-MM-DD
-  };
-
-  // Fungsi untuk menangani penghapusan rating pengguna
   const handleDeleteUserRating = async (userId, tanggalRating) => {
     try {
-      // Konversi tanggalRating ke format valid
-      const validTanggalRating = convertToValidDateDelete(tanggalRating);
-
-      if (isNaN(Date.parse(validTanggalRating))) {
-        toast.error("Tanggal rating tidak valid.");
-        return;
-      }
-
       const response = await api.delete(`/user-rating`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -263,7 +256,7 @@ const Drama = () => {
         },
         data: {
           user_id: userId,
-          tanggal_rating: validTanggalRating, // Kirimkan tanggal dalam format valid
+          tanggal_rating: tanggalRating, // Kirimkan tanggal_rating ke backend
         },
       });
 
@@ -322,15 +315,12 @@ const Drama = () => {
     setModalIsOpenRating(false);
   };
 
-  // Fungsi untuk menangani klik pada ikon
   const handleIconClick = (userId, tanggalRating) => {
-    const validTanggal = convertToValidDate(tanggalRating);
-
-    if (isNaN(Date.parse(validTanggal))) {
+    if (isNaN(Date.parse(tanggalRating))) {
       console.error("Invalid date:", tanggalRating);
       return;
     }
-    openModal(userId, validTanggal);
+    openModal(userId, tanggalRating);
   };
 
   const handleClickRating = (userId, userName) => {
