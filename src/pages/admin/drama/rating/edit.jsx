@@ -57,13 +57,27 @@ const EditRating = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
+    // Pastikan tanggal dalam format 'YYYY-MM-DD'
+    const formattedTanggalRating = tanggalRating
+      ? tanggalRating
+      : new Date().toISOString().split("T")[0]; // fallback jika kosong, tanggal hari ini
+
+    console.log("Tanggal Rating yang akan dikirim:", formattedTanggalRating); // cek format tanggal
+
     try {
       const ratings = userRating.map((ratingData) => ({
         parameter_id: ratingData.parameter_id,
-        rating: ratingMap[ratingData.parameter_id] || ratingData.rating,
-        tanggal_rating: tanggalRating,
+        rating: Number(ratingMap[ratingData.parameter_id] || ratingData.rating),
+        tanggal_rating: formattedTanggalRating, // pastikan dalam format yang benar
       }));
 
+      console.log("Data yang akan dikirim:", {
+        user_id: id,
+        ratings,
+      });
+
+      // Kirim data ke backend
       await api.put("/user-rating/update/rating", {
         user_id: id,
         ratings,
@@ -75,6 +89,7 @@ const EditRating = () => {
       }, 2000);
     } catch (err) {
       toast.error("Error updating rating");
+      console.error("Error updating rating:", err);
     }
   };
 
@@ -106,7 +121,11 @@ const EditRating = () => {
                 id="tanggal-rating"
                 type="date"
                 value={tanggalRating}
-                onChange={(e) => setTanggalRating(e.target.value)}
+                onChange={(e) => {
+                  const newDate = e.target.value; // tanggal dalam format YYYY-MM-DD
+                  setTanggalRating(newDate); // simpan dalam state tanggalRating
+                  console.log("Tanggal Rating yang dipilih:", newDate); // cek formatnya
+                }}
                 className="w-auto font-natural-body text-sm px-4 py-2 border rounded-md focus:outline-none focus:border-green-400"
               />
             </div>

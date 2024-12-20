@@ -15,6 +15,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { ToastContainer, toast } from "react-toastify";
 import Modal from "react-modal";
 import "./ModalTransisition.css";
+import moment from "moment";
 
 Modal.setAppElement("#root");
 
@@ -173,7 +174,7 @@ const Drama = () => {
 
   const convertToValidDate = (tanggal) => {
     const [day, month, year] = tanggal.split("/");
-    return `${year}-${month}-${day}`; 
+    return `${year}-${month}-${day}`;
   };
 
   const formatTanggalToDisplay = (tanggalISO) => {
@@ -186,13 +187,15 @@ const Drama = () => {
 
   const openModal = async (userId, tanggalRating) => {
     try {
-      const validDate = new Date(tanggalRating);
+      // Tidak perlu mengubah format tanggal, karena kita sudah pastikan bahwa formatnya sudah benar
+      const validDate = new Date(tanggalRating); // Menggunakan tanggal yang sudah diformat
       if (isNaN(validDate)) {
         throw new Error("Invalid tanggalRating");
       }
 
+      // Kirim tanggal dalam format YYYY-MM-DD ke backend
       const response = await api.get(`/user-rating/rating/user/tanggal`, {
-        params: { user_id: userId, tanggal_rating: validDate.toISOString() },
+        params: { user_id: userId, tanggal_rating: tanggalRating }, // Mengirim tanggal yang sudah diformat
       });
 
       const ratings = response.data.data;
@@ -200,7 +203,6 @@ const Drama = () => {
       if (ratings && ratings.length > 0) {
         const userName = ratings[0]?.user?.nama || "Unknown User";
         setSelectedUserName(userName);
-
         setSelectedUserRatings(ratings);
         setIsModalOpen(true);
       } else {
@@ -316,11 +318,24 @@ const Drama = () => {
   };
 
   const handleIconClick = (userId, tanggalRating) => {
-    if (isNaN(Date.parse(tanggalRating))) {
-      console.error("Invalid date:", tanggalRating);
-      return;
+    // Jika format tanggalRating adalah MM/DD/YYYY
+    const parts = tanggalRating.split("/");
+
+    if (parts.length === 3) {
+      // Mengubah format tanggal menjadi YYYY-MM-DD
+      const isoDate = `${parts[2]}-${parts[0]}-${parts[1]}`;
+
+      // Memeriksa apakah tanggal yang dihasilkan valid
+      if (!moment(isoDate, "YYYY-MM-DD", true).isValid()) {
+        console.error("Invalid date:", tanggalRating);
+        return;
+      }
+
+      // Kirim request ke backend dengan tanggal yang diformat
+      openModal(userId, isoDate); // Mengirim tanggal dalam format YYYY-MM-DD
+    } else {
+      console.error("Invalid date format:", tanggalRating);
     }
-    openModal(userId, tanggalRating);
   };
 
   const handleClickRating = (userId, userName) => {
@@ -328,8 +343,11 @@ const Drama = () => {
     navigate(`/admin/drama/rating/create/${userId}`, { state: { userName } });
   };
 
-  const handleEditRating = (userId, userName) => {
-    navigate(`/admin/drama/rating/edit/${userId}`, { state: { userName } });
+  const handleEditRating = (userId, userName, tanggalRating) => {
+    console.log("Sending to edit:", { userId, userName, tanggalRating }); // Debugging
+    navigate(`/admin/drama/rating/edit/${userId}`, {
+      state: { userName, tanggalRating },
+    });
   };
 
   // Pagination logic function
@@ -521,12 +539,17 @@ const Drama = () => {
                       <div className="flex justify-center gap-2">
                         <button
                           onClick={() =>
-                            handleEditRating(user.userId, user.nama)
+                            handleEditRating(
+                              user.userId,
+                              user.nama,
+                              user.tanggalRating
+                            )
                           }
                           className="text-green-600 hover:text-green-900"
                         >
                           <FaEdit />
                         </button>
+
                         <button
                           className="text-red-500 hover:text-red-700"
                           onClick={() =>

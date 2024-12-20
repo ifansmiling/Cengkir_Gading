@@ -11,6 +11,7 @@ const EditKarakter = () => {
     evaluasi: "",
     kekurangan: "",
     user_id: "",
+    tanggal_evaluasi: "",
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const EditKarakter = () => {
           evaluasi: response.data.evaluasi,
           kekurangan: response.data.kekurangan,
           user_id: response.data.user_id,
+          tanggal_evaluasi: response.data.tanggal_evaluasi, // Populate existing date
         });
       } catch (error) {
         console.error("Error fetching evaluasi karakter:", error);
@@ -123,6 +125,24 @@ const EditKarakter = () => {
                 onChange={handleChange}
                 className="text-gray-600 w-full px-4 py-2 border focus:border-green-400 hover:border-green-500 focus:outline-none rounded-md"
                 placeholder="Evaluasi"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 font-semibold font-dramatic-subtitle mb-2"
+                htmlFor="tanggal_evaluasi"
+              >
+                Tanggal Evaluasi
+              </label>
+              <input
+                type="date"
+                id="tanggal_evaluasi"
+                name="tanggal_evaluasi"
+                value={formData.tanggal_evaluasi}
+                onChange={handleChange}
+                className="text-gray-600 w-full px-4 py-2 border focus:border-green-400 hover:border-green-500 focus:outline-none rounded-md"
                 required
               />
             </div>

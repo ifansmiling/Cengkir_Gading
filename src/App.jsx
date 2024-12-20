@@ -30,6 +30,7 @@ import Beranda from "./pages/web/beranda";
 import Login from "./pages/web/login";
 import SignUp from "./pages/web/signup";
 import Drama from "./pages/web/drama/index";
+import Riwayat from "./pages/web/drama/riwayat";
 import KalenderAcara from "./pages/web/kalender/index";
 import EvaluasiKarakter from "./pages/web/karakter/index";
 import KontakDukungan from "./pages/web/kontak/index";
@@ -138,6 +139,10 @@ function App() {
         <Route
           path="/user/drama/:id"
           element={<ProtectedRoute element={Drama} />}
+        />
+        <Route
+          path="/user/drama/riwayat/:id"
+          element={<ProtectedRoute element={Riwayat} />}
         />
         <Route
           path="/user/kalender-acara"

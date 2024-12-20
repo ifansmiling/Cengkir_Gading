@@ -247,6 +247,9 @@ const Karakter = () => {
                 <th className="py-2 px-4 border font-dramatic-header">
                   Evaluasi
                 </th>
+                <th className="py-2 px-6 border font-dramatic-header">
+                  Tanggal Evaluasi
+                </th>
                 <th className="py-2 px-4 border font-dramatic-header">Aksi</th>
               </tr>
             </thead>
@@ -265,6 +268,12 @@ const Karakter = () => {
                   <td className="py-2 px-3 border font-dramatic-body-user text-justify">
                     {item.evaluasi}
                   </td>
+                  <td className="py-2 px-5 border font-dramatic-body-user text-justify">
+                    {new Date(item.tanggal_evaluasi).toLocaleDateString(
+                      "en-CA"
+                    )}
+                  </td>
+
                   <td className="py-2 px-6 border">
                     <div className="flex justify-center">
                       <button

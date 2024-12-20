@@ -60,7 +60,7 @@ const EvaluasiKarakter = () => {
           </div>
 
           {message && (
-            <div className="bg-red-100 text-red-500 p-4 text-center mb-6 rounded-lg shadow-lg">
+            <div className="bg-green-700 font-natural-body text-white p-2 text-center mb-6 rounded-md shadow-md">
               {message}
             </div>
           )}
@@ -72,10 +72,24 @@ const EvaluasiKarakter = () => {
                   key={evalItem.id}
                   className="relative group bg-white shadow-lg rounded-xl p-8 hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105"
                 >
+                  {/* Tanggal Evaluasi */}
+                  <p className="text-sm text-gray-500 mb-4 text-center">
+                    {new Date(evalItem.tanggal_evaluasi).toLocaleDateString(
+                      "id-ID",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )}
+                  </p>
+
+                  {/* Judul Evaluasi */}
                   <h2 className="underline underline-offset-2 font-dramatic-body-user text-xl font-extrabold text-green-700 mb-6 text-center">
                     {evalItem.judul_evaluasi}
                   </h2>
 
+                  {/* Kekurangan */}
                   <div className="mb-6">
                     <h3 className="font-dramatic-body-user text-base font-semibold text-green-800 mb-3">
                       Kekurangan
@@ -91,6 +105,7 @@ const EvaluasiKarakter = () => {
                     </div>
                   </div>
 
+                  {/* Evaluasi */}
                   <div>
                     <h3 className="font-dramatic-body-user text-base font-semibold text-green-800 mb-3">
                       Evaluasi yang Harus Dilakukan
@@ -112,9 +127,7 @@ const EvaluasiKarakter = () => {
               ))}
             </div>
           ) : (
-            <p className="text-center text-gray-700">
-              Tidak ada evaluasi yang tersedia.
-            </p>
+            <p className="text-center text-gray-700"></p>
           )}
         </div>
       </div>

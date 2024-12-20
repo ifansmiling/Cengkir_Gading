@@ -14,6 +14,7 @@ const AddEvaluasi = () => {
   const [judulEvaluasi, setJudulEvaluasi] = useState("");
   const [evaluasi, setEvaluasi] = useState("");
   const [kekurangan, setKekurangan] = useState("");
+  const [tanggalEvaluasi, setTanggalEvaluasi] = useState(""); // Tambahkan state untuk tanggal evaluasi
 
   const navigate = useNavigate();
 
@@ -25,6 +26,7 @@ const AddEvaluasi = () => {
         evaluasi: evaluasi,
         kekurangan: kekurangan,
         user_id: userId,
+        tanggal_evaluasi: tanggalEvaluasi, // Kirim tanggal evaluasi ke backend
       });
       toast.success("Evaluasi berhasil dibuat!");
       setTimeout(() => {
@@ -97,6 +99,22 @@ const AddEvaluasi = () => {
                 placeholder="Masukkan Kekurangan"
                 required
               ></textarea>
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 font-dramatic-subtitle mb-2 font-semibold"
+                htmlFor="tanggal-evaluasi"
+              >
+                Tanggal Evaluasi
+              </label>
+              <input
+                type="date"
+                id="tanggal-evaluasi"
+                value={tanggalEvaluasi}
+                onChange={(e) => setTanggalEvaluasi(e.target.value)}
+                className="text-gray-600 w-full px-4 py-2 border focus:border-green-400 hover:border-green-500 focus:outline-none rounded-md"
+                required
+              />
             </div>
             <button
               type="submit"

@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import UserLayout from "../../../layouts/UserLayout";
 import api from "../../../services/api";
 import { Radar } from "react-chartjs-2";
-import { FaPrint } from "react-icons/fa";
+import { FaPrint, FaHistory } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -164,6 +165,13 @@ const Drama = () => {
     printWindow.print();
   };
 
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", 
+    });
+  };
+
   return (
     <UserLayout>
       <div className="bg-white p-8 rounded-lg max-w-5xl mx-auto mt-2">
@@ -225,13 +233,26 @@ const Drama = () => {
             </tbody>
           </table>
         </div>
-        <button
-          onClick={handlePrint}
-          className="mt-4 font-natural-body flex items-center text-gray-700 px-4 py-2 rounded-lg hover:text-gray-900 mb-2"
-        >
-          <FaPrint className="mr-2" />
-          <span>Cetak laporan</span>
-        </button>
+
+        <div className="flex items-center mb-4">
+          <button
+            onClick={handlePrint}
+            className="font-natural-body flex items-center text-gray-700 px-4 py-2 rounded-lg hover:text-gray-900 mr-4"
+          >
+            <FaPrint className="mr-2" />
+            <span>Cetak laporan</span>
+          </button>
+          <div className="flex items-center">
+            <FaHistory className="text-gray-700 text-xl mr-2" />
+            <Link
+              to={`/user/drama/riwayat/${userId}`}
+              className="text-gray-700 text-sm font-natural-body hover:text-gray-900"
+              onClick={handleScrollToTop}
+            >
+              Riwayat Nilai
+            </Link>
+          </div>
+        </div>
       </div>
     </UserLayout>
   );
