@@ -150,13 +150,6 @@ const Drama = () => {
     fetchUserRatings();
   }, []);
 
-  const updatedUsers = useMemo(() => {
-    return users.map((user) => {
-      const hasRated = userRatings.some((rating) => rating.user_id === user.id);
-      return { ...user, hasRated };
-    });
-  }, [users, userRatings]);
-
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -170,19 +163,6 @@ const Drama = () => {
     } else {
       setFilteredRatings(userRatings);
     }
-  };
-
-  const convertToValidDate = (tanggal) => {
-    const [day, month, year] = tanggal.split("/");
-    return `${year}-${month}-${day}`;
-  };
-
-  const formatTanggalToDisplay = (tanggalISO) => {
-    const date = new Date(tanggalISO);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
   };
 
   const openModal = async (userId, tanggalRating) => {
@@ -243,6 +223,11 @@ const Drama = () => {
         },
       });
       toast.success("Paremeter berhasil dihapus!");
+
+      // Jeda selama 1 detik sebelum mereload halaman
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // 1000 ms = 1 detik
     } catch (error) {
       toast.error("Gagal menghapus parameter.");
     }
@@ -498,74 +483,85 @@ const Drama = () => {
               </tr>
             </thead>
             <tbody>
-              {currentRatings
-                .sort(
-                  (b, a) =>
-                    new Date(a.tanggalRating) - new Date(b.tanggalRating)
-                ) // Urutkan berdasarkan tanggalRating
-                .map((user, index) => (
-                  <tr
-                    key={user.userId + user.tanggalRating}
-                    className="text-center hover:bg-gray-100 font-dramatic-header-user"
+              {currentRatings.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="py-4 px-4 text-center text-gray-500 font-dramatic-header-user"
                   >
-                    <td className="py-2 px-4 border-b border">{index + 1}</td>
-                    <td className="py-2 px-4 border-b font-event-body border">
-                      {user.nama}
-                    </td>
-                    <td className="py-2 px-4 border-b font-event-body border">
-                      {user.nim}
-                    </td>
-                    <td className="py-2 px-4 border-b text-center border">
-                      {/* Ambil rating tertinggi */}
-                      <FontAwesomeIcon
-                        icon={
-                          Math.max(...user.ratings) >= 80
-                            ? faCircleCheck
-                            : faCircleXmark
-                        }
-                        className={`text-${
-                          Math.max(...user.ratings) >= 70 ? "green" : "red"
-                        }-500 text-xl`}
-                        onClick={() =>
-                          handleIconClick(user.userId, user.tanggalRating)
-                        } // Menambahkan onClick
-                      />
-                    </td>
-
-                    <td className="py-2 px-4 border-b text-center border">
-                      {user.tanggalRating}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      <div className="flex justify-center gap-2">
-                        <button
-                          onClick={() =>
-                            handleEditRating(
-                              user.userId,
-                              user.nama,
-                              user.tanggalRating
-                            )
+                    Belum ada rating anggota
+                  </td>
+                </tr>
+              ) : (
+                currentRatings
+                  .sort(
+                    (b, a) =>
+                      new Date(a.tanggalRating) - new Date(b.tanggalRating)
+                  ) // Urutkan berdasarkan tanggalRating
+                  .map((user, index) => (
+                    <tr
+                      key={user.userId + user.tanggalRating}
+                      className="text-center hover:bg-gray-100 font-dramatic-header-user"
+                    >
+                      <td className="py-2 px-4 border-b border">{index + 1}</td>
+                      <td className="py-2 px-4 border-b font-event-body border">
+                        {user.nama}
+                      </td>
+                      <td className="py-2 px-4 border-b font-event-body border">
+                        {user.nim}
+                      </td>
+                      <td className="py-2 px-4 border-b text-center border">
+                        {/* Ambil rating tertinggi */}
+                        <FontAwesomeIcon
+                          icon={
+                            Math.max(...user.ratings) >= 80
+                              ? faCircleCheck
+                              : faCircleXmark
                           }
-                          className="text-green-600 hover:text-green-900"
-                        >
-                          <FaEdit />
-                        </button>
-
-                        <button
-                          className="text-red-500 hover:text-red-700"
+                          className={`text-${
+                            Math.max(...user.ratings) >= 70 ? "green" : "red"
+                          }-500 text-xl`}
                           onClick={() =>
-                            openModalRating(
-                              user.userId, // Menggunakan user, bukan rating
-                              user.parameterIds, // Pastikan user memiliki parameterIds
-                              user.tanggalRating // Menggunakan tanggalRating
-                            )
-                          }
-                        >
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                            handleIconClick(user.userId, user.tanggalRating)
+                          } // Menambahkan onClick
+                        />
+                      </td>
+
+                      <td className="py-2 px-4 border-b text-center border">
+                        {user.tanggalRating}
+                      </td>
+                      <td className="py-2 px-4 border-b">
+                        <div className="flex justify-center gap-2">
+                          <button
+                            onClick={() =>
+                              handleEditRating(
+                                user.userId,
+                                user.nama,
+                                user.tanggalRating
+                              )
+                            }
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            <FaEdit />
+                          </button>
+
+                          <button
+                            className="text-red-500 hover:text-red-700"
+                            onClick={() =>
+                              openModalRating(
+                                user.userId, // Menggunakan user, bukan rating
+                                user.parameterIds, // Pastikan user memiliki parameterIds
+                                user.tanggalRating // Menggunakan tanggalRating
+                              )
+                            }
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+              )}
             </tbody>
           </table>
           <SimplePagination
