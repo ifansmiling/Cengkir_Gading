@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../layouts/AdminLayout";
 import { FaEdit, FaTrash, FaPlus, FaCaretDown, FaPrint } from "react-icons/fa";
 import api from "../../../services/api";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import "../../../App.css";
 import { useNavigate } from "react-router-dom";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { ToastContainer, toast } from "react-toastify";
@@ -139,49 +142,47 @@ const UserList = () => {
     );
   };
 
-  const handlePrint = () => {
-    // Ambil konten tabel tanpa tombol aksi
-    const printContent = document.getElementById("print-table").innerHTML;
+  const handlePrintPDF = async () => {
+    const element = document.getElementById("print-table");
 
-    // Buat jendela baru untuk cetak
-    const printWindow = window.open("", "_blank");
+    const hiddenElements = document.querySelectorAll(".print-hidden");
+    hiddenElements.forEach((el) => (el.style.display = "none"));
 
-    // Tulis konten HTML ke dalam jendela cetak
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Daftar Semua Pengguna</title>
-          <style>
-            table {
-              border-collapse: collapse;
-              width: 100%;
-            }
-            th, td {
-              border: 1px solid black;
-              padding: 8px;
-              text-align: center;
-            }
-            th {
-              background-color: #f4f4f4;
-            }
-            /* Sembunyikan tombol aksi dan kolom aksi saat mencetak */
-            @media print {
-              button, .action-buttons, th:last-child, td:last-child {
-                display: none;
-              }
-            }
-          </style>
-        </head>
-        <body>
-          <h2>Daftar Semua Pengguna</h2>
-          <table>${printContent}</table>
-        </body>
-      </html>
-    `);
+    const dropdownButton = document.querySelector(
+      "button[aria-expanded='true']"
+    );
+    const dropdownMenu = document.querySelector(".absolute");
 
-    // Menutup dokumen dan memicu pencetakan
-    printWindow.document.close();
-    printWindow.print();
+    if (dropdownButton) {
+      dropdownButton.style.display = "none";
+    }
+    if (dropdownMenu) {
+      dropdownMenu.style.display = "none";
+    }
+
+    try {
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("Daftar_Pengguna.pdf");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("Gagal mencetak PDF");
+    } finally {
+      hiddenElements.forEach((el) => (el.style.display = ""));
+
+      if (dropdownButton) {
+        dropdownButton.style.display = "";
+      }
+      if (dropdownMenu) {
+        dropdownMenu.style.display = "";
+      }
+    }
   };
 
   return (
@@ -245,11 +246,11 @@ const UserList = () => {
             <span>User</span>
           </button>
           <button
-            onClick={handlePrint}
+            onClick={handlePrintPDF}
             className="font-natural-body flex items-center bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-900 mb-3"
           >
             <FaPrint className="mr-2" />
-            <span>Cetak</span>
+            <span>Cetak PDF</span>
           </button>
         </div>
 
@@ -301,7 +302,7 @@ const UserList = () => {
                     </div>
                   )}
                 </th>
-                <th className="py-2 px-4">Aksi</th>
+                <th className="py-2 px-4 print-hidden">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -314,7 +315,7 @@ const UserList = () => {
                   <td className="py-2 px-4">{user.nama}</td>
                   <td className="py-2 px-4">{user.nim}</td>
                   <td className="py-2 px-4">{user.role}</td>
-                  <td className="py-2 px-4">
+                  <td className="py-2 px-4 print-hidden">
                     <button
                       onClick={() => navigate(`/admin/user/edit/${user.id}`)}
                       className="text-green-600 hover:text-green-900 mr-2"

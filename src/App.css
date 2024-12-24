@@ -10,6 +10,13 @@
   }
 }
 
+@media print {
+  .hide-print {
+    display: none !important;
+  }
+}
+
+
 @keyframes fadeOut {
   from {
     opacity: 1;

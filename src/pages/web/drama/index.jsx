@@ -4,6 +4,8 @@ import api from "../../../services/api";
 import { Radar } from "react-chartjs-2";
 import { FaPrint, FaHistory } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -105,71 +107,38 @@ const Drama = () => {
     ],
   };
 
-  const handlePrint = () => {
-    const printContent = printRef.current;
-
-    const printWindow = window.open("", "", "width=800,height=600");
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print</title>
-          <style>
-            body { 
-              font-family: Arial, sans-serif; 
-              margin: 0; 
-              padding: 20px; 
-            }
-            h1 { 
-              text-align: center; 
-              color: #256D85; 
-            }
-            table { 
-              width: 100%; 
-              border-collapse: collapse; 
-              margin-top: 20px; 
-            }
-            th, td { 
-              border: 1px solid #ccc; 
-              padding: 10px; 
-              text-align: center; 
-            }
-            th { 
-              background-color: #34d399; 
-              color: white; 
-            }
-            tr:nth-child(even) { 
-              background-color: #f9f9f9; 
-            }
-            img { 
-              display: block; 
-              margin: 20px auto; 
-              max-width: 600px; 
-              max-height: 400px; 
-            }
-            @media print {
-              body { margin: 0; padding: 10px; }
-              img { max-width: 100%; height: auto; }
-              table { page-break-inside: avoid; }
-              h1 { page-break-before: always; }
-            }
-          </style>
-        </head>
-        <body>
-          <h1>Laporan Perpustakaan Drama</h1>
-          <img src="${chartImage}" alt="Chart" />
-          ${printContent.innerHTML}
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.print();
-  };
-
   const handleScrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", 
+      behavior: "smooth",
     });
+  };
+
+  const handlePrint = async () => {
+    if (printRef.current) {
+      const element = printRef.current;
+
+      // Ambil tangkapan layar elemen
+      const canvas = await html2canvas(element, {
+        scale: 2, // Meningkatkan kualitas gambar
+        useCORS: true, // Mendukung sumber gambar lintas domain
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+
+      // Inisialisasi jsPDF
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      // Konversi ukuran elemen ke skala PDF
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      // Tambahkan gambar ke PDF
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+      // Unduh PDF
+      pdf.save("laporan-drama.pdf");
+    }
   };
 
   return (
@@ -242,6 +211,7 @@ const Drama = () => {
             <FaPrint className="mr-2" />
             <span>Cetak laporan</span>
           </button>
+
           <div className="flex items-center">
             <FaHistory className="text-gray-700 text-xl mr-2" />
             <Link
